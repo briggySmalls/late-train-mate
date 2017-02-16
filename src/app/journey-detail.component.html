@@ -1,0 +1,22 @@
+<div *ngIf="journey">
+    <div [ngSwitch]="journey.requestState">
+        <div *ngSwitchCase="journey.requestStateEnum.Unpopulated">Unpopulated...</div>
+        <div *ngSwitchCase="journey.requestStateEnum.Requesting">Requesting...</div>
+        <table *ngSwitchCase="journey.requestStateEnum.Populated">
+            <thead id="header-row">
+                <tr>
+                    <th>Station</th>
+                    <th>Scheduled Arrival</th>
+                    <th>Actual Arrival</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let stop of journey.stops">
+                    <td>{{ stop.station }}</td>
+                    <td>{{ stop?.scheduledArrival?.format("hh:mm") }}</td>
+                    <td>{{ stop.actualArrival?.format("hh:mm")}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

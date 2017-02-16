@@ -1,0 +1,51 @@
+<!-- TODO: Submit redirects to /results -->
+<form class="main-item" [formGroup]="search" (ngSubmit)="onSubmit()">
+    <fieldset>
+        <!-- Route locations -->
+        <legend>Route details</legend>
+        <label>Station From:</label>
+        <select formControlName="fromStation" >
+            <option *ngFor="let station of stations" [value]="station.value">  
+                {{station.display}}
+            </option>
+        </select>
+
+        <label>Station To:</label>
+        <select formControlName="toStation" >
+            <option *ngFor="let station of stations" [value]="station.value">  
+                {{station.display}}
+            </option>
+        </select>
+    </fieldset>
+    <fieldset>
+        <!-- Date range -->
+        <legend>Date range</legend>
+        <label>Date From:</label>
+        <input formControlName="fromDate" type="date">
+
+        <label>Date To:</label>
+        <input formControlName="toDate" type="date">
+
+        <div id="days-radio-group">
+            <label (click)=weekdaysBtn class="block">
+                <input #weekdaysBtn formControlName="days" type="radio" value="WEEKDAY">
+                Weekdays
+            </label>
+            <label (click)=saturdaysBtn class="block">
+                <input #saturdaysBtn formControlName="days" type="radio" value="SATURDAY">
+                Saturdays
+            </label>
+            <label (click)=sundaysBtn class="block">
+                <input #sundaysBtn formControlName="days" type="radio" value="SUNDAY">
+                Sundays
+            </label>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Delay details</legend>
+        <!-- Tolerance input -->
+        <label>Delay (mins):</label>
+        <input formControlName="delay" type="number">
+    </fieldset>
+    <button type="submit">Search</button>
+</form>

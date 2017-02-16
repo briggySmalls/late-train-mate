@@ -1,0 +1,113 @@
+/**********************************************************************
+ * GENERAL STYLING
+ *********************************************************************/
+
+main {
+  text-align: center;
+}
+.splash {
+  width: 50%;
+}
+
+/* National Rail attribution */
+#nre-attribution {
+    max-height: 3em;
+    max-width: 100%;
+    margin-top: 1em;
+}
+
+/* Loading */
+/*.loader {
+  display: 
+  z-index: 1;
+  width: 50px;
+  height: 50px;
+  margin: -25px 0 0 -25px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 1s linear infinite;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #555;
+  border-radius: 50%;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}*/
+
+/**********************************************************************
+ * TABLE STYLING
+ *********************************************************************/
+
+/* GENERAL */
+/* Header row style */
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+/* Header and normal row */
+th, td {
+    /* Horizontal dividers */
+    border-bottom: 1px solid #ddd;
+    /* Padding (spacing within cell border!) */
+    padding: 0.2em 0.5em;
+}
+
+/* SEARCH PARAMETERS TABLE */
+#search-params {
+  font-weight: bold;
+  margin: auto;
+}
+#search-params td {
+  border-bottom: none;
+}
+#search-params td:first-child {
+  text-align: right;
+}
+
+/* RESULTS TABLE */
+#results {
+    /* Auto distribute columns */
+    table-layout: auto;
+    /* No cell borders */
+    border-collapse: collapse;
+    width: 80%;
+    margin: auto;
+}
+/* Column to take up remaining space*/
+#results td:last-child{
+    width:100%;
+}
+.result-row td:not(:last-child) {
+    /* Don't wrap results cells except the last */
+    white-space: nowrap;
+}
+/* Highlight clickable rows */
+
+/* Display based upon Request State */
+.result-row.unpopulated {
+    background-color: yellow;
+}
+.result-row.requesting {
+    background-color: hotpink;
+}
+.result-row.populated {
+    background-color: green;
+}
+
+/* Display based upon Delay Status */
+.result-row.cancelled {
+    background-color: orange;
+}
+.result-row.delayed {
+    background-color: red;
+}
+#results.hide-on-time .on-time,
+#results.hide-on-time .unpopulated {
+    display: none;
+}
+
+/* Position journey details */
+#details {
+    float: right;
+}

@@ -1,9 +1,4 @@
-<app-ui-top-navigation></app-ui-top-navigation>
-
-<app-ui-sub-navigation [title]="(observable$ | async)?.title" [description]="(observable$ | async)?.text"></app-ui-sub-navigation>
-
-<div class="main">
-  <router-outlet></router-outlet>
-</div>
-
-<router-outlet name='modal'></router-outlet>
+<header id="masthead" >
+    <div class="title">{{title}}</div>
+</header>
+<router-outlet></router-outlet>

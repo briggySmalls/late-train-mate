@@ -1,4 +1,8 @@
-.main {
-  width: 800px;
-  padding: 20px;
+#masthead {
+    padding: 0.5em;
+    background-color: black;
+    color: white;
+}
+.title {
+    font-size: 2em;
 }
