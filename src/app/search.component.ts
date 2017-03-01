@@ -38,7 +38,7 @@ export class SearchComponent implements OnInit {
     private m_stations: IStation[];
 
     public ngOnInit(): void {
-        this.m_stations = this.resourceService.getStations().ToArray();
+        this.m_stations = this.resourceService.getStations();
     }
 
     public get stations(): IStation[] { return this.m_stations; }

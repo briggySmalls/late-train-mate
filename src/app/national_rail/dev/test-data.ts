@@ -2,6 +2,7 @@ import { MetricsCollection, JourneyDetails } from '../hsp-types';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/do';
 
 const SERVICE_METRICS_URL = "app/national_rail/dev/test-data/SM-FPK-CBG-0000-2359-20161001-20161101-WEEKDAY-[30].json";
 const JOURNEY_DETAILS_URL_ROOT = "app/national_rail/dev/test-data";
@@ -13,6 +14,7 @@ export class TestData {
 
     public serviceMetrics(): Observable<MetricsCollection> {
         return this.http.get(SERVICE_METRICS_URL)
+            .do(() => console.log("Getting service metrics"))
             .delay(TestData.getDelay())
             .map(
                 (response: any) => new MetricsCollection(response.json()),
@@ -21,8 +23,8 @@ export class TestData {
 
     public journeyDetails(serviceId: number): Observable<JourneyDetails> {
         let url = TestData.journeyDetailsFile(serviceId);
-        console.log("Reading file: " + url);
         return this.http.get(url)
+            .do(() => console.log("Reading file: " + url))
             .delay(TestData.getDelay())
             .map(
                 (response: any) => new JourneyDetails(response.json()),

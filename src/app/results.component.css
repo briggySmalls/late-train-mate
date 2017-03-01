@@ -10,12 +10,12 @@ main {
 }
 
 /* National Rail attribution */
-#nre-attribution {
+/*#nre-attribution {
     max-height: 3em;
     max-width: 100%;
     margin-top: 1em;
 }
-
+*/
 /* Loading */
 /*.loader {
   display: 
@@ -75,39 +75,35 @@ th, td {
     margin: auto;
 }
 /* Column to take up remaining space*/
+/*
 #results td:last-child{
     width:100%;
 }
+*/
+/*
 .result-row td:not(:last-child) {
-    /* Don't wrap results cells except the last */
+    /* Don't wrap results cells except the last * /
     white-space: nowrap;
 }
-/* Highlight clickable rows */
+*/
 
 /* Display based upon Request State */
-.result-row.unpopulated {
-    background-color: yellow;
+.result-row.unresolved {
+    border-color: yellow;
 }
 .result-row.requesting {
-    background-color: hotpink;
+    border-color: azure;
 }
-.result-row.populated {
-    background-color: green;
+.result-row.resolved {
+    border-color: green;
 }
-
 /* Display based upon Delay Status */
 .result-row.cancelled {
     background-color: orange;
 }
+.result-row.on-time {
+  background-color: green;
+}
 .result-row.delayed {
-    background-color: red;
-}
-#results.hide-on-time .on-time,
-#results.hide-on-time .unpopulated {
-    display: none;
-}
-
-/* Position journey details */
-#details {
-    float: right;
+    background-color: hotpink;
 }

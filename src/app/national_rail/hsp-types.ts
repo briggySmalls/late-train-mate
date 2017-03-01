@@ -2,6 +2,8 @@ import { List } from 'linqts';
 import * as moment from 'moment';
 
 
+// TODO: ServiceId, TocCode, Station be their own classes?
+
 /**
  * @brief      Base class for handling hsp api data.
  */
@@ -17,8 +19,12 @@ export class HspApiData {
      *
      * @return     A Date object
      */
-    protected toTime(timeText: string): moment.Moment {
-        return moment(timeText, 'HHmm');
+    protected toTime(timeText: string, date?: moment.Moment): moment.Moment {
+        let time = moment(timeText, 'HHmm');
+        if (date != null) {
+            time.set({ 'day': date.day(), 'month': date.month(), 'year': date.year() });
+        }
+        return time;
     }
 
     /**
@@ -143,8 +149,9 @@ export class JourneyDetails extends HspApiData {
     }
 
     public get stops(): List<StopDetails> {
-        return new List<StopDetails>(this.attributeDetails['locations'].map(
-            (locationData: any) => new StopDetails(locationData)));
+        return new List<StopDetails>(
+            this.attributeDetails['locations']
+                .map((locationData: any) => new StopDetails(locationData, this.date)));
     }
 
     private get attributeDetails(): any {
@@ -152,27 +159,30 @@ export class JourneyDetails extends HspApiData {
     }
 }
 
-
 export class StopDetails extends HspApiData {
+
+    constructor(private stopData: any, private date: moment.Moment) {
+        super(stopData);
+    }
 
     public get station(): String {
         return this.data['location'];
     }
 
     public get scheduledDeparture(): moment.Moment {
-        return this.data['gbtt_ptd'] ? this.toTime(this.data['gbtt_ptd']) : null;
+        return this.data['gbtt_ptd'] ? this.toTime(this.data['gbtt_ptd'], this.date) : null;
     }
 
     public get scheduledArrival(): moment.Moment {
-        return this.data['gbtt_pta'] ? this.toTime(this.data['gbtt_pta']) : null;
+        return this.data['gbtt_pta'] ? this.toTime(this.data['gbtt_pta'], this.date) : null;
     }
 
     public get actualDeparture(): moment.Moment {
-        return this.data['actual_td'] ? this.toTime(this.data['actual_td']) : null;
+        return this.data['actual_td'] ? this.toTime(this.data['actual_td'], this.date) : null;
     }
 
     public get actualArrival(): moment.Moment {
-        return this.data['actual_ta'] ? this.toTime(this.data['actual_ta']) : null;
+        return this.data['actual_ta'] ? this.toTime(this.data['actual_ta'], this.date) : null;
     }
 
     public get disruptionCode(): number {

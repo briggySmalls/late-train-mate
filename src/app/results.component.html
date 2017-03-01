@@ -29,35 +29,33 @@
 
         <!-- Results controls -->
         <label>Hide On-Time Journeys:</label>
-        <input type="checkbox" [(ngModel)]="isHideTimely" >
+        <input type="checkbox" (click)="onToggleInterest()" >
 
         <!-- Results Table -->
         <table id="results" [hidden]="(state == stateEnum.RequestingMetrics)" [class.hide-on-time]="isHideTimely" >
             <thead id="header-row">
                 <tr>
                     <th>Date</th>
+                    <th>Route</th>
                     <th>Scheduled Departure</th>
                     <th>Scheduled Arrival</th>
                     <th>Actual Arrival</th>
-                    <th>Cancellation/Delay Reason</th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="result-row" *ngFor="let journey of journeys"
-                                       [ngClass]="[journey.requestClass, journey.delayClass]"
-                                       (click)="onSelect(journey)" >
+                <tr class="result-row" *ngFor="let journey of visibleJourneys()"
+                                       [ngClass]="journey.stateClass" >
                     <td>{{ journey.date.format("D MMM YYYY") }}</td>
+                    <td><leg *ngFor="let leg of journey.legs" [leg]="leg" ></leg></td>
                     <td>{{ journey.scheduledDeparture.format("HH:mm") }}</td>
                     <td>{{ journey.scheduledArrival.format("HH:mm") }}</td>
-                    <td>{{ journey?.actualArrival?.format("HH:mm") }}</td>
-                    <td>{{ journey?.disruptionCode }}</td>
+                    <td>{{ journey.actualArrival?.format("HH:mm") }}</td>
                 </tr>
             </tbody>
         </table>
 
-        <!-- Results Detail -->
-        <aside id="details">
-            <journey-detail [journey]="selectedJourney"></journey-detail>
-        </aside>
+        <!-- Paging -->
+        <button (click)="onPrev()">Previous</button>
+        <button (click)="onNext()">Next</button>
     </div>
 </main>

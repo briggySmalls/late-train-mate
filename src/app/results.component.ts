@@ -5,12 +5,17 @@ import { ActivatedRoute, Params } from '@angular/router';
 import * as moment from 'moment';
 
 import { Observable }        from 'rxjs/Observable';
+import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/merge';
 
 import { HspApiService }     from './hsp-api.service';
 import { MetricsCollection, ServiceMetrics, JourneyDetails } from './national_rail/hsp-types';
-import { Journey }    from './journey';
+import { Journey, JourneyState }    from './journey';
 
+
+const CONCURRENT_COUNT = 50;
+const PAGE_SIZE = 10;
 
 enum State {
     RequestingMetrics,
@@ -39,6 +44,10 @@ interface IRequestFunc {
 })
 export class ResultsComponent implements OnInit {
 
+    /**********************************************************************
+     * Private Members
+     *********************************************************************/
+    
     /**
      * Field to make state type available in template
      */
@@ -56,6 +65,10 @@ export class ResultsComponent implements OnInit {
      */
     private journeys = new Array<Journey>();
     /**
+     * The page of journeys being shown
+     */
+    private page = 0;
+    /**
      * The journey that has been selected by the user
      */
     private selectedJourney: Journey = null;
@@ -64,10 +77,51 @@ export class ResultsComponent implements OnInit {
      */
     private params: ISearch;
 
+    /**********************************************************************
+     * Constructor
+     *********************************************************************/
+
     constructor(
         private http: Http,
         private route: ActivatedRoute,
         private hspApiService: HspApiService) { }
+    
+    /**********************************************************************
+     * View Methods
+     *********************************************************************/
+
+    private journeysOfInterest(): Journey[] {
+        return this.journeys.filter(journey => (!this.isHideTimely || (journey.state == JourneyState.Delayed)));
+    }
+
+    private visibleJourneys(): Journey[] {
+        return this.journeysOfInterest()
+            .slice(this.page * PAGE_SIZE, (this.page + 1) * PAGE_SIZE);
+    }
+
+    private onToggleInterest(): void {
+        this.isHideTimely = ! this.isHideTimely;
+
+        // Ensure that we never get stuck in an invalid page
+        // TODO: Consider moving this to where we set isHideTimely?
+        let pageCount = ResultsComponent.pageCount(this.journeysOfInterest().length);
+        if (this.page > pageCount) {
+            this.page = pageCount;
+        }
+    }
+
+    private onNext(): void { if (this.page < ResultsComponent.pageCount(this.journeysOfInterest().length)) this.page++; }
+
+    private onPrev(): void { if (this.page > 0) this.page--; }
+    
+    private onSelect(journey: Journey) {
+        console.log("Selected " + journey.details.serviceId);
+        this.selectedJourney = journey;
+    }
+
+    /**********************************************************************
+     * Business Logic
+     *********************************************************************/
 
     ngOnInit(): void {
         // Listen for new params and call serviceMetrics, feeding the results to processMetrics
@@ -96,7 +150,7 @@ export class ResultsComponent implements OnInit {
             this.processMetrics(metrics, this.params.delay)
         }, this.onError);
     }
-
+    
     /**
      * @brief      Processes a new metrics collection, making further requests
      *             for the details of journeys on services with delays
@@ -110,7 +164,7 @@ export class ResultsComponent implements OnInit {
         // Create a fresh journeys array
         this.journeys = new Array<Journey>();
         // Create an array of request functions
-        let furtherRequests = new Array<IRequestFunc>();
+        let furtherRequests = new Array<Observable<void>>();
         // TODO: Assert that the from/to stations match the request
 
         // Iterate over each service returned in the collection
@@ -134,10 +188,7 @@ export class ResultsComponent implements OnInit {
 
                 // Queue a request for details if metrics indicate delays on this service
                 if (ResultsComponent.isDelaysOnService(service, delay)) {
-                    furtherRequests.push(() => journey.requestDetails(this.hspApiService)
-                        .subscribe(
-                            details => {},
-                            this.onError));
+                    furtherRequests.push(journey.tryResolve(this.hspApiService));
                 }
             })
 
@@ -146,31 +197,7 @@ export class ResultsComponent implements OnInit {
         })
 
         // Now we have drawn the table, make the requests
-        for (let request of furtherRequests) {
-            request();
-        }
-    }
-
-    /**
-     * @brief      Processes new journey details, assessing impact for other journeys
-     *
-     * @param      journey  The journey
-     *
-     * @return     None
-     */
-    private processDetails(journey: Journey) {
-        // Check if this journey provides an alternative route for a cancellation
-        this.journeys
-            .filter(x => x.isCancelled &&
-                (journey.actualArrival.diff(x.scheduledArrival, 'minutes') < this.params.delay.asMinutes()))
-            .forEach(cancelledJourney => {
-                cancelledJourney.addAlternativeRoute(journey);
-            })
-    }
-
-    private onSelect(journey: Journey) {
-        console.log("Selected " + journey.details.serviceId);
-        this.selectedJourney = journey;
+        Observable.merge(...furtherRequests, CONCURRENT_COUNT).subscribe();
     }
 
     private onError(error: any) {
@@ -179,6 +206,11 @@ export class ResultsComponent implements OnInit {
 
         // TODO: Cancel all requests
     }
+
+    /**********************************************************************
+     * Static Methods (Helpers)
+     *********************************************************************/
+    
 
     /**
      * @brief      Determines if there were delays on the service.
@@ -192,6 +224,11 @@ export class ResultsComponent implements OnInit {
     private static isDelaysOnService(service: ServiceMetrics, delay: moment.Duration): boolean {
         return (service.metrics.First(
             toleranceMetrics => toleranceMetrics.tolerance.asMinutes() == delay.asMinutes()).numNotTolerance > 0);
+    }
+
+    private static pageCount(len: number) {
+        // TODO: Floor
+        return Math.floor(len / PAGE_SIZE);
     }
 
     /**

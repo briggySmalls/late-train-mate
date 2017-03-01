@@ -1,57 +1,191 @@
 import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
+import { List } from 'linqts';
 
 import { HspApiService } from './hsp-api.service';
 import { JourneyDetails, StopDetails } from './national_rail/hsp-types';
+import { Assert } from './assert';
 
 
-enum RequestState {
-    Unpopulated,
+export enum JourneyState {
+    Unresolved,
     Requesting,
-    Populated,
+    OnTime,
+    Delayed,
     Error,
 }
 
-enum DelayStatus {
-    Unknown,
-    OnTime,
-    Delayed,
-    Cancelled,
-}
-
 export class Journey {
-    public requestStateEnum = RequestState;
-    public delayStatusEnum = DelayStatus;
-
-    public requestState = RequestState.Unpopulated;
-    public delayStatus = DelayStatus.Unknown;
+    public journeyStateEnum = JourneyState;
 
     public details: JourneyDetails;
     private fromStationDetails: StopDetails;
     private toStationDetails: StopDetails;
-    private routes = new Array<Journey>();
+    private m_legs = new List<Leg>();
+    public state = JourneyState.Unresolved;
 
-    constructor(private serviceId: number,
+    public constructor(private serviceId: number,
+                       private fromStation: string,
+                       private toStation: string,
+                       public scheduledDeparture: moment.Moment,
+                       public scheduledArrival: moment.Moment,
+                       private delay: moment.Duration) {
+        // Extract the date
+        this.date = Journey.toDate(serviceId);
+
+        // Create the first leg
+        this.addLeg(
+            serviceId,
+            fromStation,
+            toStation,
+            scheduledDeparture.set({ 'day': this.date.day(), 'month': this.date.month(), 'year': this.date.year() }),
+            scheduledArrival.set({ 'day': this.date.day(), 'month': this.date.month(), 'year': this.date.year() }),
+            delay);
+    }
+
+    // Public Properties
+    public date: moment.Moment;
+
+    public get legs(): Leg[] { return this.m_legs.ToArray(); }
+
+    public tryResolve(hspApiService: HspApiService): Observable<void> {
+        // We should only attempt to resolve if unresolved
+        Assert.areEqual(this.state, JourneyState.Unresolved);
+        this.transition(JourneyState.Requesting);
+
+        // We resolve the journey by getting the details of the last leg
+        return this.m_legs.Last().requestDetails(hspApiService)
+            .map(leg => {
+                switch (leg.state) {
+                    case LegState.OnTime:
+                    case LegState.Delayed:
+                        // Do nothing, we are resolved!
+                        if (leg.actualArrival.diff(this.scheduledArrival, 'minutes') > this.delay.asMinutes()) {
+                            // Definition of delayed is actual arrival later than scheduled by specified delay
+                            this.transition(JourneyState.Delayed);
+                        } else {
+                            // Otherwise we're on time!
+                            this.transition(JourneyState.OnTime);
+                        }
+                        break;
+
+                    case LegState.Cancelled:
+                        // Raise request for later legs
+                        this.transition(JourneyState.Unresolved);
+                        break;
+
+                    case LegState.CancelledEnRoute:
+                        // Raise request for next leg
+                        this.transition(JourneyState.Unresolved);
+                        break;
+
+                    default:
+                        Assert.failUnexpectedDefault(leg.state);
+                        break;
+                }
+            },
+        )
+    }
+
+    public get actualArrival(): moment.Moment {
+        return this.m_legs.Last().actualArrival;
+    }
+
+    public get stateClass(): string {
+        let className: string;
+        switch (this.state) {
+            case JourneyState.Delayed:
+                className = 'delayed';
+                break;
+
+            case JourneyState.OnTime:
+                className = 'on-time';
+                break;
+
+            case JourneyState.Requesting:
+                className = 'requesting';
+                break;
+
+            case JourneyState.Unresolved:
+                className = 'unresolved';
+                break;
+
+            case JourneyState.Error:
+                className = 'error';
+                break;
+        }
+        return className;
+    }
+
+    private addLeg(serviceId: number,
+                   fromStation: string,
+                   toStation: string,
+                   scheduledDeparture: moment.Moment,
+                   scheduledArrival: moment.Moment,
+                   delay: moment.Duration): void {
+        this.m_legs.Add(
+            new Leg(
+                    serviceId,
+                    fromStation,
+                    toStation,
+                    scheduledDeparture,
+                    scheduledArrival,
+                    delay));
+    }
+
+    private transition(newState: JourneyState): void {
+        this.state = newState;
+    }
+
+    /**
+     * @brief      Helper function to convert a service ID to a date
+     *
+     * @param      serviceId  The service identifier
+     *
+     * @return     Moment that captures a date
+     */
+    private static toDate(serviceId: number): moment.Moment {
+        return moment(serviceId.toString().slice(0, 8), 'YYYYMMDD');
+    }
+}
+
+enum LegState {
+    Unpopulated,
+    Requesting,
+    OnTime,
+    Delayed,
+    Cancelled,
+    CancelledEnRoute,
+    Error,
+}
+
+export class Leg {
+    public legStateEnum = LegState;
+
+    public state = LegState.Unpopulated;
+    public details: JourneyDetails;
+
+    public constructor(private serviceId: number,
                 private fromStation: string,
                 private toStation: string,
                 public scheduledDeparture: moment.Moment,
                 public scheduledArrival: moment.Moment,
                 private delay: moment.Duration) {
-        this.date = moment(this.serviceId.toString().slice(0, 8), 'YYYYMMDD');
-        this.transition(RequestState.Unpopulated);
-    }sc
+    }
 
-    // Public Properties
-    public date: moment.Moment;
-    public get actualArrival(): moment.Moment { return (this.toStationDetails) ? this.toStationDetails.actualArrival : null; }
-    public get disruptionCode(): number { return (this.toStationDetails) ? this.toStationDetails.disruptionCode : null; }
-    public get isCancelled(): boolean { return (this.delayStatus == DelayStatus.Cancelled); }
-    public get stops(): Array<StopDetails> { return (this.details) ? this.details.stops.ToArray() : null; }
+    /**
+     * @brief      Make an HSP API request for the details of the service
+     *
+     * @param      hspApiService  The hsp api service
+     *
+     * @return     Observable that emits the JourneyDetails obtained
+     */
+    public requestDetails(hspApiService: HspApiService): Observable<Leg> {
+        // We should only permit requests if we are unpopulated (and not requesting)
+        Assert.areEqual(this.state, LegState.Unpopulated);
 
-    // Public Methods
-    public requestDetails(hspApiService: HspApiService): Observable<JourneyDetails> {
         // Update the state to show we have begun a request
-        this.transition(RequestState.Requesting);
+        this.transition(LegState.Requesting);
 
         // Make the request and configure how the response should be handled
         return hspApiService.journeyDetails(this.serviceId)
@@ -60,20 +194,49 @@ export class Journey {
                     // Record the journey details
                     this.recordDetails(details);
                     // Output the details to the caller's Observable
-                    return details;
+                    return this;
                 },
-                error => { });
+                this.onError);
     }
 
-    /**
-     * @brief      Adds an alternative route for arriving at the destination in time.
-     *
-     * @param      journey  The journey
-     *
-     * @return     None
-     */
-    public addAlternativeRoute(journey: Journey) {
-        this.routes.push(journey);
+    public get actualDeparture(): moment.Moment { return (this.fromStationDetails) ? this.fromStationDetails.actualDeparture : null; }
+
+    public get actualArrival(): moment.Moment { return (this.toStationDetails) ? this.toStationDetails.actualArrival : null; }
+    
+    public get disruptionCode(): number { return (this.toStationDetails) ? this.toStationDetails.disruptionCode : null; }
+
+    public get stateClass(): string {
+        let className: string;
+        switch (this.state) {
+            case LegState.Unpopulated:
+                className = 'unpopulated';
+                break;
+
+            case LegState.Requesting:
+                className = 'requesting';
+                break;
+
+            case LegState.OnTime:
+                className = 'on-time';
+                break;
+                
+            case LegState.Delayed:
+                className = 'delayed';
+                break;
+
+            case LegState.Cancelled:
+                className = 'cancelled';
+                break;
+
+            case LegState.CancelledEnRoute:
+                className = 'cancelled-en-route';
+                break;
+
+            case LegState.Error:
+                className = 'error';
+                break;
+        }
+        return className;
     }
 
     /**
@@ -87,98 +250,76 @@ export class Journey {
         // Update the details
         this.details = details;
 
-        // TOOD: Assert that scheduledArrival, scheduledDeparture and DATE are correct
-
-        // Assign the first station matching fromStation text
-        this.fromStationDetails = details.stops.First(
-            (x: StopDetails) => x.station == this.fromStation);
-
-        // Assign the first station matching toStation text
-        this.toStationDetails = details.stops.First(
-            (x: StopDetails) => x.station == this.toStation);
-
-        // Update the request state
-        this.transition(RequestState.Populated);
+        Assert.isTrue(Leg.getStop(this.details.stops, this.fromStation)
+            .scheduledDeparture.isSame(this.scheduledDeparture));
+        Assert.isTrue(Leg.getStop(this.details.stops, this.toStation)
+            .scheduledArrival.isSame(this.scheduledArrival));
 
         // Update the delay status
         if (this.actualArrival == null) {
-            // Journey was cancelled/brokedown
-            this.delayStatus = DelayStatus.Cancelled;
+            if (this.actualDeparture == null) {
+                // Journey was cancelled before arrival
+                this.transition(LegState.Cancelled);
+            } else {
+                // Journey was cancelled en-route
+                this.transition(LegState.CancelledEnRoute);
+            }
         } else if (this.actualArrival.diff(this.scheduledArrival, 'minutes') > this.delay.asMinutes()) {
             // Journey arrived late
-            this.delayStatus = DelayStatus.Delayed;
+            this.transition(LegState.Delayed);
         } else {
             // Journey arrived on time
-            this.delayStatus = DelayStatus.OnTime;
+            this.transition(LegState.OnTime);
         }
+    }
+
+    private get fromStationDetails(): Stop {
+        return (this.details) ? new Stop(Leg.getStop(this.details.stops, this.fromStation)) : null;
+    }
+
+    private get toStationDetails(): Stop {
+        return (this.details) ? new Stop(Leg.getStop(this.details.stops, this.toStation)) : null;
     }
 
     private onError(error: any) {
-        this.transition(RequestState.Error);
+        this.transition(LegState.Error);
     }
 
-    private get requestClass(): string {
-        let className = '';
-        // Update the class based upon the new state
-        switch (this.requestState)
-        {
-            case RequestState.Populated:
-                className = 'populated';
-                break;
-
-            case RequestState.Requesting:
-                className = 'requesting';
-                break;
-
-            case RequestState.Unpopulated:
-                className = 'unpopulated';
-                break;
-
-            case RequestState.Error:
-                className = 'error';
-                break;
-
-            default:
-                console.log('Unexpected RequestState: ' + this.requestState);
-                break;
-        }
-        return className;
-    };
-
-    private get delayClass(): string {
-        let className = '';
-        switch (this.delayStatus)
-        {
-            case DelayStatus.Unknown:
-                // We do not know what the status is yet
-                break;
-
-            case DelayStatus.Cancelled:
-                className = 'cancelled';
-                break;
-
-            case DelayStatus.Delayed:
-                className = 'delayed';
-                break;
-
-            case DelayStatus.OnTime:
-                className = 'on-time';
-                break;
-
-            default:
-                console.log("Unexpected status: " + this.delayStatus);
-                break;
-
-        }
-        return className;
-    }
-
-    // Private Properties
-    private get isPopulated(): boolean { return (this.requestState == RequestState.Populated); }
-
-    // Private methods
-    private transition(newRequestState: RequestState): void {
+    /**
+     * @brief      Transition to a new state
+     *
+     * @param      newState  The new state
+     *
+     * @return     None
+     */
+    private transition(newState: LegState): void {
         // Update the state
-        this.requestState = newRequestState;
+        this.state = newState;
+    }
+
+    private static getStop(stops: List<StopDetails>, stopName: string): StopDetails {
+        return stops.First(x => x.station == stopName);
+    }
+}
+
+class Stop {
+    public constructor(private details: StopDetails) { }
+
+    public get scheduledDeparture(): moment.Moment { return this.details.scheduledDeparture; }
+    public get scheduledArrival(): moment.Moment { return this.details.scheduledArrival; }
+    public get actualDeparture(): moment.Moment { return this.details.actualDeparture; }
+    public get actualArrival(): moment.Moment { return this.details.actualArrival; }
+    public get disruptionCode(): number { return this.details.disruptionCode; }
+
+    private get departedOnTime(): boolean {
+        return (this.details.scheduledDeparture) ?
+            (this.details.actualDeparture && this.details.actualDeparture.isSame(this.details.scheduledDeparture)) :
+            null;
+    }
+
+    private get arrivedOnTime(): boolean {
+        return (this.details.scheduledArrival) ?
+            (this.details.actualArrival && this.details.actualArrival.isSame(this.details.scheduledArrival)) :
+            null;
     }
 }

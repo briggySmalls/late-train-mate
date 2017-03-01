@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent }  from './app.component';
 import { ResultsComponent } from './results.component';
 import { SearchComponent } from './search.component';
-import { JourneyDetailComponent } from './journey-detail.component';
+import { LegComponent } from './leg.component';
 
 import { ResourceService } from './national_rail/resource.service';
 import { HspApiService } from './hsp-api.service';
@@ -24,7 +24,7 @@ import { HspApiService } from './hsp-api.service';
       AppComponent,
       SearchComponent,
       ResultsComponent,
-      JourneyDetailComponent
+      LegComponent
   ],
   providers: [ HspApiService, ResourceService ],
   bootstrap: [ AppComponent ]

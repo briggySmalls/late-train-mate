@@ -1,0 +1,23 @@
+
+<table class="leg">
+    <tbody>
+        <tr class="stop departure">
+            <td>{{ leg.fromStation }}</td>
+            <td>{{ leg.scheduledDeparture.format("HH:mm") }}</td>
+            <td>
+                <span *ngIf="(leg.fromStationDetails && !leg.fromStationDetails?.departedOnTime)" class="actual-time">
+                    {{ leg.actualDeparture?.format("HH:mm") }}
+                </span>
+            </td>
+        </tr>
+        <tr class="stop arrival">
+            <td>{{ leg.toStation }}</td>
+            <td>{{ leg.scheduledArrival.format("HH:mm") }}</td>
+            <td>
+                <span *ngIf="(leg.toStationDetails && !leg.toStationDetails?.arrivedOnTime)" class="actual-time">
+                    {{ leg.actualArrival?.format("HH:mm") }}
+                </span>
+            </td>
+        </tr>
+    </tbody>
+</table>
