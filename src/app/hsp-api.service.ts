@@ -26,27 +26,27 @@ export class HspApiService {
                           fromDate: moment.Moment, toDate: moment.Moment,
                           days: string, delays: moment.Duration[]): Observable<MetricsCollection> {
 
-        // return this.http.post(SERVICE_METRICS_URL, {
-        //     "from_loc": fromStation, "to_loc": toStation,
-        //     "from_time": "0000", "to_time": "2359",
-        //     "from_date": this.toHspDate(fromDate), "to_date": this.toHspDate(toDate),
-        //     "days": days,
-        //     "tolerance": delays})
-        //         // Map the http results stream to a stream of MetricsCollections
-        //         .map(
-        //             (response: any) => new MetricsCollection(response.json()),
-        //             this.handleError);
+        return this.http.post(SERVICE_METRICS_URL, {
+            "from_loc": fromStation, "to_loc": toStation,
+            "from_time": "0000", "to_time": "2359",
+            "from_date": this.toHspDate(fromDate), "to_date": this.toHspDate(toDate),
+            "days": days,
+            "tolerance": delays})
+                // Map the http results stream to a stream of MetricsCollections
+                .map(
+                    (response: any) => new MetricsCollection(response.json()),
+                    this.handleError);
 
-        return this.testData.serviceMetrics();
+        // return this.testData.serviceMetrics();
     }
 
     public journeyDetails(serviceId: number): Observable<JourneyDetails> {
-        // return this.http.post(SERVICE_DETAILS_URL, {"rid": serviceId.toString()})
-        //     .map(
-        //         (response: any) => new JourneyDetails(response.json()),
-        //         this.handleError);
+        return this.http.post(SERVICE_DETAILS_URL, {"rid": serviceId.toString()})
+            .map(
+                (response: any) => new JourneyDetails(response.json()),
+                this.handleError);
 
-        return this.testData.journeyDetails(serviceId);
+        // return this.testData.journeyDetails(serviceId);
     }
 
     private toHspDate(date: moment.Moment): string {
