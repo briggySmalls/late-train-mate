@@ -62,6 +62,7 @@ export class Journey {
                         // Do nothing, we are resolved!
                         if (leg.actualArrival.diff(this.scheduledArrival, 'minutes') > this.delay.asMinutes()) {
                             // Definition of delayed is actual arrival later than scheduled by specified delay
+                            console.log(leg.actualArrival);
                             this.transition(JourneyState.Delayed);
                         } else {
                             // Otherwise we're on time!
