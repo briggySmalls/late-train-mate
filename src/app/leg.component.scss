@@ -1,0 +1,52 @@
+$map-stop-circle-size:  10px;
+$map-stop-circle-colour: green;
+
+$map-line-width: 0.5em;
+$map-line-colour: black;
+
+$actual-time-colour: red;
+
+@mixin transform($operation) {
+  -webkit-transform: $operation;
+      -ms-transform: $operation;
+          transform: $operation;
+}
+
+.actual-time {
+  color: $actual-time-colour;
+}
+
+.leg {
+  border-spacing: 0px;
+}
+td.map-stop {
+  position: relative;
+  padding: 0em 0.75em;
+}
+td.map-stop:before {
+  content: "";
+  position: absolute;
+  width: 0px;
+  height: 100%;
+  border-left: $map-line-width solid black;
+  @include transform(translate(-50%, -50%));
+}
+td.map-stop:after {
+  content: "";
+  position: absolute;
+  border-radius: $map-stop-circle-size;
+  width: $map-stop-circle-size;
+  height: $map-stop-circle-size;
+  right: 50%;
+  top: 50%;
+  @include transform(translate(50%, -50%));
+  background-color: $map-stop-circle-colour;
+}
+td.map-stop.arrival:before {
+  @include transform(translate(-50%, -100%));
+  height: 50%;
+}
+td.map-stop.departure:before {
+  @include transform(translate(-50%, 0%));
+  height: 50%;
+}

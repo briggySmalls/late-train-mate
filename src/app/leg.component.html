@@ -1,8 +1,9 @@
 
 <table class="leg">
     <tbody>
-        <tr class="stop departure">
+        <tr>
             <td>{{ leg.fromStation }}</td>
+            <td class="map-stop departure"></td>
             <td>{{ leg.scheduledDeparture.format("HH:mm") }}</td>
             <td>
                 <span *ngIf="(leg.fromStationDetails && !leg.fromStationDetails?.departedOnTime)" class="actual-time">
@@ -10,8 +11,9 @@
                 </span>
             </td>
         </tr>
-        <tr class="stop arrival">
+        <tr>
             <td>{{ leg.toStation }}</td>
+            <td class="map-stop arrival"></td>
             <td>{{ leg.scheduledArrival.format("HH:mm") }}</td>
             <td>
                 <span *ngIf="(leg.toStationDetails && !leg.toStationDetails?.arrivedOnTime)" class="actual-time">

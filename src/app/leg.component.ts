@@ -7,7 +7,7 @@ import { Leg } from './journey';
     moduleId: module.id,
     selector: 'leg',
     templateUrl: 'leg.component.html',
-    styleUrls: ['leg.component.css']
+    styleUrls: ['leg.component.scss']
 })
 export class LegComponent {
     @Input()
