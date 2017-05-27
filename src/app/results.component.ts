@@ -51,11 +51,11 @@ export class ResultsComponent implements OnInit {
     /**
      * Field to make state type available in template
      */
-    private stateEnum: typeof State = State;
+    public stateEnum: typeof State = State;
     /**
      * Current state of the results component
      */
-    private state = State.RequestingMetrics;
+    public state = State.RequestingMetrics;
     /**
      * Bound field that controls whether to hide on-time journeys
      */
@@ -75,7 +75,7 @@ export class ResultsComponent implements OnInit {
     /**
      * The parameters of the search
      */
-    private params: ISearch;
+    public params: ISearch;
 
     /**********************************************************************
      * Constructor
@@ -91,7 +91,9 @@ export class ResultsComponent implements OnInit {
      *********************************************************************/
 
     private journeysOfInterest(): Journey[] {
-        return this.journeys.filter(journey => (!this.isHideTimely || (journey.state == JourneyState.Delayed)));
+        return this.journeys.filter(journey =>
+            (this.isHideTimely) ? (journey.state == JourneyState.Delayed) : true
+        )
     }
 
     private visibleJourneys(): Journey[] {
@@ -169,19 +171,21 @@ export class ResultsComponent implements OnInit {
 
         // Iterate over each service returned in the collection
         metricsCollection.services.ForEach(service => {
-            console.log("Considering %s service", service.departureTime.format("HH:mm"));
+            console.log("Considering %s service", service.attributes.departureTime.format("HH:mm"));
 
             // Cycle through the journeys that ran on this service
-            service.serviceIds.ForEach(serviceId => {
+            service.attributes.serviceIds.ForEach(serviceId => {
 
                 // Create a new journey for the serviceId
                 let journey = new Journey(
                         serviceId,
+                        service.attributes.departureTime,
+                        service.attributes.arrivalTime,
                         metricsCollection.fromStation,
                         metricsCollection.toStation,
-                        service.departureTime,
-                        service.arrivalTime,
-                        delay)
+                        service.attributes.originStation,
+                        service.attributes.destinationStation,
+                        delay);
 
                 // Add the journey to the list
                 this.journeys.push(journey);
@@ -240,7 +244,10 @@ export class ResultsComponent implements OnInit {
      * @return     Sort value
      */
     private static compare(a: Journey, b: Journey) {
-        let result = a.date.diff(b.date);
+        // First compare the date of departure from origin station
+        let result = a.originDate.diff(b.originDate);
+
+        // If both journeys departed on same date, use the departure time 
         if (result == 0) {
             result = a.scheduledDeparture.diff(b.scheduledDeparture);
         }

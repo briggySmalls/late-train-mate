@@ -1,9 +1,9 @@
 export class Assert {
     public static Fail(message?: string): void {
         if (message != null) {
-            console.log(message);
+            throw new Error(message);
         } else {
-            console.log("Assertion fail called.");
+            throw new Error("Assertion fail called.");
         }
     }
 

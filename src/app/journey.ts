@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import { List } from 'linqts';
 
 import { HspApiService } from './hsp-api.service';
-import { JourneyDetails, StopDetails } from './national_rail/hsp-types';
+import { JourneyDetails, StopDetails, IStation } from './national_rail/hsp-types';
 import { Assert } from './assert';
 
 
@@ -16,76 +16,63 @@ export enum JourneyState {
 }
 
 export class Journey {
-    public journeyStateEnum = JourneyState;
 
+    /**********************************************************************
+     * Private Members
+     *********************************************************************/
+    
+    public journeyStateEnum = JourneyState;
     public details: JourneyDetails;
+    public state = JourneyState.Unresolved;
+
     private fromStationDetails: StopDetails;
     private toStationDetails: StopDetails;
     private m_legs = new List<Leg>();
-    public state = JourneyState.Unresolved;
+    private m_originDate: moment.Moment;
+
+    /**********************************************************************
+     * Constructor
+     *********************************************************************/
 
     public constructor(private serviceId: number,
-                       private fromStation: string,
-                       private toStation: string,
-                       public scheduledDeparture: moment.Moment,
-                       public scheduledArrival: moment.Moment,
+                       private m_scheduledDeparture: moment.Moment,
+                       private m_scheduledArrival: moment.Moment,
+                       private m_fromStation: IStation,
+                       private m_toStation: IStation,
+                       private m_originStation: IStation,
+                       private m_terminatingStation: IStation,
                        private delay: moment.Duration) {
-        // Extract the date
-        this.date = Journey.toDate(serviceId);
+
+        // Squeeze the date out of the RID for sorting purposes
+        this.m_originDate = Journey.toDate(serviceId);
 
         // Create the first leg
-        this.addLeg(
+        this.m_legs.Add(new Leg(
             serviceId,
-            fromStation,
-            toStation,
-            scheduledDeparture.set({ 'day': this.date.day(), 'month': this.date.month(), 'year': this.date.year() }),
-            scheduledArrival.set({ 'day': this.date.day(), 'month': this.date.month(), 'year': this.date.year() }),
-            delay);
+            m_fromStation,
+            m_toStation,
+            m_scheduledDeparture,
+            m_scheduledArrival,
+            delay));
     }
 
-    // Public Properties
-    public date: moment.Moment;
+    /**********************************************************************
+     * Public Properties
+     *********************************************************************/
+
+    public get scheduledArrival(): moment.Moment { return this.m_scheduledArrival; }
+    public get scheduledDeparture(): moment.Moment { return this.m_scheduledDeparture; }
+
+
+    public get fromStation(): IStation { return this.m_fromStation; }
+    public get toStation(): IStation { return this.m_toStation; }
+    public get originStation(): IStation { return this.m_originStation; }
+    public get terminatingStation(): IStation { return this.m_terminatingStation; }
 
     public get legs(): Leg[] { return this.m_legs.ToArray(); }
 
-    public tryResolve(hspApiService: HspApiService): Observable<void> {
-        // We should only attempt to resolve if unresolved
-        Assert.areEqual(this.state, JourneyState.Unresolved);
-        this.transition(JourneyState.Requesting);
-
-        // We resolve the journey by getting the details of the last leg
-        return this.m_legs.Last().requestDetails(hspApiService)
-            .map(leg => {
-                switch (leg.state) {
-                    case LegState.OnTime:
-                    case LegState.Delayed:
-                        // Do nothing, we are resolved!
-                        if (leg.actualArrival.diff(this.scheduledArrival, 'minutes') > this.delay.asMinutes()) {
-                            // Definition of delayed is actual arrival later than scheduled by specified delay
-                            console.log(leg.actualArrival);
-                            this.transition(JourneyState.Delayed);
-                        } else {
-                            // Otherwise we're on time!
-                            this.transition(JourneyState.OnTime);
-                        }
-                        break;
-
-                    case LegState.Cancelled:
-                        // Raise request for later legs
-                        this.transition(JourneyState.Unresolved);
-                        break;
-
-                    case LegState.CancelledEnRoute:
-                        // Raise request for next leg
-                        this.transition(JourneyState.Unresolved);
-                        break;
-
-                    default:
-                        Assert.failUnexpectedDefault(leg.state);
-                        break;
-                }
-            },
-        )
+    public get originDate(): moment.Moment {
+        return this.m_originDate;
     }
 
     public get actualArrival(): moment.Moment {
@@ -118,21 +105,65 @@ export class Journey {
         return className;
     }
 
-    private addLeg(serviceId: number,
-                   fromStation: string,
-                   toStation: string,
-                   scheduledDeparture: moment.Moment,
-                   scheduledArrival: moment.Moment,
-                   delay: moment.Duration): void {
-        this.m_legs.Add(
-            new Leg(
-                    serviceId,
-                    fromStation,
-                    toStation,
-                    scheduledDeparture,
-                    scheduledArrival,
-                    delay));
+    /**********************************************************************
+     * Public Methods
+     *********************************************************************/
+
+    public tryResolve(hspApiService: HspApiService): Observable<void> {
+        // We should only attempt to resolve if unresolved
+        Assert.areEqual(this.state, JourneyState.Unresolved);
+        this.transition(JourneyState.Requesting);
+
+        // We resolve the journey by getting the details of the last leg
+        return this.m_legs.Last().requestDetails(hspApiService)
+            .map(leg => {
+                // Update times with known dates
+                if (leg == this.m_legs.First()) {
+                    console.log("Updating scheduled times");
+                    this.m_scheduledArrival = leg.scheduledArrival;
+                    this.m_scheduledDeparture = leg.scheduledDeparture;
+                }
+
+                switch (leg.state) {
+                    case LegState.OnTime:
+                    case LegState.Delayed:
+                        // Do nothing, we are resolved!
+                        if (leg.actualArrival.diff(this.scheduledArrival, 'minutes') > this.delay.asMinutes()) {
+                            // Definition of delayed is actual arrival later than scheduled by specified delay
+                            console.log("Delayed Logic");
+                            console.log(leg.actualArrival);
+                            console.log(this.scheduledArrival);
+                            console.log(leg.actualArrival.diff(this.scheduledArrival, 'minutes'));
+                            console.log(this.delay.asMinutes());
+                            this.transition(JourneyState.Delayed);
+                        } else {
+                            // Otherwise we're on time!
+                            this.transition(JourneyState.OnTime);
+                        }
+                        break;
+
+                    case LegState.Cancelled:
+                        // Raise request for later legs
+                        this.transition(JourneyState.Unresolved);
+                        break;
+
+                    case LegState.CancelledEnRoute:
+                        // Raise request for next leg
+                        this.transition(JourneyState.Unresolved);
+                        break;
+
+                    default:
+                        Assert.failUnexpectedDefault(leg.state);
+                        break;
+                }
+            },
+        )
     }
+
+    /**********************************************************************
+     * Private Methods
+     *********************************************************************/
+    
 
     private transition(newState: JourneyState): void {
         this.state = newState;
@@ -166,13 +197,24 @@ export class Leg {
     public state = LegState.Unpopulated;
     public details: JourneyDetails;
 
+    private m_fromStationDetails: Stop;
+    private m_toStationDetails: Stop;
+
+    /**********************************************************************
+     * Constructor
+     *********************************************************************/
+
     public constructor(private serviceId: number,
-                private fromStation: string,
-                private toStation: string,
+                public fromStation: IStation,
+                public toStation: IStation,
                 public scheduledDeparture: moment.Moment,
                 public scheduledArrival: moment.Moment,
                 private delay: moment.Duration) {
     }
+
+    /**********************************************************************
+     * Public Methods
+     *********************************************************************/
 
     /**
      * @brief      Make an HSP API request for the details of the service
@@ -199,6 +241,11 @@ export class Leg {
                 },
                 this.onError);
     }
+
+    /**********************************************************************
+     * Public Properties
+     *********************************************************************/
+    
 
     public get actualDeparture(): moment.Moment { return (this.fromStationDetails) ? this.fromStationDetails.actualDeparture : null; }
 
@@ -240,6 +287,17 @@ export class Leg {
         return className;
     }
 
+    /**********************************************************************
+     * Private Properties
+     *********************************************************************/
+
+    public get fromStationDetails(): Stop { return this.m_fromStationDetails }
+    public get toStationDetails(): Stop { return this.m_toStationDetails }
+
+    /**********************************************************************
+     * Private Methods
+     *********************************************************************/
+
     /**
      * @brief      Record the details of a journey
      *
@@ -251,12 +309,18 @@ export class Leg {
         // Update the details
         this.details = details;
 
-        Assert.isTrue(Leg.getStop(this.details.stops, this.fromStation)
-            .scheduledDeparture.isSame(this.scheduledDeparture));
-        Assert.isTrue(Leg.getStop(this.details.stops, this.toStation)
-            .scheduledArrival.isSame(this.scheduledArrival));
+        // Update our from/to stations
+        this.m_fromStationDetails = new Stop(this.getStop(this.fromStation));
+        this.m_toStationDetails = new Stop(this.getStop(this.toStation));
+        // Asssert that our scheduled times match up with the details
+        Assert.isTrue(this.fromStationDetails.scheduledDeparture.isSame(this.scheduledDeparture));
+        Assert.isTrue(this.toStationDetails.scheduledArrival.isSame(this.scheduledArrival));
 
-        // Update the delay status
+        // Update our scheduled departure/arrival
+        this.scheduledDeparture = this.fromStationDetails.scheduledDeparture;
+        this.scheduledArrival = this.toStationDetails.scheduledArrival;
+
+        // Update the delay status based upon the results
         if (this.actualArrival == null) {
             if (this.actualDeparture == null) {
                 // Journey was cancelled before arrival
@@ -272,14 +336,6 @@ export class Leg {
             // Journey arrived on time
             this.transition(LegState.OnTime);
         }
-    }
-
-    private get fromStationDetails(): Stop {
-        return (this.details) ? new Stop(Leg.getStop(this.details.stops, this.fromStation)) : null;
-    }
-
-    private get toStationDetails(): Stop {
-        return (this.details) ? new Stop(Leg.getStop(this.details.stops, this.toStation)) : null;
     }
 
     private onError(error: any) {
@@ -298,8 +354,8 @@ export class Leg {
         this.state = newState;
     }
 
-    private static getStop(stops: List<StopDetails>, stopName: string): StopDetails {
-        return stops.First(x => x.station == stopName);
+    private getStop(station: IStation): StopDetails {
+        return this.details.stops.First(x => x.station == station);
     }
 }
 
@@ -312,13 +368,13 @@ class Stop {
     public get actualArrival(): moment.Moment { return this.details.actualArrival; }
     public get disruptionCode(): number { return this.details.disruptionCode; }
 
-    private get departedOnTime(): boolean {
+    public get departedOnTime(): boolean {
         return (this.details.scheduledDeparture) ?
             (this.details.actualDeparture && this.details.actualDeparture.isSame(this.details.scheduledDeparture)) :
             null;
     }
 
-    private get arrivedOnTime(): boolean {
+    public get arrivedOnTime(): boolean {
         return (this.details.scheduledArrival) ?
             (this.details.actualArrival && this.details.actualArrival.isSame(this.details.scheduledArrival)) :
             null;

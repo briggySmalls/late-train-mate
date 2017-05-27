@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 
 import * as moment from 'moment';
 
-import { IStation, ResourceService } from './national_rail/resource.service';
+import { ResourceService } from './national_rail/resource.service';
+import { IStation } from './national_rail/hsp-types';
 
 
 @Component({

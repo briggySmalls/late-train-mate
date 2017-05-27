@@ -6,8 +6,7 @@ import 'rxjs/add/operator/map';
 import * as moment from 'moment';
 
 import { MetricsCollection, JourneyDetails } from './national_rail/hsp-types';
-
-import { TestData } from './national_rail/dev/test-data';
+import { ResourceService } from './national_rail/resource.service';
 
 
 const SERVICE_METRICS_URL = '/api/hsp/metrics';
@@ -16,11 +15,9 @@ const SERVICE_DETAILS_URL = '/api/hsp/details';
 
 @Injectable()
 export class HspApiService {
-    testData: TestData;
 
-    constructor(private http: Http) {
-        this.testData = new TestData(http);
-    }
+    constructor(private http: Http,
+                private resourceService: ResourceService) { }
 
     public serviceMetrics(fromStation: string, toStation: string,
                           fromDate: moment.Moment, toDate: moment.Moment,
@@ -34,19 +31,15 @@ export class HspApiService {
             "tolerance": delays})
                 // Map the http results stream to a stream of MetricsCollections
                 .map(
-                    (response: any) => new MetricsCollection(response.json()),
+                    (response: any) => new MetricsCollection(response.json(), this.resourceService),
                     this.handleError);
-
-        // return this.testData.serviceMetrics();
     }
 
     public journeyDetails(serviceId: number): Observable<JourneyDetails> {
         return this.http.post(SERVICE_DETAILS_URL, {"rid": serviceId.toString()})
             .map(
-                (response: any) => new JourneyDetails(response.json()),
+                (response: any) => new JourneyDetails(response.json(), this.resourceService),
                 this.handleError);
-
-        // return this.testData.journeyDetails(serviceId);
     }
 
     private toHspDate(date: moment.Moment): string {
