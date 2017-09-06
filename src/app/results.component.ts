@@ -14,7 +14,7 @@ import { MetricsCollection, ServiceMetrics, JourneyDetails } from './national_ra
 import { Journey, JourneyState }    from './journey';
 
 
-const CONCURRENT_COUNT = 50;
+const CONCURRENT_COUNT = 3;
 const PAGE_SIZE = 10;
 
 enum State {
