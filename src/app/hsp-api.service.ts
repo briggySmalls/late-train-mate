@@ -28,7 +28,7 @@ export class HspApiService {
             "from_time": "0000", "to_time": "2359",
             "from_date": this.toHspDate(fromDate), "to_date": this.toHspDate(toDate),
             "days": days,
-            "tolerance": delays})
+            "tolerance": delays.map(value => value.minutes())})
                 // Map the http results stream to a stream of MetricsCollections
                 .map(
                     (response: any) => new MetricsCollection(response.json(), this.resourceService),
