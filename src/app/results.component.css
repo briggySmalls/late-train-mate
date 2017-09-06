@@ -18,7 +18,7 @@ main {
 */
 /* Loading */
 /*.loader {
-  display: 
+  display:
   z-index: 1;
   width: 50px;
   height: 50px;
@@ -98,8 +98,12 @@ th, td {
     border-color: green;
 }
 /* Display based upon Delay Status */
-.result-row.cancelled {
+.result-row.cancelled, .result-row.cancelled-en-route {
     background-color: orange;
+}
+.result-row.cancelled>td:last-child,
+.result-row.cancelled-en-route>td:last-child {
+    font-style: italic;
 }
 .result-row.on-time {
   background-color: green;

@@ -47,7 +47,7 @@ export class ResultsComponent implements OnInit {
     /**********************************************************************
      * Private Members
      *********************************************************************/
-    
+
     /**
      * Field to make state type available in template
      */
@@ -85,14 +85,14 @@ export class ResultsComponent implements OnInit {
         private http: Http,
         private route: ActivatedRoute,
         private hspApiService: HspApiService) { }
-    
+
     /**********************************************************************
      * View Methods
      *********************************************************************/
 
     private journeysOfInterest(): Journey[] {
         return this.journeys.filter(journey =>
-            (this.isHideTimely) ? (journey.state == JourneyState.Delayed) : true
+            (this.isHideTimely) ? ResultsComponent.isDelayedState(journey.state) : true
         )
     }
 
@@ -115,7 +115,7 @@ export class ResultsComponent implements OnInit {
     private onNext(): void { if (this.page < ResultsComponent.pageCount(this.journeysOfInterest().length)) this.page++; }
 
     private onPrev(): void { if (this.page > 0) this.page--; }
-    
+
     private onSelect(journey: Journey) {
         console.log("Selected " + journey.details.serviceId);
         this.selectedJourney = journey;
@@ -152,7 +152,7 @@ export class ResultsComponent implements OnInit {
             this.processMetrics(metrics, this.params.delay)
         }, this.onError);
     }
-    
+
     /**
      * @brief      Processes a new metrics collection, making further requests
      *             for the details of journeys on services with delays
@@ -214,7 +214,10 @@ export class ResultsComponent implements OnInit {
     /**********************************************************************
      * Static Methods (Helpers)
      *********************************************************************/
-    
+
+    private static isDelayedState(state: JourneyState): boolean {
+        return (state == JourneyState.Delayed) || (state == JourneyState.Cancelled) || (state == JourneyState.CancelledEnRoute);
+    }
 
     /**
      * @brief      Determines if there were delays on the service.
@@ -247,7 +250,7 @@ export class ResultsComponent implements OnInit {
         // First compare the date of departure from origin station
         let result = a.originDate.diff(b.originDate);
 
-        // If both journeys departed on same date, use the departure time 
+        // If both journeys departed on same date, use the departure time
         if (result == 0) {
             result = a.scheduledDeparture.diff(b.scheduledDeparture);
         }

@@ -29,7 +29,7 @@
 
         <!-- Results controls -->
         <label>Hide On-Time Journeys:</label>
-        <input type="checkbox" (click)="onToggleInterest()" >
+        <input type="checkbox" (change)="onToggleInterest()" [checked]="isHideTimely">
 
         <!-- Results Table -->
         <table id="results" [hidden]="(state == stateEnum.RequestingMetrics)" [class.hide-on-time]="isHideTimely" >
@@ -49,7 +49,17 @@
                     <td><leg *ngFor="let leg of journey.legs" [leg]="leg" ></leg></td>
                     <td>{{ journey.scheduledDeparture.format("HH:mm") }}</td>
                     <td>{{ journey.scheduledArrival.format("HH:mm") }}</td>
-                    <td>{{ journey.actualArrival?.format("HH:mm") }}</td>
+                    <td [ngSwitch]="journey.state">
+                        <div *ngSwitchCase="journey.journeyStateEnum.Cancelled">
+                            Journey cancelled before departure
+                        </div>
+                        <div *ngSwitchCase="journey.journeyStateEnum.CancelledEnRoute">
+                            Journey cancelled en route
+                        </div>
+                        <div *ngSwitchDefault>
+                            {{ journey.actualArrival?.format("HH:mm") }}
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>

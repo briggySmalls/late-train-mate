@@ -13,6 +13,8 @@ export enum JourneyState {
     OnTime,
     Delayed,
     Error,
+    Cancelled,
+    CancelledEnRoute,
 }
 
 export class Journey {
@@ -20,7 +22,7 @@ export class Journey {
     /**********************************************************************
      * Private Members
      *********************************************************************/
-    
+
     public journeyStateEnum = JourneyState;
     public details: JourneyDetails;
     public state = JourneyState.Unresolved;
@@ -90,6 +92,14 @@ export class Journey {
                 className = 'on-time';
                 break;
 
+            case JourneyState.Cancelled:
+                className = 'cancelled';
+                break;
+
+            case JourneyState.CancelledEnRoute:
+                className = 'cancelled-en-route';
+                break;
+
             case JourneyState.Requesting:
                 className = 'requesting';
                 break;
@@ -130,11 +140,6 @@ export class Journey {
                         // Do nothing, we are resolved!
                         if (leg.actualArrival.diff(this.scheduledArrival, 'minutes') > this.delay.asMinutes()) {
                             // Definition of delayed is actual arrival later than scheduled by specified delay
-                            console.log("Delayed Logic");
-                            console.log(leg.actualArrival);
-                            console.log(this.scheduledArrival);
-                            console.log(leg.actualArrival.diff(this.scheduledArrival, 'minutes'));
-                            console.log(this.delay.asMinutes());
                             this.transition(JourneyState.Delayed);
                         } else {
                             // Otherwise we're on time!
@@ -143,13 +148,13 @@ export class Journey {
                         break;
 
                     case LegState.Cancelled:
-                        // Raise request for later legs
-                        this.transition(JourneyState.Unresolved);
+                        // TODO: Raise request for later legs
+                        this.transition(JourneyState.Cancelled);
                         break;
 
                     case LegState.CancelledEnRoute:
-                        // Raise request for next leg
-                        this.transition(JourneyState.Unresolved);
+                        // TODO: Raise request for next leg
+                        this.transition(JourneyState.CancelledEnRoute);
                         break;
 
                     default:
@@ -163,7 +168,7 @@ export class Journey {
     /**********************************************************************
      * Private Methods
      *********************************************************************/
-    
+
 
     private transition(newState: JourneyState): void {
         this.state = newState;
@@ -245,12 +250,12 @@ export class Leg {
     /**********************************************************************
      * Public Properties
      *********************************************************************/
-    
+
 
     public get actualDeparture(): moment.Moment { return (this.fromStationDetails) ? this.fromStationDetails.actualDeparture : null; }
 
     public get actualArrival(): moment.Moment { return (this.toStationDetails) ? this.toStationDetails.actualArrival : null; }
-    
+
     public get disruptionCode(): number { return (this.toStationDetails) ? this.toStationDetails.disruptionCode : null; }
 
     public get stateClass(): string {
@@ -267,7 +272,7 @@ export class Leg {
             case LegState.OnTime:
                 className = 'on-time';
                 break;
-                
+
             case LegState.Delayed:
                 className = 'delayed';
                 break;
