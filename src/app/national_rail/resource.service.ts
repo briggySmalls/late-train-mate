@@ -3,10 +3,7 @@ import { List } from 'linqts';
 
 import { IStation } from './hsp-types';
 
-var station_codes = require('./resources/station_codes.json');
-
-
-const STATIONS_FILE = 'app/national_rail/resources/station_codes.json';
+const station_codes = require('./resources/station_codes.json');
 
 @Injectable()
 export class ResourceService {
