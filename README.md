@@ -1,33 +1,20 @@
-<img width="150" src="https://i.cloudup.com/zfY6lL7eFa-3000x3000.png" />
-<img width="50" src="https://angular.io/resources/images/logos/angular2/angular.svg" />
+# Late Mate
 
-## Angular2 Express Starter ( Advanced )
+A handy web application to review delayed and cancelled trains across the UK.
 
-- Angular 2 ( 2.x )
-- ExpressJS ( 4.x - with compression )
-- Webpack ( angular-cli )
+## Getting Started
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-## Concepts
+### Prerequisites
 
-- Redux ( NgRx/Store - with server calls)
-- Smart & dumb components
-- AOT: Ahead-of-Time compilation
-- Advanced routing ( lazy loading, router outlets...)
+The project dependencies are managed by npm, which must be installed before the project can run.
 
-## Support
-
-If you’d like to support me developing this project you’re able to do so by donating on PayPal or if you have any special needs/ feature requests don’t hesitate to send me an email.
-
-[![Support via PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://www.paypal.me/ngsemantic)
-
-
-## Install / Development
+### Installing
 
 ```bash
-git clone https://github.com/vladotesanovic/angular2-express-starter
-cd angular2-express-starter
+git clone https://github.com/briggysmalls/late-mate
+cd late-mate
 
 # Install dependencies
 npm install
@@ -36,17 +23,37 @@ npm install
 npm run start
 
 # Client url: http://localhost:4200
-# Application ( epxress ) API: http://localhost:4300
+# Application ( express ) API: http://localhost:4300
 ```
 
 Install Redux DevTools chrome extenstion:
 
 https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd
 
-## Build / Production
+<!--## Running the tests
+
+Explain how to run the automated tests for this system
+
+### Break down into end to end tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+### And coding style tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```-->
+
+## Deployment
+
 
 ```bash
-
 npm run build
 
 ## Deploy dist folder to app server
@@ -58,8 +65,32 @@ Structure of dist folder:
 
 ```
 
-## Note
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
-All html and css are from: http://www.w3schools.com/howto/
+## Built With
 
+- Angular 2 ( 2.x )
+- ExpressJS ( 4.x - with compression )
+- Webpack ( angular-cli )
 
+<!--## Contributing
+
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+
+## Authors
+
+* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+
+See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.-->
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+* Was built from the [angular2-express-starter](https://github.com/vladotesanovic/angular2-express-starter) project by Vlado Tesanovic
