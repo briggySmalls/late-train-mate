@@ -60,7 +60,7 @@
     "ts-helpers": "^1.1.2",
     "ts-node": "~3.3.0",
     "tslint": "^4.5.1",
-    "typescript": "^2.3.4",
+    "typescript": ">=2.1.0 <2.4.0",
     "uuid": "^3.0.1",
     "zone.js": "^0.8.14"
   },
