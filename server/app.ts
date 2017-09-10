@@ -2,6 +2,7 @@ import { json, urlencoded } from "body-parser";
 import * as compression from "compression";
 import * as express from "express";
 import * as path from "path";
+var history = require('connect-history-api-fallback');
 
 import { hspRouter } from "./routes/hsp";
 
@@ -17,7 +18,8 @@ app.use(urlencoded({ extended: true }));
 app.use('/api/hsp', hspRouter);
 
 if (app.get("env") === "production") {
-
+  // Deep link rewrites
+  app.use(history());
   // in production mode run application from dist folder
   app.use(express.static(path.join(__dirname, "/../client")));
 }

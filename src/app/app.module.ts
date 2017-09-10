@@ -8,6 +8,7 @@ import { AppComponent }  from './app.component';
 import { ResultsComponent } from './results.component';
 import { SearchComponent } from './search.component';
 import { LegComponent } from './leg.component';
+import { PageNotFoundComponent } from './page-not-found.component';
 
 import { ResourceService } from './national_rail/resource.service';
 import { HspApiService } from './hsp-api.service';
@@ -24,7 +25,8 @@ import { HspApiService } from './hsp-api.service';
       AppComponent,
       SearchComponent,
       ResultsComponent,
-      LegComponent
+      LegComponent,
+      PageNotFoundComponent
   ],
   providers: [ HspApiService, ResourceService ],
   bootstrap: [ AppComponent ]

@@ -10,7 +10,7 @@
     "lint:server": "tslint './server/**/*.ts' -c ./server/tslint.json --fix",
     "test:client": "ng test",
     "e2e:client": "ng e2e",
-    "build": "ng build --prod --sm=false --aot --output-path=dist/client && npm run _server:build",
+    "build": "ng build --prod --sm=false --aot --output-path=dist/client --deploy-url=/ && npm run _server:build",
     "_server:run": "tsc -p ./server && concurrently \"tsc -w -p ./server\" \"nodemon --delay 5 dist/server/bin/www.js\" ",
     "_server:build": "tsc -p ./server",
     "postinstall": "npm run build"
@@ -45,6 +45,7 @@
     "@types/uuid": "^2.0.29",
     "body-parser": "~1.17.1",
     "compression": "^1.6.2",
+    "connect-history-api-fallback": "^1.3.0",
     "cookie-parser": "~1.3.5",
     "core-js": "^2.4.1",
     "express": "^4.15.2",
