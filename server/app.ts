@@ -2,7 +2,7 @@ import { json, urlencoded } from "body-parser";
 import * as compression from "compression";
 import * as express from "express";
 import * as path from "path";
-var history = require('connect-history-api-fallback');
+import * as history from "connect-history-api-fallback";
 
 import { hspRouter } from "./routes/hsp";
 
