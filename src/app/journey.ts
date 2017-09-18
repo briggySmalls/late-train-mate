@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 import { List } from 'linqts';
+import * as assert from 'assert';
 
 import { HspApiService } from './hsp-api.service';
 import { JourneyDetails, StopDetails, IStation } from './national_rail/hsp-types';
-import { Assert } from './assert';
 
 
 export enum JourneyState {
@@ -121,7 +121,7 @@ export class Journey {
 
     public tryResolve(hspApiService: HspApiService): Observable<void> {
         // We should only attempt to resolve if unresolved
-        Assert.areEqual(this.state, JourneyState.Unresolved);
+        assert.equal(this.state, JourneyState.Unresolved);
         this.transition(JourneyState.Requesting);
 
         // We resolve the journey by getting the details of the last leg
@@ -158,7 +158,7 @@ export class Journey {
                         break;
 
                     default:
-                        Assert.failUnexpectedDefault(leg.state);
+                        assert.fail(undefined, undefined, "Unexpected default state: ${leg.state}");
                         break;
                 }
             },
@@ -230,7 +230,7 @@ export class Leg {
      */
     public requestDetails(hspApiService: HspApiService): Observable<Leg> {
         // We should only permit requests if we are unpopulated (and not requesting)
-        Assert.areEqual(this.state, LegState.Unpopulated);
+        assert.equal(this.state, LegState.Unpopulated);
 
         // Update the state to show we have begun a request
         this.transition(LegState.Requesting);
@@ -317,11 +317,11 @@ export class Leg {
         // Update our from/to stations
         this.m_fromStationDetails = new Stop(this.getStop(this.fromStation));
         this.m_toStationDetails = new Stop(this.getStop(this.toStation));
-        // Asssert that our scheduled times match up with the details
-        Assert.isTrue(this.fromStationDetails.scheduledDeparture.minutes == this.scheduledDeparture.minutes);
-        Assert.isTrue(this.fromStationDetails.scheduledDeparture.hours == this.scheduledDeparture.hours);
-        Assert.isTrue(this.toStationDetails.scheduledArrival.minutes == this.scheduledArrival.minutes);
-        Assert.isTrue(this.toStationDetails.scheduledArrival.hours == this.scheduledArrival.hours);
+        // Assert that our scheduled times match up with the details
+        assert.equal(this.fromStationDetails.scheduledDeparture.minutes, this.scheduledDeparture.minutes);
+        assert.equal(this.fromStationDetails.scheduledDeparture.hours, this.scheduledDeparture.hours);
+        assert.equal(this.toStationDetails.scheduledArrival.minutes, this.scheduledArrival.minutes);
+        assert.equal(this.toStationDetails.scheduledArrival.hours, this.scheduledArrival.hours);
 
         // Update our scheduled departure/arrival
         this.scheduledDeparture = this.fromStationDetails.scheduledDeparture;

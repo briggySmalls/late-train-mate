@@ -3,6 +3,7 @@ import { Http }      from '@angular/http';
 import { ActivatedRoute, Params } from '@angular/router';
 
 import * as moment from 'moment';
+import * as assert from 'assert';
 
 import { Observable }        from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
@@ -163,6 +164,8 @@ export class ResultsComponent implements OnInit {
      * @return     NONE
      */
     private processMetrics(metricsCollection: MetricsCollection, delay: moment.Duration): void {
+        assert.ok(metricsCollection.services.Count() > 0);
+
         // Create a fresh journeys array
         this.journeys = new Array<Journey>();
         // Create an array of request functions
