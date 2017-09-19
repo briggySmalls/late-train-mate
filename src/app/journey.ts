@@ -158,7 +158,7 @@ export class Journey {
                         break;
 
                     default:
-                        assert.fail(undefined, undefined, "Unexpected default state: ${leg.state}");
+                        assert.fail(undefined, undefined, `Unexpected default state: ${leg.state}`);
                         break;
                 }
             },
