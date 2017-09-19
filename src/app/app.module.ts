@@ -10,9 +10,6 @@ import { SearchComponent } from './search.component';
 import { LegComponent } from './leg.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 
-import { ResourceService } from './national_rail/resource.service';
-import { HspApiService } from './hsp-api.service';
-
 @NgModule({
   imports: [
       BrowserModule,
@@ -28,7 +25,6 @@ import { HspApiService } from './hsp-api.service';
       LegComponent,
       PageNotFoundComponent
   ],
-  providers: [ HspApiService, ResourceService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

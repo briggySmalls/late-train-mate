@@ -12,7 +12,8 @@ import { IStation } from './national_rail/hsp-types';
     moduleId: module.id,
     selector: 'search-view',
     templateUrl: 'search.component.html',
-    styleUrls: ['search.component.css']
+    styleUrls: ['search.component.css'],
+    providers: [ ResourceService ],
 })
 export class SearchComponent implements OnInit {
     constructor(

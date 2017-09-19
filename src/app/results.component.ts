@@ -41,7 +41,8 @@ interface IRequestFunc {
     moduleId: module.id,
     selector: 'results-view',
     templateUrl: 'results.component.html',
-    styleUrls: ['results.component.css']
+    styleUrls: ['results.component.css'],
+    providers: [ HspApiService ],
 })
 export class ResultsComponent implements OnInit {
 
