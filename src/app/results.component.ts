@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { Http }      from '@angular/http';
+import { Http } from '@angular/http';
 import { ActivatedRoute, Params } from '@angular/router';
 
 import * as moment from 'moment';
 import * as assert from 'assert';
 
-import { Observable }        from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/merge';
 
-import { HspApiService }     from './hsp-api.service';
+import { HspApiService } from './hsp-api.service';
 import { MetricsCollection, ServiceMetrics, JourneyDetails } from './national_rail/hsp-types';
-import { Journey, JourneyState }    from './journey';
+import { Journey, JourneyState } from './journey';
 
 
 const CONCURRENT_COUNT = 3;
@@ -25,9 +25,9 @@ enum State {
 }
 
 interface ISearch {
-    fromStation: string;
+ fromStation: string;
     toStation: string;
-    fromDate: moment.Moment;
+ fromDate: moment.Moment;
     toDate: moment.Moment;
     days: string;
     delay: moment.Duration;
@@ -114,9 +114,17 @@ export class ResultsComponent implements OnInit {
         }
     }
 
-    private onNext(): void { if (this.page < ResultsComponent.pageCount(this.journeysOfInterest().length)) this.page++; }
+    private onNext(): void {
+      if (this.page < ResultsComponent.pageCount(this.journeysOfInterest().length)) {
+        this.page++;
+      }
+    }
 
-    private onPrev(): void { if (this.page > 0) this.page--; }
+    private onPrev(): void {
+      if (this.page > 0) {
+        this.page--;
+      }
+    }
 
     private onSelect(journey: Journey) {
         console.log('Selected ' + journey.details.serviceId);
@@ -220,7 +228,9 @@ export class ResultsComponent implements OnInit {
      *********************************************************************/
 
     private static isDelayedState(state: JourneyState): boolean {
-        return (state == JourneyState.Delayed) || (state == JourneyState.Cancelled) || (state == JourneyState.CancelledEnRoute);
+        return (state === JourneyState.Delayed) ||
+               (state === JourneyState.Cancelled) ||
+               (state === JourneyState.CancelledEnRoute);
     }
 
     /**
@@ -234,7 +244,7 @@ export class ResultsComponent implements OnInit {
      */
     private static isDelaysOnService(service: ServiceMetrics, delay: moment.Duration): boolean {
         return (service.metrics.First(
-            toleranceMetrics => toleranceMetrics.tolerance.asMinutes() == delay.asMinutes()).numNotTolerance > 0);
+            toleranceMetrics => toleranceMetrics.tolerance.asMinutes() === delay.asMinutes()).numNotTolerance > 0);
     }
 
     private static pageCount(len: number) {
@@ -255,7 +265,7 @@ export class ResultsComponent implements OnInit {
         let result = a.originDate.diff(b.originDate);
 
         // If both journeys departed on same date, use the departure time
-        if (result == 0) {
+        if (result === 0) {
             result = a.scheduledDeparture.diff(b.scheduledDeparture);
         }
         return result;

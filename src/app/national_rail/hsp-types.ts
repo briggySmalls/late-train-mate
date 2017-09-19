@@ -172,7 +172,7 @@ export class Metric extends HspApiData {
     }
 
     public isGlobalTolerance(): boolean {
-        return (this.data['global_tolerance'] == 'true');
+        return (this.data['global_tolerance'] === 'true');
     }
 }
 

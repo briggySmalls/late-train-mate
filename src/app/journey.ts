@@ -128,7 +128,7 @@ export class Journey {
         return this.m_legs.Last().requestDetails(hspApiService)
             .map(leg => {
                 // Update times with known dates
-                if (leg == this.m_legs.First()) {
+                if (leg === this.m_legs.First()) {
                     console.log('Updating scheduled times');
                     this.m_scheduledArrival = leg.scheduledArrival;
                     this.m_scheduledDeparture = leg.scheduledDeparture;
@@ -362,7 +362,7 @@ export class Leg {
     }
 
     private getStop(station: IStation): StopDetails {
-        return this.details.stops.First(x => x.station == station);
+        return this.details.stops.First(x => x.station === station);
     }
 }
 
