@@ -13,7 +13,8 @@
     "build": "ng build --prod --sm=false --aot --output-path=dist/client --deploy-url=/ && npm run _server:build",
     "_server:run": "tsc -p ./server && concurrently \"tsc -w -p ./server\" \"nodemon --delay 5 dist/server/bin/www.js\" ",
     "_server:build": "tsc -p ./server",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "test": "npm run test:client"
   },
   "author": "Vlado Tešanović",
   "repository": {
