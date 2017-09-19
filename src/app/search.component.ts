@@ -23,15 +23,15 @@ export class SearchComponent implements OnInit {
 
         this.search = fb.group({
             // Stations
-            "fromStation": ["" , Validators.required],
-            "toStation": ["" , Validators.required],
+            'fromStation': ['' , Validators.required],
+            'toStation': ['' , Validators.required],
             // Dates
-            "fromDate": ["", Validators.required],
-            "toDate": ["", Validators.required],
+            'fromDate': ['', Validators.required],
+            'toDate': ['', Validators.required],
             // Day
-            "days": ["", Validators.required],
+            'days': ['', Validators.required],
             // Delay
-            "delay": ["", Validators.required]
+            'delay': ['', Validators.required]
         });
     }
 
@@ -46,12 +46,12 @@ export class SearchComponent implements OnInit {
     public get stations(): IStation[] { return this.m_stations; }
 
     onSubmit() {
-        let link = [
-            "/results",
+        const link = [
+            '/results',
             this.search.value.fromStation, this.search.value.toStation,
             this.search.value.fromDate, this.search.value.toDate,
             this.search.value.days, this.search.value.delay
-        ]
+        ];
         this.router.navigate(link);
     }
 }

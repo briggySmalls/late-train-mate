@@ -129,7 +129,7 @@ export class Journey {
             .map(leg => {
                 // Update times with known dates
                 if (leg == this.m_legs.First()) {
-                    console.log("Updating scheduled times");
+                    console.log('Updating scheduled times');
                     this.m_scheduledArrival = leg.scheduledArrival;
                     this.m_scheduledDeparture = leg.scheduledDeparture;
                 }
@@ -162,7 +162,7 @@ export class Journey {
                         break;
                 }
             },
-        )
+        );
     }
 
     /**********************************************************************
@@ -296,8 +296,8 @@ export class Leg {
      * Private Properties
      *********************************************************************/
 
-    public get fromStationDetails(): Stop { return this.m_fromStationDetails }
-    public get toStationDetails(): Stop { return this.m_toStationDetails }
+    public get fromStationDetails(): Stop { return this.m_fromStationDetails; }
+    public get toStationDetails(): Stop { return this.m_toStationDetails; }
 
     /**********************************************************************
      * Private Methods

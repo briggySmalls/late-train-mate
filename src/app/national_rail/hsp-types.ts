@@ -24,7 +24,7 @@ export class HspApiData {
      * @return     A Date object
      */
     protected toTime(timeText: string, date?: moment.Moment): moment.Moment {
-        let time = moment(timeText, 'HHmm');
+        const time = moment(timeText, 'HHmm');
         if (date != null) {
             time.set({
                 'day': date.day(),
@@ -166,7 +166,7 @@ export class Metric extends HspApiData {
     public get numTolerance(): number {
         return +this.data['num_tolerance'];
     }
-    
+
     public percentTolerance(): number {
         return +this.data['percent_to_tolerance'];
     }
@@ -190,7 +190,7 @@ export class JourneyDetails extends HspApiData {
         super(journeyData);
 
         // Get the first stop
-        let originTime = this.toTime(
+        const originTime = this.toTime(
             this.attributeDetails['locations'][0]['gbtt_ptd'],
             this.date);
 
@@ -208,7 +208,7 @@ export class JourneyDetails extends HspApiData {
     /**
      * @brief      Date of the scheduled departure of the journey from the
      *             @TODO origin/from station?
-     *             
+     *
      */
     public get date(): DateOnly {
         return this.toDate(this.attributeDetails['date_of_service']);
@@ -261,7 +261,7 @@ export class StopDetails extends HspApiData {
     }
 
     public get disruptionCode(): number {
-        return this.data['late_canc_reason'] ? +this.data['late_canc_reason']: null;
+        return this.data['late_canc_reason'] ? +this.data['late_canc_reason'] : null;
     }
 
     private dateFromTime(time: TimeOnly): moment.Moment {

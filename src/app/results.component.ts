@@ -95,7 +95,7 @@ export class ResultsComponent implements OnInit {
     private journeysOfInterest(): Journey[] {
         return this.journeys.filter(journey =>
             (this.isHideTimely) ? ResultsComponent.isDelayedState(journey.state) : true
-        )
+        );
     }
 
     private visibleJourneys(): Journey[] {
@@ -108,7 +108,7 @@ export class ResultsComponent implements OnInit {
 
         // Ensure that we never get stuck in an invalid page
         // TODO: Consider moving this to where we set isHideTimely?
-        let pageCount = ResultsComponent.pageCount(this.journeysOfInterest().length);
+        const pageCount = ResultsComponent.pageCount(this.journeysOfInterest().length);
         if (this.page > pageCount) {
             this.page = pageCount;
         }
@@ -119,7 +119,7 @@ export class ResultsComponent implements OnInit {
     private onPrev(): void { if (this.page > 0) this.page--; }
 
     private onSelect(journey: Journey) {
-        console.log("Selected " + journey.details.serviceId);
+        console.log('Selected ' + journey.details.serviceId);
         this.selectedJourney = journey;
     }
 
@@ -138,7 +138,7 @@ export class ResultsComponent implements OnInit {
                 'toDate': moment(params['toDate'], 'YYYY-MM-DD'),
                 'days': params['days'],
                 'delay': moment.duration(+params['delay'], 'minutes')
-            }
+            };
             // Return the promise
             return this.hspApiService.serviceMetrics(
                 this.params.fromStation,
@@ -146,12 +146,12 @@ export class ResultsComponent implements OnInit {
                 this.params.fromDate,
                 this.params.toDate,
                 this.params.days,
-                [this.params.delay])
+                [this.params.delay]);
         }).subscribe(metrics => {
             // Indicate the initial request is complete
             this.state = State.RequestingDetails;
             // Process the metrics
-            this.processMetrics(metrics, this.params.delay)
+            this.processMetrics(metrics, this.params.delay);
         }, this.onError);
     }
 
@@ -170,18 +170,18 @@ export class ResultsComponent implements OnInit {
         // Create a fresh journeys array
         this.journeys = new Array<Journey>();
         // Create an array of request functions
-        let furtherRequests = new Array<Observable<void>>();
+        const furtherRequests = new Array<Observable<void>>();
         // TODO: Assert that the from/to stations match the request
 
         // Iterate over each service returned in the collection
         metricsCollection.services.ForEach(service => {
-            console.log("Considering %s service", service.attributes.departureTime.format("HH:mm"));
+            console.log('Considering %s service', service.attributes.departureTime.format('HH:mm'));
 
             // Cycle through the journeys that ran on this service
             service.attributes.serviceIds.ForEach(serviceId => {
 
                 // Create a new journey for the serviceId
-                let journey = new Journey(
+                const journey = new Journey(
                         serviceId,
                         service.attributes.departureTime,
                         service.attributes.arrivalTime,
@@ -198,11 +198,11 @@ export class ResultsComponent implements OnInit {
                 if (ResultsComponent.isDelaysOnService(service, delay)) {
                     furtherRequests.push(journey.tryResolve(this.hspApiService));
                 }
-            })
+            });
 
             // Refresh the array reference to redraw view
             this.journeys = this.journeys.sort(ResultsComponent.compare);
-        })
+        });
 
         // Now we have drawn the table, make the requests
         Observable.merge(...furtherRequests, CONCURRENT_COUNT).subscribe();
