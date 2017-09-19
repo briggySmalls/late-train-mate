@@ -29,7 +29,7 @@ describe('AppComponent', function () {
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
     comp = fixture.componentInstance;
-    de = fixture.debugElement.query(By.css('h1'));
+    de = fixture.debugElement.query(By.css('.title'));
   });
 
   // Test component created
