@@ -1,7 +1,7 @@
 import { AppComponent } from './app.component';
 import { AppModule } from './app.module';
-import { HspApiService } from './hsp-api.service';
-import { ResourceService } from './national_rail/resource.service';
+import { HspApiService } from './national-rail/hsp-api.service';
+import { ResourceService } from './national-rail/resource.service';
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';

@@ -5,12 +5,11 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { ResultsComponent } from './results.component';
-import { SearchComponent } from './search.component';
-import { LegComponent } from './leg.component';
-import { PageNotFoundComponent } from './page-not-found.component';
-
-import { ResourceService } from './national_rail/resource.service';
+import { ResultsComponent } from './results/results.component';
+import { SearchComponent } from './search/search.component';
+import { LegComponent } from './leg/leg.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ResourceService } from './national-rail/resource.service';
 
 @NgModule({
   imports: [
@@ -25,7 +24,7 @@ import { ResourceService } from './national_rail/resource.service';
       SearchComponent,
       ResultsComponent,
       LegComponent,
-      PageNotFoundComponent
+      PageNotFoundComponent,
   ],
   providers: [ ResourceService ],
   bootstrap: [ AppComponent ]

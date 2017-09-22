@@ -10,8 +10,8 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/merge';
 
-import { HspApiService } from './hsp-api.service';
-import { MetricsCollection, ServiceMetrics, JourneyDetails } from './national_rail/hsp-types';
+import { HspApiService } from '../national-rail/hsp-api.service';
+import { MetricsCollection, ServiceMetrics, JourneyDetails } from '../national-rail/hsp-types';
 import { Journey, JourneyState } from './journey';
 
 

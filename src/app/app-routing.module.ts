@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { SearchComponent } from './search.component';
-import { ResultsComponent } from './results.component';
-import { PageNotFoundComponent } from './page-not-found.component';
+import { SearchComponent } from './search/search.component';
+import { ResultsComponent } from './results/results.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 
 const routes: Routes = [

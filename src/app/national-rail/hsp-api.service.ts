@@ -5,8 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import * as moment from 'moment';
 
-import { MetricsCollection, JourneyDetails } from './national_rail/hsp-types';
-import { ResourceService } from './national_rail/resource.service';
+import { MetricsCollection, JourneyDetails } from './hsp-types';
+import { ResourceService } from './resource.service';
 
 
 const SERVICE_METRICS_URL = '/api/hsp/metrics';
