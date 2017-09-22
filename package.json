@@ -14,7 +14,7 @@
     "_server:run": "tsc -p ./server && concurrently \"tsc -w -p ./server\" \"nodemon --delay 5 dist/server/bin/www.js\" ",
     "_server:build": "tsc -p ./server",
     "postinstall": "npm run build",
-    "test": "ng test --single-run"
+    "test": "npm run lint:client && npm run lint:server && ng test --single-run"
   },
   "author": "Vlado Tešanović",
   "repository": {
