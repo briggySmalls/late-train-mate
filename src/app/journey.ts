@@ -58,6 +58,17 @@ export class Journey {
             delay));
     }
 
+    /**
+     * @brief      Helper function to convert a service ID to a date
+     *
+     * @param      serviceId  The service identifier
+     *
+     * @return     Moment that captures a date
+     */
+    private static toDate(serviceId: number): moment.Moment {
+      return moment(serviceId.toString().slice(0, 8), 'YYYYMMDD');
+    }
+
     /**********************************************************************
      * Public Properties
      *********************************************************************/
@@ -172,17 +183,6 @@ export class Journey {
 
     private transition(newState: JourneyState): void {
         this.state = newState;
-    }
-
-    /**
-     * @brief      Helper function to convert a service ID to a date
-     *
-     * @param      serviceId  The service identifier
-     *
-     * @return     Moment that captures a date
-     */
-    private static toDate(serviceId: number): moment.Moment {
-        return moment(serviceId.toString().slice(0, 8), 'YYYYMMDD');
     }
 }
 
