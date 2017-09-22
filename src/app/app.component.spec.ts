@@ -4,7 +4,7 @@ import { HspApiService } from './hsp-api.service';
 import { ResourceService } from './national_rail/resource.service';
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By }           from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common'
 
@@ -22,6 +22,7 @@ describe('AppComponent', function () {
         {provide: APP_BASE_HREF, useValue: '/'}
       ]
     })
+    // TODO: .overrideComponent
     .compileComponents();
   }));
 

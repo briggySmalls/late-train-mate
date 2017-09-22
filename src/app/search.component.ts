@@ -13,7 +13,6 @@ import { IStation } from './national_rail/hsp-types';
     selector: 'search-view',
     templateUrl: 'search.component.html',
     styleUrls: ['search.component.css'],
-    providers: [ ResourceService ],
 })
 export class SearchComponent implements OnInit {
     constructor(

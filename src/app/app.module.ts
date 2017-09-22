@@ -10,6 +10,8 @@ import { SearchComponent } from './search.component';
 import { LegComponent } from './leg.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 
+import { ResourceService } from './national_rail/resource.service';
+
 @NgModule({
   imports: [
       BrowserModule,
@@ -25,6 +27,7 @@ import { PageNotFoundComponent } from './page-not-found.component';
       LegComponent,
       PageNotFoundComponent
   ],
+  providers: [ ResourceService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
