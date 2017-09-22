@@ -19,6 +19,6 @@ export class ResourceService {
     }
 
     public lookup(code: string): IStation {
-        return this.m_stationCodes.First(station => (station.value == code));
+        return this.m_stationCodes.First(station => (station.value === code));
     }
 }

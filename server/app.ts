@@ -1,8 +1,8 @@
 import { json, urlencoded } from "body-parser";
 import * as compression from "compression";
+import * as history from "connect-history-api-fallback";
 import * as express from "express";
 import * as path from "path";
-import * as history from "connect-history-api-fallback";
 
 import { hspRouter } from "./routes/hsp";
 
@@ -15,7 +15,7 @@ app.use(compression());
 app.use(urlencoded({ extended: true }));
 
 // api routes
-app.use('/api/hsp', hspRouter);
+app.use("/api/hsp", hspRouter);
 
 if (app.get("env") === "production") {
   // Deep link rewrites

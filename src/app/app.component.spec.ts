@@ -6,7 +6,7 @@ import { ResourceService } from './national_rail/resource.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-import { APP_BASE_HREF } from '@angular/common'
+import { APP_BASE_HREF } from '@angular/common';
 
 describe('AppComponent', function () {
   let de: DebugElement;
