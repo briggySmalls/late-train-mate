@@ -11,7 +11,7 @@ export type DateOnly = moment.Moment;
 /**
  * @brief      Base class for handling hsp api data.
  */
-export class HspApiData {
+class HspApiData {
     constructor(private jsonData: any) { }
 
     protected get data(): any { return this.jsonData; }

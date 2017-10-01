@@ -5,7 +5,7 @@ import * as assert from 'assert';
 
 import { HspApiService } from '../national-rail/hsp-api.service';
 import { JourneyDetails, StopDetails, IStation } from '../national-rail/hsp-types';
-import { Leg, LegState } from '../leg/leg';
+import { Leg, LegState } from './leg/leg';
 
 
 export enum JourneyState {
