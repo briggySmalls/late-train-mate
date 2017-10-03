@@ -20,8 +20,6 @@ const RESOURCES = [
 // Debug
 const TEST_DATA_PATH = `${__dirname}/test-data`;
 
-interface IReadJsonCallback { (json: any): void; };
-
 function hspUri(resource: Resource): string {
     let endpoint: string;
     for (let res of RESOURCES) {
@@ -60,7 +58,7 @@ function fileResults(req: Request, res: Response, resource: Resource): void {
     }
 }
 
-function readFile(filename: string, callback: IReadJsonCallback): void {
+function readFile(filename: string, callback: (json: any) => void): void {
     let obj;
     fs.readFile(filename, "utf8", (err, data) => {
       if (err) { throw err; }
