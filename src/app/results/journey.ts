@@ -3,9 +3,7 @@ import * as moment from 'moment';
 import { List } from 'linqts';
 import * as assert from 'assert';
 
-import { HspApiService } from '../national-rail/hsp-api.service';
-import { JourneyDetails, StopDetails } from '../national-rail/hsp-details.model';
-import { IStation } from '../national-rail/shared/hsp-core.model';
+import { HspApiService, JourneyDetails, StopDetails, IStation } from '../national-rail';
 import { Leg, LegState } from './leg/leg';
 
 

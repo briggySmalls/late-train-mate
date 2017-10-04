@@ -1,12 +1,11 @@
-import { AppComponent } from './app.component';
-import { AppModule } from './app.module';
-import { HspApiService } from './national-rail/hsp-api.service';
-import { ResourceService } from './national-rail/resource.service';
-
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
+
+import { AppComponent } from './app.component';
+import { AppModule } from './app.module';
+import { HspApiService, ResourceService } from './national-rail';
 
 describe('AppComponent', function () {
   let de: DebugElement;

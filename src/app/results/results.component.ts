@@ -1,18 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { ActivatedRoute, Params } from '@angular/router';
-
 import * as moment from 'moment';
 import * as assert from 'assert';
-
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/merge';
 
-import { HspApiService } from '../national-rail/hsp-api.service';
-import { MetricsCollection, ServiceMetrics } from '../national-rail/hsp-metrics.model';
-import { JourneyDetails } from '../national-rail/hsp-details.model';
+import { HspApiService, MetricsCollection, ServiceMetrics, JourneyDetails } from '../national-rail';
 import { Journey, JourneyState } from './journey';
 
 

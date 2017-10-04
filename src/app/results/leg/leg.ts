@@ -2,10 +2,7 @@ import * as moment from 'moment';
 import * as assert from 'assert';
 import { Observable } from 'rxjs/Observable';
 
-import { JourneyDetails, StopDetails } from '../../national-rail/hsp-details.model';
-import { IStation } from '../../national-rail/shared/hsp-core.model';
-import { HspApiService } from '../../national-rail/hsp-api.service';
-
+import { JourneyDetails, StopDetails, IStation, HspApiService } from '../../national-rail';
 
 export enum LegState {
   Unpopulated,
