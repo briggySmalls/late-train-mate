@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { List } from 'linqts';
 
-import { IStation } from './hsp-types';
+import { IStation } from './shared/hsp-core.model';
 
 const station_codes = require('./resources/station_codes.json');
 

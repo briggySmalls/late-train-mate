@@ -1,8 +1,8 @@
-import { MetricsCollection } from './hsp-types';
+import { MetricsCollection } from './hsp-metrics.model';
 import { ResourceService } from './resource.service';
 
 const TEST_DATA_PATH = `${__dirname}/resources/test-data`;
-const metricsJson = require('./resources/test-data//SM-FPK-CBG-0000-2359-20161001-20161101-WEEKDAY-[30].json');
+const metricsJson = require('./resources/test-data/SM-FPK-CBG-0000-2359-20161001-20161101-WEEKDAY-[30].json');
 
 describe('MetricsCollection', function () {
   let mC: MetricsCollection;
@@ -73,44 +73,44 @@ describe('MetricsCollection', function () {
   // Test attributes
   it('should have expected attributes', () => {
     // First service
-    expect(mC.services.ElementAt(0).attributes.destinationStation.value).toEqual('CBG');
-    expect(mC.services.ElementAt(0).attributes.arrivalTime.hour()).toEqual(1);
-    expect(mC.services.ElementAt(0).attributes.arrivalTime.minute()).toEqual(24);
-    expect(mC.services.ElementAt(0).attributes.tocCode).toEqual('GN');
-    expect(mC.services.ElementAt(0).attributes.originStation.value).toEqual('KGX');
-    expect(mC.services.ElementAt(0).attributes.departureTime.hour()).toEqual(0);
-    expect(mC.services.ElementAt(0).attributes.departureTime.minute()).toEqual(11);
-    expect(mC.services.ElementAt(0).attributes.serviceCount).toEqual(4);
-    expect(mC.services.ElementAt(0).attributes.serviceIds.ElementAt(0)).toEqual(201610257170724);
-    expect(mC.services.ElementAt(0).attributes.serviceIds.ElementAt(1)).toEqual(201610267170724);
-    expect(mC.services.ElementAt(0).attributes.serviceIds.ElementAt(2)).toEqual(201610277170724);
-    expect(mC.services.ElementAt(0).attributes.serviceIds.ElementAt(3)).toEqual(201610287170724);
+    expect(mC.services.ElementAt(0).destinationStation.value).toEqual('CBG');
+    expect(mC.services.ElementAt(0).arrivalTime.hour()).toEqual(1);
+    expect(mC.services.ElementAt(0).arrivalTime.minute()).toEqual(24);
+    expect(mC.services.ElementAt(0).tocCode).toEqual('GN');
+    expect(mC.services.ElementAt(0).originStation.value).toEqual('KGX');
+    expect(mC.services.ElementAt(0).departureTime.hour()).toEqual(0);
+    expect(mC.services.ElementAt(0).departureTime.minute()).toEqual(11);
+    expect(mC.services.ElementAt(0).serviceCount).toEqual(4);
+    expect(mC.services.ElementAt(0).serviceIds.ElementAt(0)).toEqual(201610257170724);
+    expect(mC.services.ElementAt(0).serviceIds.ElementAt(1)).toEqual(201610267170724);
+    expect(mC.services.ElementAt(0).serviceIds.ElementAt(2)).toEqual(201610277170724);
+    expect(mC.services.ElementAt(0).serviceIds.ElementAt(3)).toEqual(201610287170724);
 
     // Second service
-    expect(mC.services.ElementAt(1).attributes.destinationStation.value).toEqual('CBG');
-    expect(mC.services.ElementAt(1).attributes.arrivalTime.hour()).toEqual(1);
-    expect(mC.services.ElementAt(1).attributes.arrivalTime.minute()).toEqual(42);
-    expect(mC.services.ElementAt(1).attributes.tocCode).toEqual('GN');
-    expect(mC.services.ElementAt(1).attributes.originStation.value).toEqual('KGX');
-    expect(mC.services.ElementAt(1).attributes.departureTime.hour()).toEqual(0);
-    expect(mC.services.ElementAt(1).attributes.departureTime.minute()).toEqual(11);
-    expect(mC.services.ElementAt(1).attributes.serviceCount).toEqual(2);
-    expect(mC.services.ElementAt(1).attributes.serviceIds.ElementAt(0)).toEqual(201610207170724);
-    expect(mC.services.ElementAt(1).attributes.serviceIds.ElementAt(1)).toEqual(201610217170724);
+    expect(mC.services.ElementAt(1).destinationStation.value).toEqual('CBG');
+    expect(mC.services.ElementAt(1).arrivalTime.hour()).toEqual(1);
+    expect(mC.services.ElementAt(1).arrivalTime.minute()).toEqual(42);
+    expect(mC.services.ElementAt(1).tocCode).toEqual('GN');
+    expect(mC.services.ElementAt(1).originStation.value).toEqual('KGX');
+    expect(mC.services.ElementAt(1).departureTime.hour()).toEqual(0);
+    expect(mC.services.ElementAt(1).departureTime.minute()).toEqual(11);
+    expect(mC.services.ElementAt(1).serviceCount).toEqual(2);
+    expect(mC.services.ElementAt(1).serviceIds.ElementAt(0)).toEqual(201610207170724);
+    expect(mC.services.ElementAt(1).serviceIds.ElementAt(1)).toEqual(201610217170724);
 
     // Third service
-    expect(mC.services.ElementAt(2).attributes.destinationStation.value).toEqual('CBG');
-    expect(mC.services.ElementAt(2).attributes.arrivalTime.hour()).toEqual(1);
-    expect(mC.services.ElementAt(2).attributes.arrivalTime.minute()).toEqual(30);
-    expect(mC.services.ElementAt(2).attributes.tocCode).toEqual('GN');
-    expect(mC.services.ElementAt(2).attributes.originStation.value).toEqual('KGX');
-    expect(mC.services.ElementAt(2).attributes.departureTime.hour()).toEqual(0);
-    expect(mC.services.ElementAt(2).attributes.departureTime.minute()).toEqual(11);
-    expect(mC.services.ElementAt(2).attributes.serviceCount).toEqual(5);
-    expect(mC.services.ElementAt(2).attributes.serviceIds.ElementAt(0)).toEqual(201610037171311);
-    expect(mC.services.ElementAt(2).attributes.serviceIds.ElementAt(1)).toEqual(201610107171311);
-    expect(mC.services.ElementAt(2).attributes.serviceIds.ElementAt(2)).toEqual(201610177171311);
-    expect(mC.services.ElementAt(2).attributes.serviceIds.ElementAt(3)).toEqual(201610247171311);
-    expect(mC.services.ElementAt(2).attributes.serviceIds.ElementAt(4)).toEqual(201610317171311);
+    expect(mC.services.ElementAt(2).destinationStation.value).toEqual('CBG');
+    expect(mC.services.ElementAt(2).arrivalTime.hour()).toEqual(1);
+    expect(mC.services.ElementAt(2).arrivalTime.minute()).toEqual(30);
+    expect(mC.services.ElementAt(2).tocCode).toEqual('GN');
+    expect(mC.services.ElementAt(2).originStation.value).toEqual('KGX');
+    expect(mC.services.ElementAt(2).departureTime.hour()).toEqual(0);
+    expect(mC.services.ElementAt(2).departureTime.minute()).toEqual(11);
+    expect(mC.services.ElementAt(2).serviceCount).toEqual(5);
+    expect(mC.services.ElementAt(2).serviceIds.ElementAt(0)).toEqual(201610037171311);
+    expect(mC.services.ElementAt(2).serviceIds.ElementAt(1)).toEqual(201610107171311);
+    expect(mC.services.ElementAt(2).serviceIds.ElementAt(2)).toEqual(201610177171311);
+    expect(mC.services.ElementAt(2).serviceIds.ElementAt(3)).toEqual(201610247171311);
+    expect(mC.services.ElementAt(2).serviceIds.ElementAt(4)).toEqual(201610317171311);
   });
 });

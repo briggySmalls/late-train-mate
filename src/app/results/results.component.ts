@@ -11,7 +11,8 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/merge';
 
 import { HspApiService } from '../national-rail/hsp-api.service';
-import { MetricsCollection, ServiceMetrics, JourneyDetails } from '../national-rail/hsp-types';
+import { MetricsCollection, ServiceMetrics } from '../national-rail/hsp-metrics.model';
+import { JourneyDetails } from '../national-rail/hsp-details.model';
 import { Journey, JourneyState } from './journey';
 
 
@@ -228,20 +229,20 @@ export class ResultsComponent implements OnInit {
 
     // Iterate over each service returned in the collection
     metricsCollection.services.ForEach(service => {
-      console.log('Considering %s service', service.attributes.departureTime.format('HH:mm'));
+      console.log('Considering %s service', service.departureTime.format('HH:mm'));
 
       // Cycle through the journeys that ran on this service
-      service.attributes.serviceIds.ForEach(serviceId => {
+      service.serviceIds.ForEach(serviceId => {
 
       // Create a new journey for the serviceId
       const journey = new Journey(
         serviceId,
-        service.attributes.departureTime,
-        service.attributes.arrivalTime,
+        service.departureTime,
+        service.arrivalTime,
         metricsCollection.fromStation,
         metricsCollection.toStation,
-        service.attributes.originStation,
-        service.attributes.destinationStation,
+        service.originStation,
+        service.destinationStation,
         delay);
 
         // Add the journey to the list

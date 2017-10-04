@@ -5,7 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import * as moment from 'moment';
 
-import { MetricsCollection, JourneyDetails } from './hsp-types';
+import { MetricsCollection } from './hsp-metrics.model';
+import { JourneyDetails } from './hsp-details.model';
 import { ResourceService } from './resource.service';
 
 

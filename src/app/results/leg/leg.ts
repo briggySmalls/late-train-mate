@@ -2,7 +2,8 @@ import * as moment from 'moment';
 import * as assert from 'assert';
 import { Observable } from 'rxjs/Observable';
 
-import { JourneyDetails, StopDetails, IStation } from '../../national-rail/hsp-types';
+import { JourneyDetails, StopDetails } from '../../national-rail/hsp-details.model';
+import { IStation } from '../../national-rail/shared/hsp-core.model';
 import { HspApiService } from '../../national-rail/hsp-api.service';
 
 
