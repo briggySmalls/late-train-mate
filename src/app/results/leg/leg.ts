@@ -70,11 +70,11 @@ export class Leg {
    *********************************************************************/
 
 
-  public get actualDeparture(): moment.Moment { return (this.fromStationDetails) ? this.fromStationDetails.actualDeparture : null; }
+  public get actualDeparture(): moment.Moment { return (this.fromStationDetails) ? this.fromStationDetails.actualDeparture : undefined; }
 
-  public get actualArrival(): moment.Moment { return (this.toStationDetails) ? this.toStationDetails.actualArrival : null; }
+  public get actualArrival(): moment.Moment { return (this.toStationDetails) ? this.toStationDetails.actualArrival : undefined; }
 
-  public get disruptionCode(): number { return (this.toStationDetails) ? this.toStationDetails.disruptionCode : null; }
+  public get disruptionCode(): number { return (this.toStationDetails) ? this.toStationDetails.disruptionCode : undefined; }
 
   public get stateClass(): string {
     let className: string;
@@ -146,8 +146,8 @@ export class Leg {
     this.scheduledArrival = this.toStationDetails.scheduledArrival;
 
     // Update the delay status based upon the results
-    if (this.actualArrival == null) {
-      if (this.actualDeparture == null) {
+    if (this.actualArrival === undefined) {
+      if (this.actualDeparture === undefined) {
         // Journey was cancelled before arrival
         this.transition(LegState.Cancelled);
       } else {
@@ -196,12 +196,12 @@ class Stop {
   public get departedOnTime(): boolean {
     return (this.details.scheduledDeparture) ?
       (this.details.actualDeparture && this.details.actualDeparture.isSame(this.details.scheduledDeparture)) :
-      null;
+      undefined;
   }
 
   public get arrivedOnTime(): boolean {
     return (this.details.scheduledArrival) ?
       (this.details.actualArrival && this.details.actualArrival.isSame(this.details.scheduledArrival)) :
-      null;
+      undefined;
   }
 }

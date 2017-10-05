@@ -19,15 +19,15 @@ export class MetricsCollection extends HspApiData {
      */
     public services: List<ServiceMetrics>;
 
-    constructor(private metricsData: any,
-                private resourceService: ResourceService) {
+    constructor(metricsData: any,
+                resourceService: ResourceService) {
         super();
 
         // Populate class from json data
         this.services = new List<ServiceMetrics>(metricsData['Services'].map(
             (serviceData: any) => new ServiceMetrics(serviceData, resourceService)));
-        this.fromStation = this.resourceService.lookup(metricsData['header']['from_location']);
-        this.toStation = this.resourceService.lookup(metricsData['header']['to_location']);
+        this.fromStation = resourceService.lookup(metricsData['header']['from_location']);
+        this.toStation = resourceService.lookup(metricsData['header']['to_location']);
     }
 }
 
@@ -43,12 +43,12 @@ export class ServiceMetrics extends HspApiData {
   public metrics: List<Metric>;
 
   constructor(serviceData: any,
-              private resourceService: ResourceService) {
+              resourceService: ResourceService) {
     super();
 
     // Populate class from json data
-    this.originStation = this.resourceService.lookup(serviceData['serviceAttributesMetrics']['origin_location']);
-    this.destinationStation = this.resourceService.lookup(serviceData['serviceAttributesMetrics']['destination_location']);
+    this.originStation = resourceService.lookup(serviceData['serviceAttributesMetrics']['origin_location']);
+    this.destinationStation = resourceService.lookup(serviceData['serviceAttributesMetrics']['destination_location']);
     this.departureTime = this.toTime(serviceData['serviceAttributesMetrics']['gbtt_ptd']);
     this.arrivalTime = this.toTime(serviceData['serviceAttributesMetrics']['gbtt_pta']);
     this.tocCode = serviceData['serviceAttributesMetrics']['toc_code'];
@@ -67,8 +67,8 @@ export class Metric extends HspApiData {
   public isGlobalTolerance: boolean;
 
   constructor(
-    private metricData: any,
-    private resourceService: ResourceService) {
+    metricData: any,
+    resourceService: ResourceService) {
       super();
 
       // Populate class from json data

@@ -17,7 +17,7 @@ export class HspApiData {
      */
     protected toTime(timeText: string, date?: moment.Moment): moment.Moment {
       const time = moment(timeText, 'HHmm');
-      if (date != null) {
+      if (date !== undefined) {
         time.set({
           'day': date.day(),
           'month': date.month(),
@@ -35,7 +35,7 @@ export class HspApiData {
      * @return     A Date object
      */
     protected toDate(dateText: string): moment.Moment {
-        return moment(dateText, 'YYYY-M-DD');
+      return moment(dateText, 'YYYY-MM-DD');
     }
 }
 

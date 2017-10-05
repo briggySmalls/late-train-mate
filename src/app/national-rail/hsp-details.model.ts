@@ -18,14 +18,14 @@ export class JourneyDetails extends HspApiData {
   public serviceId: number;
   public stops: List<StopDetails>;
 
-  constructor(journeyData: any, private resourceService: ResourceService) {
+  constructor(journeyData: any, resourceService: ResourceService) {
     super();
 
     // Populate class from json data
     const attributeDetails = journeyData['serviceAttributesDetails'];
     this.date = this.toDate(attributeDetails['date_of_service']);
     this.tocCode = attributeDetails['toc_code'];
-    this.serviceId = attributeDetails['rid'];
+    this.serviceId = +attributeDetails['rid'];
 
     // Get the first stop
     const originTime = this.toTime(
@@ -56,15 +56,15 @@ export class StopDetails extends HspApiData {
                 date: DateOnly,
                 originTime: moment.Moment,
                 resourceService: ResourceService) {
-        super();
+      super();
 
-        // Populate class from json data
+      // Populate class from json data
       this.station = resourceService.lookup(stopData['location']);
-      this.scheduledDeparture = stopData['gbtt_ptd'] ? this.dateFromTime(this.toTime(stopData['gbtt_ptd'], date), originTime) : null;
-      this.scheduledArrival = stopData['gbtt_pta'] ? this.dateFromTime(this.toTime(stopData['gbtt_pta'], date), originTime) : null;
-      this.actualDeparture = stopData['actual_td'] ? this.dateFromTime(this.toTime(stopData['actual_td'], date), originTime) : null;
-      this.actualArrival = stopData['actual_ta'] ? this.dateFromTime(this.toTime(stopData['actual_ta'], date), originTime) : null;
-      this.disruptionCode = stopData['late_canc_reason'] ? +stopData['late_canc_reason'] : null;
+      this.scheduledDeparture = stopData['gbtt_ptd'] ? this.dateFromTime(this.toTime(stopData['gbtt_ptd'], date), originTime) : undefined;
+      this.scheduledArrival = stopData['gbtt_pta'] ? this.dateFromTime(this.toTime(stopData['gbtt_pta'], date), originTime) : undefined;
+      this.actualDeparture = stopData['actual_td'] ? this.dateFromTime(this.toTime(stopData['actual_td'], date), originTime) : undefined;
+      this.actualArrival = stopData['actual_ta'] ? this.dateFromTime(this.toTime(stopData['actual_ta'], date), originTime) : undefined;
+      this.disruptionCode = stopData['late_canc_reason'] ? +stopData['late_canc_reason'] : undefined;
     }
 
     private dateFromTime(time: TimeOnly, originTime: TimeOnly): moment.Moment {

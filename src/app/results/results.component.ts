@@ -77,7 +77,7 @@ export class ResultsComponent implements OnInit {
   /**
   * The journey that has been selected by the user
   */
-  private selectedJourney: Journey = null;
+  private selectedJourney: Journey;
 
   /**
   * The parameters of the search

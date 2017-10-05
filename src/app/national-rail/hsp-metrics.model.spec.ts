@@ -7,13 +7,13 @@ const metricsJson = require('./resources/test-data/SM-FPK-CBG-0000-2359-20161001
 describe('MetricsCollection', function () {
   let mC: MetricsCollection;
 
-  // Configure the test bed
+  // Prepare the test
   beforeEach((() => {
     mC = new MetricsCollection(metricsJson, new ResourceService());
   }));
 
-  // Test component created
-  it('should create service', () => expect(mC).toBeDefined() );
+  // Test object created
+  it('should create object', () => expect(mC).toBeDefined() );
 
   // Test stations
   it('should have expected stations', () => {
