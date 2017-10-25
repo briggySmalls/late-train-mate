@@ -1,7 +1,6 @@
 import { MetricsCollection } from './hsp-metrics.model';
 import { ResourceService } from './resource.service';
 
-const TEST_DATA_PATH = `${__dirname}/resources/test-data`;
 const metricsJson = require('./resources/test-data/SM-FPK-CBG-0000-2359-20161001-20161101-WEEKDAY-[30].json');
 
 describe('MetricsCollection', function () {

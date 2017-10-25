@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import * as moment from 'moment';
@@ -20,20 +19,24 @@ export class HspApiService {
     constructor(private http: Http,
                 private resourceService: ResourceService) { }
 
-    public serviceMetrics(fromStation: string, toStation: string,
-                          fromDate: moment.Moment, toDate: moment.Moment,
-                          days: string, delays: moment.Duration[]): Observable<MetricsCollection> {
+    public serviceMetrics(
+        fromStation: string,
+        toStation: string,
+        fromDate: moment.Moment,
+        toDate: moment.Moment,
+        days: string,
+        delays: moment.Duration[]): Observable<MetricsCollection> {
 
-        return this.http.post(SERVICE_METRICS_URL, {
-            'from_loc': fromStation, 'to_loc': toStation,
-            'from_time': '0000', 'to_time': '2359',
-            'from_date': this.toHspDate(fromDate), 'to_date': this.toHspDate(toDate),
-            'days': days,
-            'tolerance': delays.map(value => value.minutes())})
-                // Map the http results stream to a stream of MetricsCollections
-                .map(
-                    (response: any) => new MetricsCollection(response.json(), this.resourceService),
-                    this.handleError);
+      return this.http.post(SERVICE_METRICS_URL, {
+        'from_loc': fromStation, 'to_loc': toStation,
+        'from_time': '0000', 'to_time': '2359',
+        'from_date': this.toHspDate(fromDate), 'to_date': this.toHspDate(toDate),
+        'days': days,
+        'tolerance': delays.map(value => value.minutes())})
+            // Map the http results stream to a stream of MetricsCollections
+            .map(
+                (response: any) => new MetricsCollection(response.json(), this.resourceService),
+                this.handleError);
     }
 
     public journeyDetails(serviceId: number): Observable<JourneyDetails> {

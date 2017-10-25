@@ -136,10 +136,10 @@ export class Leg {
     this.m_fromStationDetails = new Stop(this.getStop(this.fromStation));
     this.m_toStationDetails = new Stop(this.getStop(this.toStation));
     // Assert that our scheduled times match up with the details
-    assert.equal(this.fromStationDetails.scheduledDeparture.minutes, this.scheduledDeparture.minutes);
-    assert.equal(this.fromStationDetails.scheduledDeparture.hours, this.scheduledDeparture.hours);
-    assert.equal(this.toStationDetails.scheduledArrival.minutes, this.scheduledArrival.minutes);
-    assert.equal(this.toStationDetails.scheduledArrival.hours, this.scheduledArrival.hours);
+    assert.equal(this.fromStationDetails.scheduledDeparture.minute(), this.scheduledDeparture.minute());
+    assert.equal(this.fromStationDetails.scheduledDeparture.hour(), this.scheduledDeparture.hour());
+    assert.equal(this.toStationDetails.scheduledArrival.minute(), this.scheduledArrival.minute());
+    assert.equal(this.toStationDetails.scheduledArrival.hour(), this.scheduledArrival.hour());
 
     // Update our scheduled departure/arrival
     this.scheduledDeparture = this.fromStationDetails.scheduledDeparture;

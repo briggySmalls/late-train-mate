@@ -1,7 +1,6 @@
 import { JourneyDetails } from './hsp-details.model';
 import { ResourceService } from './resource.service';
 
-const TEST_DATA_PATH = `${__dirname}/resources/test-data`;
 const detailsJson = require('./resources/test-data/SD-201610037170624.json');
 
 describe('JourneyDetails', function () {
@@ -15,7 +14,7 @@ describe('JourneyDetails', function () {
   // Test object created
   it('should create object', () => expect(jD).toBeDefined() );
 
-  // Test
+  // Test journey attributes
   it('should have expected attributes', () => {
     expect(jD.date.year()).toEqual(2016);
     expect(jD.date.month()).toEqual(10 - 1); // Months are 0-base
@@ -24,6 +23,7 @@ describe('JourneyDetails', function () {
     expect(jD.serviceId).toEqual(201610037170624);
   });
 
+  // Test journey stops
   it('should have expected stops', () => {
     // Stop 1
     expect(jD.stops.ElementAt(0).station.value).toEqual('KGX');
