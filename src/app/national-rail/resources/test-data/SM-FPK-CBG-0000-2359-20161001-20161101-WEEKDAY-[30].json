@@ -1,0 +1,103 @@
+{
+  "header": {
+    "from_location": "FPK",
+    "to_location": "CBG"
+  },
+  "Services": [
+    {
+      "Metrics": [
+        {
+          "percent_tolerance": "100",
+          "num_not_tolerance": "0",
+          "tolerance_value": "0",
+          "num_tolerance": "4",
+          "global_tolerance": true
+        },
+        {
+          "percent_tolerance": "100",
+          "num_not_tolerance": "0",
+          "tolerance_value": "30",
+          "num_tolerance": "4",
+          "global_tolerance": false
+        }
+      ],
+      "serviceAttributesMetrics": {
+        "destination_location": "CBG",
+        "gbtt_pta": "0124",
+        "toc_code": "GN",
+        "origin_location": "KGX",
+        "rids": [
+          "201610257170724",
+          "201610267170724",
+          "201610277170724",
+          "201610287170724"
+        ],
+        "gbtt_ptd": "0011",
+        "matched_services": "4"
+      }
+    },
+    {
+      "Metrics": [
+        {
+          "percent_tolerance": "0",
+          "num_not_tolerance": "2",
+          "tolerance_value": "0",
+          "num_tolerance": "0",
+          "global_tolerance": true
+        },
+        {
+          "percent_tolerance": "50",
+          "num_not_tolerance": "1",
+          "tolerance_value": "30",
+          "num_tolerance": "1",
+          "global_tolerance": false
+        }
+      ],
+      "serviceAttributesMetrics": {
+        "destination_location": "CBG",
+        "gbtt_pta": "0142",
+        "toc_code": "GN",
+        "origin_location": "KGX",
+        "rids": [
+          "201610207170724",
+          "201610217170724"
+        ],
+        "gbtt_ptd": "0011",
+        "matched_services": "2"
+      }
+    },
+    {
+      "Metrics": [
+        {
+          "percent_tolerance": "80",
+          "num_not_tolerance": "1",
+          "tolerance_value": "0",
+          "num_tolerance": "4",
+          "global_tolerance": true
+        },
+        {
+          "percent_tolerance": "80",
+          "num_not_tolerance": "1",
+          "tolerance_value": "30",
+          "num_tolerance": "4",
+          "global_tolerance": false
+        }
+      ],
+      "serviceAttributesMetrics": {
+        "destination_location": "CBG",
+        "gbtt_pta": "0130",
+        "toc_code": "GN",
+        "origin_location": "KGX",
+        "rids": [
+          "201610037171311",
+          "201610107171311",
+          "201610177171311",
+          "201610247171311",
+          "201610317171311"
+        ],
+        "gbtt_ptd": "0011",
+        "matched_services": "5"
+      }
+    }
+  ]
+}

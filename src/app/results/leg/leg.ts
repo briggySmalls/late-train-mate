@@ -2,9 +2,7 @@ import * as moment from 'moment';
 import * as assert from 'assert';
 import { Observable } from 'rxjs/Observable';
 
-import { JourneyDetails, StopDetails, IStation } from '../../national-rail/hsp-types';
-import { HspApiService } from '../../national-rail/hsp-api.service';
-
+import { JourneyDetails, StopDetails, IStation, HspApiService } from '../../national-rail';
 
 export enum LegState {
   Unpopulated,
@@ -72,11 +70,11 @@ export class Leg {
    *********************************************************************/
 
 
-  public get actualDeparture(): moment.Moment { return (this.fromStationDetails) ? this.fromStationDetails.actualDeparture : null; }
+  public get actualDeparture(): moment.Moment { return (this.fromStationDetails) ? this.fromStationDetails.actualDeparture : undefined; }
 
-  public get actualArrival(): moment.Moment { return (this.toStationDetails) ? this.toStationDetails.actualArrival : null; }
+  public get actualArrival(): moment.Moment { return (this.toStationDetails) ? this.toStationDetails.actualArrival : undefined; }
 
-  public get disruptionCode(): number { return (this.toStationDetails) ? this.toStationDetails.disruptionCode : null; }
+  public get disruptionCode(): number { return (this.toStationDetails) ? this.toStationDetails.disruptionCode : undefined; }
 
   public get stateClass(): string {
     let className: string;
@@ -138,18 +136,18 @@ export class Leg {
     this.m_fromStationDetails = new Stop(this.getStop(this.fromStation));
     this.m_toStationDetails = new Stop(this.getStop(this.toStation));
     // Assert that our scheduled times match up with the details
-    assert.equal(this.fromStationDetails.scheduledDeparture.minutes, this.scheduledDeparture.minutes);
-    assert.equal(this.fromStationDetails.scheduledDeparture.hours, this.scheduledDeparture.hours);
-    assert.equal(this.toStationDetails.scheduledArrival.minutes, this.scheduledArrival.minutes);
-    assert.equal(this.toStationDetails.scheduledArrival.hours, this.scheduledArrival.hours);
+    assert.equal(this.fromStationDetails.scheduledDeparture.minute(), this.scheduledDeparture.minute());
+    assert.equal(this.fromStationDetails.scheduledDeparture.hour(), this.scheduledDeparture.hour());
+    assert.equal(this.toStationDetails.scheduledArrival.minute(), this.scheduledArrival.minute());
+    assert.equal(this.toStationDetails.scheduledArrival.hour(), this.scheduledArrival.hour());
 
     // Update our scheduled departure/arrival
     this.scheduledDeparture = this.fromStationDetails.scheduledDeparture;
     this.scheduledArrival = this.toStationDetails.scheduledArrival;
 
     // Update the delay status based upon the results
-    if (this.actualArrival == null) {
-      if (this.actualDeparture == null) {
+    if (this.actualArrival === undefined) {
+      if (this.actualDeparture === undefined) {
         // Journey was cancelled before arrival
         this.transition(LegState.Cancelled);
       } else {
@@ -198,12 +196,12 @@ class Stop {
   public get departedOnTime(): boolean {
     return (this.details.scheduledDeparture) ?
       (this.details.actualDeparture && this.details.actualDeparture.isSame(this.details.scheduledDeparture)) :
-      null;
+      undefined;
   }
 
   public get arrivedOnTime(): boolean {
     return (this.details.scheduledArrival) ?
       (this.details.actualArrival && this.details.actualArrival.isSame(this.details.scheduledArrival)) :
-      null;
+      undefined;
   }
 }

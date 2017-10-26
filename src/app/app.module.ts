@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { ResultsModule } from './results/results.module';
 import { SearchComponent } from './search/search.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { ResourceService } from './national-rail/resource.service';
+import { ResourceService } from './national-rail';
 
 @NgModule({
   imports: [
