@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { List } from 'linqts';
 
 import * as moment from 'moment';
 
@@ -39,7 +40,11 @@ export class SearchComponent implements OnInit {
     private m_stations: IStation[];
 
     public ngOnInit(): void {
-        this.m_stations = this.resourceService.getStations();
+      this.resourceService
+        .getStations()
+        .subscribe(stations => {
+          this.m_stations = stations.OrderBy(station => station.display).ToArray();
+        });
     }
 
     public get stations(): IStation[] { return this.m_stations; }
