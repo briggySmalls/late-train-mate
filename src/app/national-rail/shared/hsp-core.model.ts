@@ -43,6 +43,6 @@ export class HspApiData {
  * TODO: Remove 'I' and potentially replace with a class?
  */
 export interface IStation {
-    display: string;
-    value: string;
+    readonly code: string;
+    readonly text: string;
 }

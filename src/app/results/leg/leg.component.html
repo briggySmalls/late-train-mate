@@ -2,7 +2,7 @@
 <table class="leg">
     <tbody>
         <tr>
-            <td>{{ leg.fromStation.display }}</td>
+            <td>{{ leg.fromStation.text }}</td>
             <td class="map-stop departure"></td>
             <td>{{ leg.scheduledDeparture.format("HH:mm") }}</td>
             <td>
@@ -12,7 +12,7 @@
             </td>
         </tr>
         <tr>
-            <td>{{ leg.toStation.display }}</td>
+            <td>{{ leg.toStation.text }}</td>
             <td class="map-stop arrival"></td>
             <td>{{ leg.scheduledArrival.format("HH:mm") }}</td>
             <td>

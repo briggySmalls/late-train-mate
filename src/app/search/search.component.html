@@ -5,15 +5,15 @@
         <legend>Route details</legend>
         <label>Station From:</label>
         <select formControlName="fromStation" >
-            <option *ngFor="let station of stations" [value]="station.value">  
-                {{station.display}}
+            <option *ngFor="let station of stations" [value]="station.code">
+                {{station.text}}
             </option>
         </select>
 
         <label>Station To:</label>
         <select formControlName="toStation" >
-            <option *ngFor="let station of stations" [value]="station.value">  
-                {{station.display}}
+            <option *ngFor="let station of stations" [value]="station.code">
+                {{station.text}}
             </option>
         </select>
     </fieldset>

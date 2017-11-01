@@ -23,7 +23,7 @@ class ResourceService {
     }
 
     public lookup(code: string): Observable<IStation> {
-      return this.m_stationCodes.map(stations => stations.First(station => (station.value === code)));
+      return this.m_stationCodes.map(stations => stations.First(station => (station.code === code)));
     }
 
     // Private methods

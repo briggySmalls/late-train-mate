@@ -43,7 +43,7 @@ export class SearchComponent implements OnInit {
       this.resourceService
         .getStations()
         .subscribe(stations => {
-          this.m_stations = stations.OrderBy(station => station.display).ToArray();
+          this.m_stations = stations.OrderBy(station => station.text).ToArray();
         });
     }
 
