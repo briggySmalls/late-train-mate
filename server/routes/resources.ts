@@ -8,7 +8,7 @@ import { Parser } from "xml2js";
 /**
  * TODO: Remove 'I' and potentially replace with a class?
  */
-interface Station {
+interface IStation {
   readonly code: string;
   readonly text: string;
 }
@@ -23,7 +23,7 @@ const RESOURCES_PATH = `${__dirname}/resources`;
 const STATIONS_FILE_PATH = `${RESOURCES_PATH}/*_ref_v3.xml`;
 
 // Populate the stations list immediately
-let allStations: Station[] = [];
+let allStations: IStation[] = [];
 let allReasons: IReason[] = [];
 
 // Load the resources from disk when we load the module
