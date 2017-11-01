@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import { List } from 'linqts';
 import * as assert from 'assert';
 
-import { HspApiService, JourneyDetails, StopDetails, IStation } from '../national-rail';
+import { HspApiService, JourneyDetails, StopDetails, Station } from '../national-rail';
 import { Leg, LegState } from './leg/leg';
 
 
@@ -39,10 +39,10 @@ export class Journey {
   public constructor(private serviceId: number,
     private m_scheduledDeparture: moment.Moment,
     private m_scheduledArrival: moment.Moment,
-    private m_fromStation: IStation,
-    private m_toStation: IStation,
-    private m_originStation: IStation,
-    private m_terminatingStation: IStation,
+    private m_fromStation: Station,
+    private m_toStation: Station,
+    private m_originStation: Station,
+    private m_terminatingStation: Station,
     private delay: moment.Duration) {
 
     // Squeeze the date out of the RID for sorting purposes
@@ -77,10 +77,10 @@ export class Journey {
   public get scheduledDeparture(): moment.Moment { return this.m_scheduledDeparture; }
 
 
-  public get fromStation(): IStation { return this.m_fromStation; }
-  public get toStation(): IStation { return this.m_toStation; }
-  public get originStation(): IStation { return this.m_originStation; }
-  public get terminatingStation(): IStation { return this.m_terminatingStation; }
+  public get fromStation(): Station { return this.m_fromStation; }
+  public get toStation(): Station { return this.m_toStation; }
+  public get originStation(): Station { return this.m_originStation; }
+  public get terminatingStation(): Station { return this.m_terminatingStation; }
 
   public get legs(): Leg[] { return this.m_legs.ToArray(); }
 

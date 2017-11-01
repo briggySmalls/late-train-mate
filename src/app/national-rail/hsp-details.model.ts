@@ -1,7 +1,7 @@
 import { List } from 'linqts';
 import * as moment from 'moment';
 
-import { HspApiData, IStation, TimeOnly, DateOnly } from './shared/hsp-core.model';
+import { HspApiData, Station, TimeOnly, DateOnly } from './shared/hsp-core.model';
 import { ResourceService } from './resource.service';
 
 export class JourneyDetails extends HspApiData {
@@ -45,7 +45,7 @@ export class JourneyDetails extends HspApiData {
 }
 
 export class StopDetails extends HspApiData {
-  public station: IStation;
+  public station: Station;
   public scheduledDeparture: moment.Moment;
   public scheduledArrival: moment.Moment;
   public actualDeparture: moment.Moment;

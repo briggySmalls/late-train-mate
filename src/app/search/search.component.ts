@@ -6,7 +6,7 @@ import { List } from 'linqts';
 import * as moment from 'moment';
 
 import { ResourceService } from '../national-rail/resource.service';
-import { IStation } from '../national-rail/shared/hsp-core.model';
+import { Station } from '../national-rail/shared/hsp-core.model';
 
 
 @Component({
@@ -37,7 +37,7 @@ export class SearchComponent implements OnInit {
 
     public search: FormGroup;
 
-    private m_stations: IStation[];
+    private m_stations: Station[];
 
     public ngOnInit(): void {
       this.resourceService
@@ -47,7 +47,7 @@ export class SearchComponent implements OnInit {
         });
     }
 
-    public get stations(): IStation[] { return this.m_stations; }
+    public get stations(): Station[] { return this.m_stations; }
 
     onSubmit() {
         const link = [

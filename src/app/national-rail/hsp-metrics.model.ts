@@ -1,7 +1,7 @@
 import { List } from 'linqts';
 import * as moment from 'moment';
 
-import { HspApiData, IStation, TimeOnly, DateOnly } from './shared/hsp-core.model';
+import { HspApiData, Station, TimeOnly, DateOnly } from './shared/hsp-core.model';
 import { ResourceService } from './resource.service';
 
 export class MetricsCollection extends HspApiData {
@@ -9,11 +9,11 @@ export class MetricsCollection extends HspApiData {
     /**
      * @brief   The start station for which metrics were calculated
      */
-    public fromStation: IStation;
+    public fromStation: Station;
     /**
      * @brief   The end station for which metrics were calculated
      */
-    public toStation: IStation;
+    public toStation: Station;
     /**
      * @brief   The collection of metrics per service
      */
@@ -33,8 +33,8 @@ export class MetricsCollection extends HspApiData {
 
 export class ServiceMetrics extends HspApiData {
 
-  public originStation: IStation;
-  public destinationStation: IStation;
+  public originStation: Station;
+  public destinationStation: Station;
   public departureTime: TimeOnly;
   public arrivalTime: TimeOnly;
   public tocCode: string;

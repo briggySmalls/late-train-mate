@@ -39,10 +39,7 @@ export class HspApiData {
     }
 }
 
-/**
- * TODO: Remove 'I' and potentially replace with a class?
- */
-export interface IStation {
+export interface Station {
     readonly code: string;
     readonly text: string;
 }

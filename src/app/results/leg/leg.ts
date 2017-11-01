@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import * as assert from 'assert';
 import { Observable } from 'rxjs/Observable';
 
-import { JourneyDetails, StopDetails, IStation, HspApiService } from '../../national-rail';
+import { JourneyDetails, StopDetails, Station, HspApiService } from '../../national-rail';
 
 export enum LegState {
   Unpopulated,
@@ -28,8 +28,8 @@ export class Leg {
    *********************************************************************/
 
   public constructor(private serviceId: number,
-    public fromStation: IStation,
-    public toStation: IStation,
+    public fromStation: Station,
+    public toStation: Station,
     public scheduledDeparture: moment.Moment,
     public scheduledArrival: moment.Moment,
     private delay: moment.Duration) {
@@ -179,7 +179,7 @@ export class Leg {
     this.state = newState;
   }
 
-  private getStop(station: IStation): StopDetails {
+  private getStop(station: Station): StopDetails {
     return this.details.stops.First(x => x.station === station);
   }
 }
