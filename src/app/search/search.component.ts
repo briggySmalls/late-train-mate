@@ -57,4 +57,8 @@ export class SearchComponent implements OnInit {
         ];
         this.router.navigate(link);
     }
+
+    stationFormatter(station: any): string {
+      return `${station.text}`;
+    }
 }

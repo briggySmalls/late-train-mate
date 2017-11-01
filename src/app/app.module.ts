@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
+import { Ng2AutoCompleteModule } from "ng2-auto-complete";
 
 import { AppComponent } from './app.component';
 import { ResultsModule } from './results/results.module';
@@ -18,6 +19,7 @@ import { ResourceService, HttpResourceService } from './national-rail';
       FormsModule,
       AppRoutingModule,
       ResultsModule,
+      Ng2AutoCompleteModule
   ],
   declarations: [
       AppComponent,

@@ -55,6 +55,7 @@
     "jsonwebtoken": "^7.3.0",
     "linqts": "^1.7.4",
     "moment": "^2.17.1",
+    "ng2-auto-complete": "^0.12.0",
     "ngrx-store-freeze": "^0.1.9",
     "normalize.css": "^5.0.0",
     "path": "^0.12.7",

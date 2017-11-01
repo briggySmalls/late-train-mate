@@ -4,18 +4,20 @@
         <!-- Route locations -->
         <legend>Route details</legend>
         <label>Station From:</label>
-        <select formControlName="fromStation" >
-            <option *ngFor="let station of stations" [value]="station.code">
-                {{station.text}}
-            </option>
-        </select>
+        <input formControlName="fromStation"
+               ng2-auto-complete
+               [source]="stations"
+               select-value-of="code"
+               [list-formatter]="stationFormatter"
+               accept-user-input="false" />
 
         <label>Station To:</label>
-        <select formControlName="toStation" >
-            <option *ngFor="let station of stations" [value]="station.code">
-                {{station.text}}
-            </option>
-        </select>
+        <input formControlName="toStation"
+               ng2-auto-complete
+               [source]="stations"
+               select-value-of="code"
+               [list-formatter]="stationFormatter"
+               accept-user-input="false" />
     </fieldset>
     <fieldset>
         <!-- Date range -->
