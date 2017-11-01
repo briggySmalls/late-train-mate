@@ -9,13 +9,13 @@ import { Parser } from "xml2js";
  * TODO: Remove 'I' and potentially replace with a class?
  */
 interface IStation {
-  code: string;
-  text: string;
+  readonly code: string;
+  readonly text: string;
 }
 
 interface IReason {
-  code: string;
-  text: string;
+  readonly code: number;
+  readonly text: string;
 }
 
 const resourcesRouter: Router = Router();
@@ -91,13 +91,13 @@ function loadReasons(data: any) {
   for (let reason of data.PportTimetableRef.LateRunningReasons[0].Reason) {
     assert(reason.$.hasOwnProperty("code"));
     assert(reason.$.hasOwnProperty("reasontext"));
-    allReasons.push({code: reason.$.code, text: reason.$.reasontext});
+    allReasons.push({code: +reason.$.code, text: reason.$.reasontext});
   }
   // Add a key for each cancellation reason
   for (let reason of data.PportTimetableRef.CancellationReasons[0].Reason) {
     assert(reason.$.hasOwnProperty("code"));
     assert(reason.$.hasOwnProperty("reasontext"));
-    allReasons.push({code: reason.$.code, text: reason.$.reasontext});
+    allReasons.push({code: +reason.$.code, text: reason.$.reasontext});
   }
 }
 
