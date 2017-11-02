@@ -3,7 +3,6 @@ import { Observer } from 'rxjs/Observer';
 import { List } from 'linqts';
 
 import { MetricsCollection } from './hsp-metrics.model';
-import { ResourceService } from './resource.service';
 import { MockResourceService } from './resource.service.mock';
 import { Station } from './shared/hsp-core.model';
 
@@ -11,10 +10,22 @@ const metricsJson = require('./resources/test-data/SM-FPK-CBG-0000-2359-20161001
 
 describe('MetricsCollection', function () {
   let mC: MetricsCollection;
+  const mockResourceService = new MockResourceService();
 
   // Prepare the test
-  beforeEach(async() => {
-    mC = new MetricsCollection(metricsJson, new MockResourceService());
+  beforeEach(() => {
+    // Configure the TestBed to return some data
+    mockResourceService.stations = [
+      { code: 'KGX', text: '' },
+      { code: 'FPK', text: 'Finsbury Park' },
+      { code: 'SVG', text: '' },
+      { code: 'HIT', text: '' },
+      { code: 'LET', text: '' },
+      { code: 'BDK', text: '' },
+      { code: 'RYS', text: '' },
+      { code: 'CBG', text: 'Cambridge' }
+    ];
+    mC = new MetricsCollection(metricsJson, mockResourceService);
   });
 
   // Test object created

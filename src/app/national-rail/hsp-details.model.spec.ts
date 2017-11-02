@@ -3,7 +3,6 @@ import { Observer } from 'rxjs/Observer';
 import { List } from 'linqts';
 
 import { JourneyDetails } from './hsp-details.model';
-import { ResourceService } from './resource.service';
 import { MockResourceService } from './resource.service.mock';
 import { Station } from './shared/hsp-core.model';
 
@@ -11,13 +10,25 @@ const detailsJson = require('./resources/test-data/SD-201610037170624.json');
 
 describe('JourneyDetails', function () {
   let jD: JourneyDetails;
-  const mockResourceService: ResourceService = jasmine.createSpyObj('ResourceService', ['lookup']);
+  const mockResourceService: MockResourceService = new MockResourceService();
 
   // Prepare the test
-  beforeEach(async() => {
+  beforeEach(async(() => {
     // Create the unit under test
-    jD = new JourneyDetails(detailsJson, new MockResourceService());
-  });
+    jD = new JourneyDetails(detailsJson, mockResourceService);
+
+    // Configure the TestBed to return some data
+    mockResourceService.stations = [
+      { code: 'KGX', text: '' },
+      { code: 'FPK', text: 'Finsbury Park' },
+      { code: 'SVG', text: '' },
+      { code: 'HIT', text: '' },
+      { code: 'LET', text: '' },
+      { code: 'BDK', text: '' },
+      { code: 'RYS', text: '' },
+      { code: 'CBG', text: 'Cambridge' }
+    ];
+  }));
 
   // Test object created
   it('should create object', () => expect(jD).toBeDefined() );

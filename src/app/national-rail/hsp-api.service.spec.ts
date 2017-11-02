@@ -23,7 +23,7 @@ describe('HspApiService', () => {
   let service: HspApiService;
 
   // Note: we Mark function as async to ensure everything is resolved by the start
-  beforeEach(async() => {
+  beforeEach(async(() => {
     // Configure our test environment
     TestBed.configureTestingModule({
       providers: [
@@ -45,13 +45,25 @@ describe('HspApiService', () => {
       ]
     });
 
+    // Configure the TestBed to return some data
+    TestBed.get(MockResourceService).stations = [
+      { code: 'KGX', text: '' },
+      { code: 'FPK', text: 'Finsbury Park' },
+      { code: 'SVG', text: '' },
+      { code: 'HIT', text: '' },
+      { code: 'LET', text: '' },
+      { code: 'BDK', text: '' },
+      { code: 'RYS', text: '' },
+      { code: 'CBG', text: 'Cambridge' }
+    ];
+
     // Grab hold of the mock backend so we can query the connections made
     backend = TestBed.get(MockBackend);
     backend.connections.subscribe((connection: any) => this.lastConnection = connection);
 
     // Create the unit under test
     service = TestBed.get(HspApiService);
-  });
+  }));
 
   it('should be created', () => {
     expect(service).toBeTruthy();
