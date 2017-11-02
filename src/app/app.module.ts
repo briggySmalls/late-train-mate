@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { ResultsModule } from './results/results.module';
 import { SearchComponent } from './search/search.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { ResourceService } from './national-rail';
+import { ResourceService, HttpResourceService } from './national-rail';
 
 @NgModule({
   imports: [
@@ -24,7 +24,7 @@ import { ResourceService } from './national-rail';
       SearchComponent,
       PageNotFoundComponent,
   ],
-  providers: [ ResourceService ],
+  providers: [{ provide: ResourceService, useClass: HttpResourceService }],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

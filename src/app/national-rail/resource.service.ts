@@ -10,7 +10,13 @@ import { Station } from './shared/hsp-core.model';
 const STATIONS_URL = '/api/resources/stations';
 
 @Injectable()
-class ResourceService {
+export abstract class ResourceService {
+  abstract getStations(): Observable<List<Station>>;
+  abstract lookup(code: string): Observable<Station>;
+}
+
+@Injectable()
+export class HttpResourceService {
     private m_stationCodes: Subject<List<Station>> = new BehaviorSubject<List<Station>>(new List<Station>());
 
     constructor(private http: Http) {
@@ -34,4 +40,3 @@ class ResourceService {
     }
 }
 
-export { ResourceService }

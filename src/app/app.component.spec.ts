@@ -5,7 +5,7 @@ import { APP_BASE_HREF } from '@angular/common';
 
 import { AppComponent } from './app.component';
 import { AppModule } from './app.module';
-import { HspApiService, ResourceService } from './national-rail';
+import { HspApiService, HttpResourceService } from './national-rail';
 
 describe('AppComponent', function () {
   let de: DebugElement;

@@ -1,15 +1,50 @@
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import { List } from 'linqts';
+
 import { JourneyDetails } from './hsp-details.model';
 import { ResourceService } from './resource.service';
+import { Station } from './shared/hsp-core.model';
 
 const detailsJson = require('./resources/test-data/SD-201610037170624.json');
 
+const stations: Station[] = [
+  { code: 'KGX', text: '' },
+  { code: 'FPK', text: 'Finsbury Park' },
+  { code: 'SVG', text: '' },
+  { code: 'HIT', text: '' },
+  { code: 'LET', text: '' },
+  { code: 'BDK', text: '' },
+  { code: 'RYS', text: '' },
+  { code: 'CBG', text: 'Cambridge' }
+];
+
+export function getStationObservable(code: string): Observable<Station> {
+  return Observable.create((observer: Observer<Station>) => {
+    // Iterate through the stations and return one if found
+    for (const station of stations) {
+      if (station.code === code) {
+        // We have found the station, so send it
+        observer.next(station);
+        break;
+      }
+    };
+    observer.complete();
+  });
+}
+
 describe('JourneyDetails', function () {
   let jD: JourneyDetails;
+  const mockResourceService: ResourceService = jasmine.createSpyObj('ResourceService', ['lookup']);
 
   // Prepare the test
-  beforeEach((() => {
-    jD = new JourneyDetails(detailsJson, new ResourceService());
-  }));
+  beforeEach(async() => {
+    // Create a mock lookup function
+    (<jasmine.Spy>mockResourceService.lookup).and.callFake(getStationObservable);
+
+    // Create the unit under test
+    jD = new JourneyDetails(detailsJson, mockResourceService);
+  });
 
   // Test object created
   it('should create object', () => expect(jD).toBeDefined() );
@@ -25,8 +60,9 @@ describe('JourneyDetails', function () {
 
   // Test journey stops
   it('should have expected stops', () => {
+
     // Stop 1
-    expect(jD.stops.ElementAt(0).station.value).toEqual('KGX');
+    expect(jD.stops.ElementAt(0).station.code).toEqual('KGX');
     expect(jD.stops.ElementAt(0).scheduledArrival).toBeUndefined();
     expect(jD.stops.ElementAt(0).actualArrival).toBeUndefined();
     expect(jD.stops.ElementAt(0).scheduledDeparture.hour()).toEqual(9);
@@ -36,7 +72,7 @@ describe('JourneyDetails', function () {
     expect(jD.stops.ElementAt(0).disruptionCode).toEqual(904);
 
     // Stop 2
-    expect(jD.stops.ElementAt(1).station.value).toEqual('FPK');
+    expect(jD.stops.ElementAt(1).station.code).toEqual('FPK');
     expect(jD.stops.ElementAt(1).scheduledArrival.hour()).toEqual(9);
     expect(jD.stops.ElementAt(1).scheduledArrival.minute()).toEqual(57);
     expect(jD.stops.ElementAt(1).actualArrival.hour()).toEqual(9);
@@ -48,7 +84,7 @@ describe('JourneyDetails', function () {
     expect(jD.stops.ElementAt(1).disruptionCode).toEqual(904);
 
     // Stop 3
-    expect(jD.stops.ElementAt(2).station.value).toEqual('SVG');
+    expect(jD.stops.ElementAt(2).station.code).toEqual('SVG');
     expect(jD.stops.ElementAt(2).scheduledArrival.hour()).toEqual(10);
     expect(jD.stops.ElementAt(2).scheduledArrival.minute()).toEqual(17);
     expect(jD.stops.ElementAt(2).actualArrival.hour()).toEqual(10);
@@ -60,7 +96,7 @@ describe('JourneyDetails', function () {
     expect(jD.stops.ElementAt(2).disruptionCode).toEqual(904);
 
     // Stop 4
-    expect(jD.stops.ElementAt(3).station.value).toEqual('HIT');
+    expect(jD.stops.ElementAt(3).station.code).toEqual('HIT');
     expect(jD.stops.ElementAt(3).scheduledArrival.hour()).toEqual(10);
     expect(jD.stops.ElementAt(3).scheduledArrival.minute()).toEqual(22);
     expect(jD.stops.ElementAt(3).actualArrival.hour()).toEqual(10);
@@ -72,7 +108,7 @@ describe('JourneyDetails', function () {
     expect(jD.stops.ElementAt(3).disruptionCode).toEqual(904);
 
     // Stop 5
-    expect(jD.stops.ElementAt(4).station.value).toEqual('LET');
+    expect(jD.stops.ElementAt(4).station.code).toEqual('LET');
     expect(jD.stops.ElementAt(4).scheduledArrival.hour()).toEqual(10);
     expect(jD.stops.ElementAt(4).scheduledArrival.minute()).toEqual(27);
     expect(jD.stops.ElementAt(4).actualArrival.hour()).toEqual(10);
@@ -84,7 +120,7 @@ describe('JourneyDetails', function () {
     expect(jD.stops.ElementAt(4).disruptionCode).toEqual(904);
 
     // Stop 6
-    expect(jD.stops.ElementAt(5).station.value).toEqual('BDK');
+    expect(jD.stops.ElementAt(5).station.code).toEqual('BDK');
     expect(jD.stops.ElementAt(5).scheduledArrival.hour()).toEqual(10);
     expect(jD.stops.ElementAt(5).scheduledArrival.minute()).toEqual(31);
     expect(jD.stops.ElementAt(5).actualArrival.hour()).toEqual(10);
@@ -96,7 +132,7 @@ describe('JourneyDetails', function () {
     expect(jD.stops.ElementAt(5).disruptionCode).toEqual(904);
 
     // Stop 7
-    expect(jD.stops.ElementAt(6).station.value).toEqual('RYS');
+    expect(jD.stops.ElementAt(6).station.code).toEqual('RYS');
     expect(jD.stops.ElementAt(6).scheduledArrival.hour()).toEqual(10);
     expect(jD.stops.ElementAt(6).scheduledArrival.minute()).toEqual(39);
     expect(jD.stops.ElementAt(6).actualArrival.hour()).toEqual(10);
@@ -108,7 +144,7 @@ describe('JourneyDetails', function () {
     expect(jD.stops.ElementAt(6).disruptionCode).toEqual(904);
 
     // Stop 8
-    expect(jD.stops.ElementAt(7).station.value).toEqual('CBG');
+    expect(jD.stops.ElementAt(7).station.code).toEqual('CBG');
     expect(jD.stops.ElementAt(7).scheduledArrival.hour()).toEqual(10);
     expect(jD.stops.ElementAt(7).scheduledArrival.minute()).toEqual(55);
     expect(jD.stops.ElementAt(7).actualArrival.hour()).toEqual(11);

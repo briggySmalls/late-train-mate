@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { List } from 'linqts';
-
 import * as moment from 'moment';
 
 import { ResourceService } from '../national-rail/resource.service';
