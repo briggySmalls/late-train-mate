@@ -4,34 +4,10 @@ import { List } from 'linqts';
 
 import { JourneyDetails } from './hsp-details.model';
 import { ResourceService } from './resource.service';
+import { MockResourceService } from './resource.service.mock';
 import { Station } from './shared/hsp-core.model';
 
 const detailsJson = require('./resources/test-data/SD-201610037170624.json');
-
-const stations: Station[] = [
-  { code: 'KGX', text: '' },
-  { code: 'FPK', text: 'Finsbury Park' },
-  { code: 'SVG', text: '' },
-  { code: 'HIT', text: '' },
-  { code: 'LET', text: '' },
-  { code: 'BDK', text: '' },
-  { code: 'RYS', text: '' },
-  { code: 'CBG', text: 'Cambridge' }
-];
-
-export function getStationObservable(code: string): Observable<Station> {
-  return Observable.create((observer: Observer<Station>) => {
-    // Iterate through the stations and return one if found
-    for (const station of stations) {
-      if (station.code === code) {
-        // We have found the station, so send it
-        observer.next(station);
-        break;
-      }
-    };
-    observer.complete();
-  });
-}
 
 describe('JourneyDetails', function () {
   let jD: JourneyDetails;
@@ -39,11 +15,8 @@ describe('JourneyDetails', function () {
 
   // Prepare the test
   beforeEach(async() => {
-    // Create a mock lookup function
-    (<jasmine.Spy>mockResourceService.lookup).and.callFake(getStationObservable);
-
     // Create the unit under test
-    jD = new JourneyDetails(detailsJson, mockResourceService);
+    jD = new JourneyDetails(detailsJson, new MockResourceService());
   });
 
   // Test object created

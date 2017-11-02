@@ -6,7 +6,16 @@ import { Station } from './shared/hsp-core.model';
 import { ResourceService } from './resource.service';
 
 export class MockResourceService {
-  public stations: Station[];
+  private readonly stations: Station[] = [
+    { code: 'KGX', text: '' },
+    { code: 'FPK', text: 'Finsbury Park' },
+    { code: 'SVG', text: '' },
+    { code: 'HIT', text: '' },
+    { code: 'LET', text: '' },
+    { code: 'BDK', text: '' },
+    { code: 'RYS', text: '' },
+    { code: 'CBG', text: 'Cambridge' }
+  ];
 
   public lookup = jasmine.createSpy('lookup').and.callFake((code: string) => {
     return Observable.create((observer: Observer<Station>) => {

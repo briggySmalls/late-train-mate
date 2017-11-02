@@ -21,7 +21,6 @@ const metricsJson = require('./resources/test-data/SM-FPK-CBG-0000-2359-20161001
 describe('HspApiService', () => {
   let backend: MockBackend;
   let service: HspApiService;
-  let resourceService: MockResourceService;
 
   // Note: we Mark function as async to ensure everything is resolved by the start
   beforeEach(async() => {
@@ -45,19 +44,6 @@ describe('HspApiService', () => {
         }
       ]
     });
-
-    // Grab hold of the mock ResourceService
-    resourceService = TestBed.get(MockResourceService);
-    resourceService.stations = [
-      { code: 'KGX', text: '' },
-      { code: 'FPK', text: 'Finsbury Park' },
-      { code: 'SVG', text: '' },
-      { code: 'HIT', text: '' },
-      { code: 'LET', text: '' },
-      { code: 'BDK', text: '' },
-      { code: 'RYS', text: '' },
-      { code: 'CBG', text: 'Cambridge' }
-    ];
 
     // Grab hold of the mock backend so we can query the connections made
     backend = TestBed.get(MockBackend);
@@ -94,8 +80,7 @@ describe('HspApiService', () => {
 
       // Test the serviceDetails function
       service.journeyDetails(0).subscribe((details: JourneyDetails) => {
-        // expect(details).toEqual(new JourneyDetails(detailsJson, resourceService));
-        expect(details).toBeDefined();
+        expect(details).toEqual(new JourneyDetails(detailsJson, TestBed.get(MockResourceService)));
       });
     });
   });
@@ -145,8 +130,7 @@ describe('HspApiService', () => {
         moment(metrics_args.fromDate, 'YYYY-MM-DD'), moment(metrics_args.toDate, 'YYYY-MM-DD'),
         metrics_args.days, metrics_args.delays.map(x => moment.duration(x, 'minutes')))
       .subscribe((metrics: MetricsCollection) => {
-        // expect(metrics).toEqual(new MetricsCollection(metricsJson, resourceService));
-        expect(metrics).toBeDefined();
+        expect(metrics).toEqual(new MetricsCollection(metricsJson, TestBed.get(MockResourceService)));
       });
     });
   });

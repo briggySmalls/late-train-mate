@@ -4,46 +4,17 @@ import { List } from 'linqts';
 
 import { MetricsCollection } from './hsp-metrics.model';
 import { ResourceService } from './resource.service';
+import { MockResourceService } from './resource.service.mock';
 import { Station } from './shared/hsp-core.model';
 
 const metricsJson = require('./resources/test-data/SM-FPK-CBG-0000-2359-20161001-20161101-WEEKDAY-[30].json');
 
-const stations: Station[] = [
-  { code: 'KGX', text: '' },
-  { code: 'FPK', text: 'Finsbury Park' },
-  { code: 'SVG', text: '' },
-  { code: 'HIT', text: '' },
-  { code: 'LET', text: '' },
-  { code: 'BDK', text: '' },
-  { code: 'RYS', text: '' },
-  { code: 'CBG', text: 'Cambridge' }
-];
-
-export function getStationObservable(code: string): Observable<Station> {
-  return Observable.create((observer: Observer<Station>) => {
-    // Iterate through the stations and return one if found
-    for (const station of stations) {
-      if (station.code === code) {
-        // We have found the station, so send it
-        observer.next(station);
-        break;
-      }
-    };
-    observer.complete();
-  });
-}
-
-
 describe('MetricsCollection', function () {
   let mC: MetricsCollection;
-  const mockResourceService: ResourceService = jasmine.createSpyObj('ResourceService', ['lookup']);
 
   // Prepare the test
   beforeEach(async() => {
-    // Create a mock lookup function
-    (<jasmine.Spy>mockResourceService.lookup).and.callFake(getStationObservable);
-
-    mC = new MetricsCollection(metricsJson, mockResourceService);
+    mC = new MetricsCollection(metricsJson, new MockResourceService());
   });
 
   // Test object created
