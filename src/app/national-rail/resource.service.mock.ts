@@ -1,30 +1,14 @@
+import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import { List } from 'linqts';
 
 import { Station } from './shared/hsp-core.model';
+import { ResourceService } from './resource.service';
 
-export class MockResourceService {
-  public stations: Station[];
-
-  public lookup = jasmine.createSpy('lookup').and.callFake((code: string) => {
-    return BehaviorSubject.create((observer: Observer<Station>) => {
-      // Iterate through the stations and return one if found
-      for (const station of this.stations) {
-        if (station.code === code) {
-          // We have found the station, so send it
-          observer.next(station);
-          break;
-        }
-      };
-      observer.complete();
-    });
-  });
-
-  public getStations = jasmine.createSpy('getStations').and.callFake(() => {
-    return BehaviorSubject.create((observer: Observer<List<Station>>) => {
-      observer.next(new List(this.stations));
-      observer.complete();
-    });
-  });
+export class MockResourceService extends ResourceService {
+  public setStations(stations: Station[]) {
+    this.stations.next(new List(stations));
+  }
 }

@@ -11,31 +11,26 @@ const STATIONS_URL = '/api/resources/stations';
 
 @Injectable()
 export abstract class ResourceService {
-  abstract getStations(): Observable<List<Station>>;
-  abstract lookup(code: string): Observable<Station>;
+  protected stations: Subject<List<Station>> = new BehaviorSubject<List<Station>>(new List<Station>());
+
+  // Public methods
+  public getStations(): Observable<List<Station>> {
+    return this.stations;
+  }
+
+  public lookup(code: string): Observable<Station> {
+    return this.stations.map(stations => stations.First(station => (station.code === code)));
+  }
 }
 
 @Injectable()
-export class HttpResourceService {
-    private m_stationCodes: Subject<List<Station>> = new BehaviorSubject<List<Station>>(new List<Station>());
-
+export class HttpResourceService extends ResourceService {
     constructor(private http: Http) {
-      this.populate();
-    }
+      super();
 
-    // Public methods
-    public getStations(): Observable<List<Station>> {
-      return this.m_stationCodes;
-    }
-
-    public lookup(code: string): Observable<Station> {
-      return this.m_stationCodes.map(stations => stations.First(station => (station.code === code)));
-    }
-
-    // Private methods
-    private populate(): void {
+      // Assign stations with a http result
       this.http.get(STATIONS_URL).subscribe(response => {
-        this.m_stationCodes.next(new List<Station>(response.json()));
+        this.stations.next(new List<Station>(response.json()));
       });
     }
 }

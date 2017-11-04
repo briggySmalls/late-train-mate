@@ -1,11 +1,10 @@
 import { ReflectiveInjector } from '@angular/core';
-import { async, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 import { Http,
   ConnectionBackend, XHRBackend,
   Response, ResponseOptions,
   Request, RequestOptions, BaseRequestOptions } from '@angular/http';
 import { MockBackend, MockConnection } from '@angular/http/testing';
-import { TestBed } from '@angular/core/testing';
 import * as moment from 'moment';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 
@@ -31,7 +30,23 @@ describe('HspApiService', () => {
         MockBackend,
         BaseRequestOptions,
         MockResourceService,
-        {provide: ResourceService, useClass: MockResourceService},
+        {
+          deps: [MockResourceService],
+          provide: ResourceService,
+          useFactory: (mockService: MockResourceService) => {
+            mockService.setStations([
+              { code: 'KGX', text: '' },
+              { code: 'FPK', text: 'Finsbury Park' },
+              { code: 'SVG', text: '' },
+              { code: 'HIT', text: '' },
+              { code: 'LET', text: '' },
+              { code: 'BDK', text: '' },
+              { code: 'RYS', text: '' },
+              { code: 'CBG', text: 'Cambridge' }
+            ]);
+            return mockService;
+          }
+        },
         {
           deps: [
             MockBackend,
@@ -44,18 +59,6 @@ describe('HspApiService', () => {
         }
       ]
     });
-
-    // Configure the TestBed to return some data
-    TestBed.get(MockResourceService).stations = [
-      { code: 'KGX', text: '' },
-      { code: 'FPK', text: 'Finsbury Park' },
-      { code: 'SVG', text: '' },
-      { code: 'HIT', text: '' },
-      { code: 'LET', text: '' },
-      { code: 'BDK', text: '' },
-      { code: 'RYS', text: '' },
-      { code: 'CBG', text: 'Cambridge' }
-    ];
 
     // Grab hold of the mock backend so we can query the connections made
     backend = TestBed.get(MockBackend);

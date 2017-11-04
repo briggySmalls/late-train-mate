@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { List } from 'linqts';
+import { async } from '@angular/core/testing';
 
 import { MetricsCollection } from './hsp-metrics.model';
 import { MockResourceService } from './resource.service.mock';
@@ -10,12 +11,12 @@ const metricsJson = require('./resources/test-data/SM-FPK-CBG-0000-2359-20161001
 
 describe('MetricsCollection', function () {
   let mC: MetricsCollection;
-  const mockResourceService = new MockResourceService();
 
-  // Prepare the test
-  beforeEach(() => {
-    // Configure the TestBed to return some data
-    mockResourceService.stations = [
+  beforeEach(async(() => {
+    // Create a resource service
+    const resourceService = new MockResourceService();
+    // Set the stations as you like
+    resourceService.setStations([
       { code: 'KGX', text: '' },
       { code: 'FPK', text: 'Finsbury Park' },
       { code: 'SVG', text: '' },
@@ -24,9 +25,9 @@ describe('MetricsCollection', function () {
       { code: 'BDK', text: '' },
       { code: 'RYS', text: '' },
       { code: 'CBG', text: 'Cambridge' }
-    ];
-    mC = new MetricsCollection(metricsJson, mockResourceService);
-  });
+    ]);
+    mC = new MetricsCollection(metricsJson, resourceService);
+  }));
 
   // Test object created
   it('should create object', () => expect(mC).toBeDefined() );

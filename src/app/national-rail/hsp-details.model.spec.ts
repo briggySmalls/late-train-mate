@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { List } from 'linqts';
+import { TestBed, async } from '@angular/core/testing';
 
 import { JourneyDetails } from './hsp-details.model';
 import { MockResourceService } from './resource.service.mock';
@@ -10,15 +11,13 @@ const detailsJson = require('./resources/test-data/SD-201610037170624.json');
 
 describe('JourneyDetails', function () {
   let jD: JourneyDetails;
-  const mockResourceService: MockResourceService = new MockResourceService();
 
   // Prepare the test
   beforeEach(async(() => {
-    // Create the unit under test
-    jD = new JourneyDetails(detailsJson, mockResourceService);
-
-    // Configure the TestBed to return some data
-    mockResourceService.stations = [
+    // Create a resource service
+    const resourceService = new MockResourceService();
+    // Set the stations as you like
+    resourceService.setStations([
       { code: 'KGX', text: '' },
       { code: 'FPK', text: 'Finsbury Park' },
       { code: 'SVG', text: '' },
@@ -27,7 +26,9 @@ describe('JourneyDetails', function () {
       { code: 'BDK', text: '' },
       { code: 'RYS', text: '' },
       { code: 'CBG', text: 'Cambridge' }
-    ];
+    ]);
+    // Create the unit under test
+    jD = new JourneyDetails(detailsJson, resourceService);
   }));
 
   // Test object created
