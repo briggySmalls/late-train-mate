@@ -3,6 +3,10 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { List } from 'linqts';
 import * as moment from 'moment';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 import { ResourceService } from '../national-rail/resource.service';
 import { Station } from '../national-rail/shared/hsp-core.model';
@@ -51,14 +55,26 @@ export class SearchComponent implements OnInit {
     onSubmit() {
         const link = [
             '/results',
-            this.search.value.fromStation, this.search.value.toStation,
+            this.search.value.fromStation.code, this.search.value.toStation.code,
             this.search.value.fromDate, this.search.value.toDate,
             this.search.value.days, this.search.value.delay
         ];
         this.router.navigate(link);
     }
 
-    stationFormatter(station: any): string {
-      return `${station.text}`;
+    /**
+     * Function to return station matches for a given search string
+     * Note: Fat arrow syntax used to keep 'this' from class scope
+     */
+    public stationSearch = (inputs: Observable<string>) => {
+      return inputs.debounceTime(200).distinctUntilChanged()
+        .map(term => term.length < 2 ? []
+          : this.stations.filter(s => s.text.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
     }
+
+    /**
+     * Converts a station to a string for typeahead
+     * @param station A station to format
+     */
+    public stationFormatter(station: Station): string { return (station) ? station.text : ''; }
 }

@@ -30,7 +30,7 @@ export class HttpResourceService extends ResourceService {
 
       // Assign stations with a http result
       this.http.get(STATIONS_URL).subscribe(response => {
-        this.stations.next(new List<Station>(response.json()));
+        this.stations.next(new List<Station>(response.json()).OrderBy(station => station.text));
       });
     }
 }

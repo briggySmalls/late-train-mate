@@ -3,26 +3,32 @@
     <fieldset>
         <!-- Route locations -->
         <legend>Route details</legend>
-        <label>Station From:</label>
-        <input formControlName="fromStation"
-               ng2-auto-complete
-               [source]="stations"
-               select-value-of="code"
-               [list-formatter]="stationFormatter"
-               accept-user-input="false" />
+        <label for="from-station-field">Station From:</label>
+        <input id="from-station-field"
+               type="text"
+               class="form-control"
+               formControlName="fromStation"
+               [ngModel]="stations"
+               [ngbTypeahead]="stationSearch"
+               [inputFormatter]="stationFormatter"
+               [resultFormatter]="stationFormatter"
+               editable=false />
 
-        <label>Station To:</label>
-        <input formControlName="toStation"
-               ng2-auto-complete
-               [source]="stations"
-               select-value-of="code"
-               [list-formatter]="stationFormatter"
-               accept-user-input="false" />
+        <label for="to-station-field">Station To:</label>
+        <input id="to-station-field"
+               type="text"
+               class="form-control"
+               [ngModel]="stations"
+               formControlName="toStation"
+               [ngbTypeahead]="stationSearch"
+               [inputFormatter]="stationFormatter"
+               [resultFormatter]="stationFormatter"
+               editable=false />
     </fieldset>
     <fieldset>
         <!-- Date range -->
         <legend>Date range</legend>
-        <label>Date From:</label>
+        <label for="to-station-field">Date From:</label>
         <input formControlName="fromDate" type="date">
 
         <label>Date To:</label>
