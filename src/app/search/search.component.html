@@ -28,17 +28,17 @@
         <label>Date To:</label>
         <input formControlName="toDate" type="date">
 
-        <div id="days-radio-group">
-            <label (click)=weekdaysBtn class="block">
-                <input #weekdaysBtn formControlName="days" type="radio" value="WEEKDAY">
+        <div id="days-radio-group" class="btn-group" ngbRadioGroup name="radioBasic" formControlName="days">
+            <label class="btn-primary" ngbButtonLabel>
+                <input ngbButton type="radio" value="WEEKDAY">
                 Weekdays
             </label>
-            <label (click)=saturdaysBtn class="block">
-                <input #saturdaysBtn formControlName="days" type="radio" value="SATURDAY">
+            <label class="btn-primary" ngbButtonLabel>
+                <input ngbButton type="radio" value="SATURDAY">
                 Saturdays
             </label>
-            <label (click)=sundaysBtn class="block">
-                <input #sundaysBtn formControlName="days" type="radio" value="SUNDAY">
+            <label class="btn-primary" ngbButtonLabel>
+                <input ngbButton type="radio" value="SUNDAY">
                 Sundays
             </label>
         </div>

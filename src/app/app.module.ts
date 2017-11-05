@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { Ng2AutoCompleteModule } from 'ng2-auto-complete';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,18 +13,18 @@ import { ResourceService, HttpResourceService } from './national-rail';
 
 @NgModule({
   imports: [
-      BrowserModule,
-      HttpModule,
-      ReactiveFormsModule,
-      FormsModule,
-      AppRoutingModule,
-      ResultsModule,
-      Ng2AutoCompleteModule
+    BrowserModule,
+    HttpModule,
+    ReactiveFormsModule,
+    FormsModule,
+    AppRoutingModule,
+    ResultsModule,
+    NgbModule.forRoot(),
   ],
   declarations: [
-      AppComponent,
-      SearchComponent,
-      PageNotFoundComponent,
+    AppComponent,
+    SearchComponent,
+    PageNotFoundComponent,
   ],
   providers: [{ provide: ResourceService, useClass: HttpResourceService }],
   bootstrap: [ AppComponent ]
