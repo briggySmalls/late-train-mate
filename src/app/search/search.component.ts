@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { List } from 'linqts';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
@@ -20,7 +20,7 @@ import { Station } from '../national-rail/shared/hsp-core.model';
     styleUrls: ['search.component.css'],
   })
   export class SearchComponent implements OnInit {
-    private m_stations: Station[] = [];
+    private stations: List<Station> = new List([]);
     public search: FormGroup;
 
     constructor(
@@ -30,8 +30,8 @@ import { Station } from '../national-rail/shared/hsp-core.model';
 
         this.search = fb.group({
             // Stations
-            'fromStation': [undefined, Validators.required],
-            'toStation': [undefined, Validators.required],
+            'fromStation': [undefined, [Validators.required, this.stationValidator()]],
+            'toStation': [undefined, [Validators.required, this.stationValidator()]],
             // Dates
             'fromDate': [undefined, Validators.required],
             'toDate': [undefined, Validators.required],
@@ -51,16 +51,26 @@ import { Station } from '../national-rail/shared/hsp-core.model';
       return `${date.year}-${date.month}-${date.day}`;
     }
 
+
+    /** A hero's name can't match the given regular expression */
+    private stationValidator(): ValidatorFn {
+      return (control: AbstractControl): { [key: string]: any } => {
+        const forbidden = !this.stations.Contains(control.value);
+        return forbidden ? { 'stationValidator': { value: control.value } } : null;
+      };
+    }
+
     public ngOnInit(): void {
       this.resourceService
         .getStations()
         .subscribe(stations => {
           // Save the stations
-          this.m_stations = stations.OrderBy(station => station.text).ToArray();
+          this.stations = stations.OrderBy(station => station.text);
         });
     }
 
-    public get stations(): Station[] { return this.m_stations; }
+    public get fromStation() { return this.search.get('fromStation'); }
+    public get toStation() { return this.search.get('toStation'); }
 
     onSubmit() {
         const link = [
@@ -82,7 +92,7 @@ import { Station } from '../national-rail/shared/hsp-core.model';
     public stationSearch = (inputs: Observable<string>) => {
       return inputs.debounceTime(200).distinctUntilChanged()
         .map(term => term.length < 2 ? []
-          : this.stations.filter(s => s.text.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
+          : this.stations.Where(s => s.text.toLowerCase().indexOf(term.toLowerCase()) > -1).Take(10).ToArray());
     }
 
     /**
@@ -91,3 +101,4 @@ import { Station } from '../national-rail/shared/hsp-core.model';
      */
     public stationFormatter(station: Station): string { return (station) ? station.text : ''; }
 }
+

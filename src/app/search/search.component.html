@@ -1,32 +1,34 @@
 <!-- TODO: Submit redirects to /results -->
-<form class="main-item container mt-" [formGroup]="search" (ngSubmit)="onSubmit()">
+<form class="main-item container mt-2" [formGroup]="search" (ngSubmit)="onSubmit()">
   <!-- Route locations -->
-  <fieldset class="form-group">
+  <fieldset>
       <legend>Route details</legend>
       <div class="row">
-        <div class="col-sm">
-          <label for="from-station-field">Station From:</label>
+        <div class="form-group col-sm">
+          <label for="from-station-field" class="form-control-label">From:</label>
           <input id="from-station-field"
-          type="text"
           class="form-control"
+          type="text"
           formControlName="fromStation"
           [ngbTypeahead]="stationSearch"
           [inputFormatter]="stationFormatter"
           [resultFormatter]="stationFormatter"
-          editable=false
-          placeholder="Station" />
+          placeholder="Station"
+          [class.is-invalid]="fromStation.invalid && fromStation.touched" />
+          <div class="invalid-feedback">Please pick a valid station from the list</div>
         </div>
-        <div class="col-sm">
-          <label for="to-station-field">Station To:</label>
+        <div class="form-group col-sm">
+          <label for="to-station-field" class="form-control-label">To:</label>
           <input id="to-station-field"
-          type="text"
           class="form-control"
+          type="text"
           formControlName="toStation"
           [ngbTypeahead]="stationSearch"
           [inputFormatter]="stationFormatter"
           [resultFormatter]="stationFormatter"
-          editable=false
-          placeholder="Station" />
+          placeholder="Station"
+          [class.is-invalid]="toStation.invalid && toStation.touched"/>
+          <div class="invalid-feedback">Please pick a valid station from the list</div>
         </div>
       </div>
     </fieldset>
