@@ -1,59 +1,84 @@
 <!-- TODO: Submit redirects to /results -->
-<form class="main-item" [formGroup]="search" (ngSubmit)="onSubmit()">
-    <fieldset>
-        <!-- Route locations -->
-        <legend>Route details</legend>
-        <label for="from-station-field">Station From:</label>
-        <input id="from-station-field"
-               type="text"
-               class="form-control"
-               formControlName="fromStation"
-               [ngModel]="stations"
-               [ngbTypeahead]="stationSearch"
-               [inputFormatter]="stationFormatter"
-               [resultFormatter]="stationFormatter"
-               editable=false />
-
-        <label for="to-station-field">Station To:</label>
-        <input id="to-station-field"
-               type="text"
-               class="form-control"
-               [ngModel]="stations"
-               formControlName="toStation"
-               [ngbTypeahead]="stationSearch"
-               [inputFormatter]="stationFormatter"
-               [resultFormatter]="stationFormatter"
-               editable=false />
+<form class="main-item container mt-" [formGroup]="search" (ngSubmit)="onSubmit()">
+  <!-- Route locations -->
+  <fieldset class="form-group">
+      <legend>Route details</legend>
+      <div class="row">
+        <div class="col-sm">
+          <label for="from-station-field">Station From:</label>
+          <input id="from-station-field"
+          type="text"
+          class="form-control"
+          formControlName="fromStation"
+          [ngModel]="stations"
+          [ngbTypeahead]="stationSearch"
+          [inputFormatter]="stationFormatter"
+          [resultFormatter]="stationFormatter"
+          editable=false />
+        </div>
+        <div class="col-sm">
+          <label for="to-station-field">Station To:</label>
+          <input id="to-station-field"
+          type="text"
+          class="form-control"
+          [ngModel]="stations"
+          formControlName="toStation"
+          [ngbTypeahead]="stationSearch"
+          [inputFormatter]="stationFormatter"
+          [resultFormatter]="stationFormatter"
+          editable=false />
+        </div>
+      </div>
     </fieldset>
-    <fieldset>
-        <!-- Date range -->
+    <!-- Date range -->
+    <fieldset class="form-group">
         <legend>Date range</legend>
-        <label for="to-station-field">Date From:</label>
-        <input formControlName="fromDate" type="date">
-
-        <label>Date To:</label>
-        <input formControlName="toDate" type="date">
-
-        <div id="days-radio-group" class="btn-group" ngbRadioGroup name="radioBasic" formControlName="days">
-            <label class="btn-primary" ngbButtonLabel>
-                <input ngbButton type="radio" value="WEEKDAY">
-                Weekdays
-            </label>
-            <label class="btn-primary" ngbButtonLabel>
-                <input ngbButton type="radio" value="SATURDAY">
-                Saturdays
-            </label>
-            <label class="btn-primary" ngbButtonLabel>
-                <input ngbButton type="radio" value="SUNDAY">
-                Sundays
-            </label>
+        <div class="row">
+          <div class="col-sm">
+            <label for="from-date-field">From:</label>
+            <input id="from-date-field"
+            class="form-control"
+            formControlName="fromDate"
+            ngbDatepicker
+            #fromDatePicker="ngbDatepicker"
+            type="date"
+            (focus)="fromDatePicker.open()">
+          </div>
+          <div class="col-sm">
+            <label for="to-date-field">To:</label>
+            <input id="to-date-field"
+            class="form-control"
+            formControlName="toDate"
+            ngbDatepicker
+            type="date"
+            #toDatePicker="ngbDatepicker"
+            (focus)="toDatePicker.open()">
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col">
+            <div id="days-radio-group" class="btn-group" ngbRadioGroup name="radioBasic" formControlName="days">
+              <label class="btn btn-primary active" ngbButtonLabel>
+                  <input ngbButton type="radio" value="WEEKDAY" checked>
+                  Weekdays
+              </label>
+              <label class="btn btn-primary" ngbButtonLabel>
+                  <input ngbButton type="radio" value="SATURDAY">
+                  Saturdays
+              </label>
+              <label class="btn btn-primary" ngbButtonLabel>
+                  <input ngbButton type="radio" value="SUNDAY">
+                  Sundays
+              </label>
+            </div>
+          </div>
         </div>
     </fieldset>
-    <fieldset>
+    <!-- Tolerance input -->
+    <fieldset class="form-group">
         <legend>Delay details</legend>
-        <!-- Tolerance input -->
-        <label>Delay (mins):</label>
-        <input formControlName="delay" type="number">
+        <label for="delay-field">Delay (mins):</label>
+        <input id="delay-field" class="form-control" formControlName="delay" type="number">
     </fieldset>
-    <button type="submit">Search</button>
+    <button type="submit" class="btn btn-primary btn-block">Search</button>
 </form>

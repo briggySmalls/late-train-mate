@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 import { ResourceService } from '../national-rail/resource.service';
 import { Station } from '../national-rail/shared/hsp-core.model';
@@ -17,8 +18,10 @@ import { Station } from '../national-rail/shared/hsp-core.model';
     selector: 'search-view',
     templateUrl: 'search.component.html',
     styleUrls: ['search.component.css'],
-})
-export class SearchComponent implements OnInit {
+  })
+  export class SearchComponent implements OnInit {
+    private m_stations: Station[];
+
     constructor(
         public fb: FormBuilder,
         private router: Router,
@@ -40,7 +43,13 @@ export class SearchComponent implements OnInit {
 
     public search: FormGroup;
 
-    private m_stations: Station[];
+    /**
+     * Converts an Ng-bootstrap date to a HSP-ready date string
+     * @param date The date structure
+     */
+    private static toHspDate(date: NgbDateStruct) {
+      return `${date.year}-${date.month}-${date.day}`;
+    }
 
     public ngOnInit(): void {
       this.resourceService
@@ -55,9 +64,12 @@ export class SearchComponent implements OnInit {
     onSubmit() {
         const link = [
             '/results',
-            this.search.value.fromStation.code, this.search.value.toStation.code,
-            this.search.value.fromDate, this.search.value.toDate,
-            this.search.value.days, this.search.value.delay
+            this.search.value.fromStation.code,
+            this.search.value.toStation.code,
+            SearchComponent.toHspDate(this.search.value.fromDate),
+            SearchComponent.toHspDate(this.search.value.toDate),
+            this.search.value.days,
+            this.search.value.delay
         ];
         this.router.navigate(link);
     }
