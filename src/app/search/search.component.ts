@@ -20,10 +20,10 @@ import { Station } from '../national-rail/shared/hsp-core.model';
     styleUrls: ['search.component.css'],
   })
   export class SearchComponent implements OnInit {
-    private m_stations: Station[];
+    private m_stations: Station[] = [];
 
     constructor(
-        public fb: FormBuilder,
+        fb: FormBuilder,
         private router: Router,
         private resourceService: ResourceService) {
 
@@ -55,6 +55,7 @@ import { Station } from '../national-rail/shared/hsp-core.model';
       this.resourceService
         .getStations()
         .subscribe(stations => {
+          // Save the stations
           this.m_stations = stations.OrderBy(station => station.text).ToArray();
         });
     }
