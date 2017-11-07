@@ -10,23 +10,23 @@
           type="text"
           class="form-control"
           formControlName="fromStation"
-          [ngModel]="stations"
           [ngbTypeahead]="stationSearch"
           [inputFormatter]="stationFormatter"
           [resultFormatter]="stationFormatter"
-          editable=false />
+          editable=false
+          placeholder="Station" />
         </div>
         <div class="col-sm">
           <label for="to-station-field">Station To:</label>
           <input id="to-station-field"
           type="text"
           class="form-control"
-          [ngModel]="stations"
           formControlName="toStation"
           [ngbTypeahead]="stationSearch"
           [inputFormatter]="stationFormatter"
           [resultFormatter]="stationFormatter"
-          editable=false />
+          editable=false
+          placeholder="Station" />
         </div>
       </div>
     </fieldset>
