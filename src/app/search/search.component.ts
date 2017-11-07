@@ -21,6 +21,7 @@ import { Station } from '../national-rail/shared/hsp-core.model';
   })
   export class SearchComponent implements OnInit {
     private m_stations: Station[] = [];
+    public search: FormGroup;
 
     constructor(
         fb: FormBuilder,
@@ -29,19 +30,18 @@ import { Station } from '../national-rail/shared/hsp-core.model';
 
         this.search = fb.group({
             // Stations
-            'fromStation': ['' , Validators.required],
-            'toStation': ['' , Validators.required],
+            'fromStation': [undefined, Validators.required],
+            'toStation': [undefined, Validators.required],
             // Dates
-            'fromDate': ['', Validators.required],
-            'toDate': ['', Validators.required],
+            'fromDate': [undefined, Validators.required],
+            'toDate': [undefined, Validators.required],
             // Day
-            'days': ['', Validators.required],
+            'days': [undefined, Validators.required],
             // Delay
-            'delay': ['', Validators.required]
+            'delay': [0, Validators.required]
         });
     }
 
-    public search: FormGroup;
 
     /**
      * Converts an Ng-bootstrap date to a HSP-ready date string
