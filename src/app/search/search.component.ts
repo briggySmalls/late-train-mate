@@ -12,6 +12,29 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ResourceService } from '../national-rail/resource.service';
 import { Station } from '../national-rail/shared/hsp-core.model';
 
+/**
+ * Validator to ensure that date is after other Control
+ * @param sibling Control to validate against
+ */
+function dateAfterControlValidator(sibling: AbstractControl): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } => {
+    if (control.value && sibling.value) {
+      const ours = toMoment(control.value);
+      const theirs = toMoment(sibling.value);
+      return (ours.isBefore(theirs)) ? { 'dateAfterControlValidator': { value: control.value } } : null;
+    }
+    return null;
+  };
+}
+
+/**
+ * Helper function to convert NgbDateStruct to a Moment
+ * @param date Ngb date structure
+ */
+function toMoment(date: NgbDateStruct): moment.Moment {
+  return moment([date.year, date.month - 1, date.day]);
+}
+
 
 @Component({
     moduleId: module.id,
@@ -22,26 +45,33 @@ import { Station } from '../national-rail/shared/hsp-core.model';
   export class SearchComponent implements OnInit {
     private stations: List<Station> = new List([]);
     public search: FormGroup;
+    public today: NgbDateStruct;
 
     constructor(
         fb: FormBuilder,
         private router: Router,
         private resourceService: ResourceService) {
 
-        this.search = fb.group({
-            // Stations
-            'fromStation': [undefined, [Validators.required, this.stationValidator()]],
-            'toStation': [undefined, [Validators.required, this.stationValidator()]],
-            // Dates
-            'fromDate': [undefined, Validators.required],
-            'toDate': [undefined, Validators.required],
-            // Day
-            'days': [undefined, Validators.required],
-            // Delay
-            'delay': [0, Validators.required]
-        });
-    }
+      this.search = fb.group({
+          // Stations
+          'fromStation': [undefined, [Validators.required, this.stationValidator()]],
+          'toStation': [undefined, [Validators.required, this.stationValidator()]],
+          // Dates
+          'fromDate': [undefined, Validators.required],
+          'toDate': [undefined, Validators.required],
+          // Day
+          'days': ['WEEKDAY', Validators.required],
+          // Delay
+          'delay': [0, Validators.required]
+      });
 
+      // Save today's date for datepicker
+      const today: Date = new Date();
+      this.today = { day: today.getUTCDate(), month: today.getUTCMonth() + 1, year: today.getUTCFullYear() };
+
+      // Update validator for toDate
+      this.toDate.setValidators([Validators.required, dateAfterControlValidator(this.fromDate)]);
+    }
 
     /**
      * Converts an Ng-bootstrap date to a HSP-ready date string
@@ -51,8 +81,9 @@ import { Station } from '../national-rail/shared/hsp-core.model';
       return `${date.year}-${date.month}-${date.day}`;
     }
 
-
-    /** A hero's name can't match the given regular expression */
+    /**
+     * Station input must match a recognised station
+     */
     private stationValidator(): ValidatorFn {
       return (control: AbstractControl): { [key: string]: any } => {
         const forbidden = !this.stations.Contains(control.value);
@@ -71,8 +102,10 @@ import { Station } from '../national-rail/shared/hsp-core.model';
 
     public get fromStation() { return this.search.get('fromStation'); }
     public get toStation() { return this.search.get('toStation'); }
+    public get fromDate() { return this.search.get('fromDate'); }
+    public get toDate() { return this.search.get('toDate'); }
 
-    onSubmit() {
+    public onSubmit() {
         const link = [
             '/results',
             this.search.value.fromStation.code,
@@ -83,6 +116,22 @@ import { Station } from '../national-rail/shared/hsp-core.model';
             this.search.value.delay
         ];
         this.router.navigate(link);
+    }
+
+    /**
+     * Helper function to determine if control should display errors
+     * @param control The control to review
+     */
+    public isShowInvalidStation(control: AbstractControl): Boolean {
+      return (control.invalid && control.dirty);
+    }
+
+    /**
+     * Helper function to determine if control should display errors
+     * @param control The control to review
+     */
+    public isShowInvalidDate(control: AbstractControl): Boolean {
+      return (control.invalid && !control.pristine);
     }
 
     /**

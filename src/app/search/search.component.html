@@ -14,7 +14,7 @@
           [inputFormatter]="stationFormatter"
           [resultFormatter]="stationFormatter"
           placeholder="Station"
-          [class.is-invalid]="fromStation.invalid && fromStation.touched" />
+          [class.is-invalid]="isShowInvalidStation(fromStation)" />
           <div class="invalid-feedback">Please pick a valid station from the list</div>
         </div>
         <div class="form-group col-sm">
@@ -27,7 +27,7 @@
           [inputFormatter]="stationFormatter"
           [resultFormatter]="stationFormatter"
           placeholder="Station"
-          [class.is-invalid]="toStation.invalid && toStation.touched"/>
+          [class.is-invalid]="isShowInvalidStation(toStation)"/>
           <div class="invalid-feedback">Please pick a valid station from the list</div>
         </div>
       </div>
@@ -40,36 +40,42 @@
             <label for="from-date-field">From:</label>
             <input id="from-date-field"
             class="form-control"
+            type="date"
             formControlName="fromDate"
             ngbDatepicker
             #fromDatePicker="ngbDatepicker"
-            type="date"
-            (focus)="fromDatePicker.open()">
+            (focus)="fromDatePicker.open()"
+            [maxDate]="today"
+            [class.is-invalid]="isShowInvalidDate(fromDate)"/>
+            <div class="invalid-feedback">Please pick a date</div>
           </div>
           <div class="col-sm">
             <label for="to-date-field">To:</label>
             <input id="to-date-field"
             class="form-control"
+            type="date"
             formControlName="toDate"
             ngbDatepicker
-            type="date"
             #toDatePicker="ngbDatepicker"
-            (focus)="toDatePicker.open()">
+            (focus)="toDatePicker.open()"
+            [maxDate]="today"
+            [class.is-invalid]="isShowInvalidDate(toDate)">
+            <div class="invalid-feedback">Please pick a date after the <em>from</em> date</div>
           </div>
         </div>
         <div class="row mt-2">
           <div class="col">
-            <div id="days-radio-group" class="btn-group" ngbRadioGroup name="radioBasic" formControlName="days">
+            <div id="days-radio-group" class="btn-group" role="group" ngbRadioGroup name="radioBasic" formControlName="days">
               <label class="btn btn-primary active" ngbButtonLabel>
-                  <input ngbButton type="radio" value="WEEKDAY" checked>
+                  <input ngbButton type="radio" value="WEEKDAY" class="form-control">
                   Weekdays
               </label>
               <label class="btn btn-primary" ngbButtonLabel>
-                  <input ngbButton type="radio" value="SATURDAY">
+                  <input ngbButton type="radio" class="form-control" value="SATURDAY">
                   Saturdays
               </label>
               <label class="btn btn-primary" ngbButtonLabel>
-                  <input ngbButton type="radio" value="SUNDAY">
+                  <input ngbButton type="radio" class="form-control" value="SUNDAY">
                   Sundays
               </label>
             </div>
