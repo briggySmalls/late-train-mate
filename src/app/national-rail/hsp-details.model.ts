@@ -4,6 +4,41 @@ import * as moment from 'moment';
 import { HspApiData, Station, TimeOnly, DateOnly } from './shared/hsp-core.model';
 import { ResourceService } from './resource.service';
 
+
+export class StopDetails extends HspApiData {
+  public station: Station;
+  public scheduledDeparture: moment.Moment;
+  public scheduledArrival: moment.Moment;
+  public actualDeparture: moment.Moment;
+  public actualArrival: moment.Moment;
+  public disruptionCode: number;
+
+  constructor(stopData: any,
+    date: DateOnly,
+    originTime: moment.Moment,
+    resourceService: ResourceService) {
+    super();
+
+    // Populate class from json data
+    resourceService.lookup(stopData['location']).subscribe(station => { this.station = station; });
+    this.scheduledDeparture = stopData['gbtt_ptd'] ? this.dateFromTime(this.toTime(stopData['gbtt_ptd'], date), originTime) : undefined;
+    this.scheduledArrival = stopData['gbtt_pta'] ? this.dateFromTime(this.toTime(stopData['gbtt_pta'], date), originTime) : undefined;
+    this.actualDeparture = stopData['actual_td'] ? this.dateFromTime(this.toTime(stopData['actual_td'], date), originTime) : undefined;
+    this.actualArrival = stopData['actual_ta'] ? this.dateFromTime(this.toTime(stopData['actual_ta'], date), originTime) : undefined;
+    this.disruptionCode = stopData['late_canc_reason'] ? +stopData['late_canc_reason'] : undefined;
+  }
+
+  private dateFromTime(time: TimeOnly, originTime: TimeOnly): moment.Moment {
+    if (time) {
+      // Handle times that occur other side of midnight
+      if (time.diff(originTime) < 0) {
+        time.add(1, 'days');
+      }
+    }
+    return time;
+  }
+}
+
 export class JourneyDetails extends HspApiData {
 
   private attributeDetails: any;
@@ -43,39 +78,4 @@ export class JourneyDetails extends HspApiData {
     );
   }
 }
-
-export class StopDetails extends HspApiData {
-  public station: Station;
-  public scheduledDeparture: moment.Moment;
-  public scheduledArrival: moment.Moment;
-  public actualDeparture: moment.Moment;
-  public actualArrival: moment.Moment;
-  public disruptionCode: number;
-
-    constructor(stopData: any,
-                date: DateOnly,
-                originTime: moment.Moment,
-                resourceService: ResourceService) {
-      super();
-
-      // Populate class from json data
-      resourceService.lookup(stopData['location']).subscribe(station => { this.station = station; });
-      this.scheduledDeparture = stopData['gbtt_ptd'] ? this.dateFromTime(this.toTime(stopData['gbtt_ptd'], date), originTime) : undefined;
-      this.scheduledArrival = stopData['gbtt_pta'] ? this.dateFromTime(this.toTime(stopData['gbtt_pta'], date), originTime) : undefined;
-      this.actualDeparture = stopData['actual_td'] ? this.dateFromTime(this.toTime(stopData['actual_td'], date), originTime) : undefined;
-      this.actualArrival = stopData['actual_ta'] ? this.dateFromTime(this.toTime(stopData['actual_ta'], date), originTime) : undefined;
-      this.disruptionCode = stopData['late_canc_reason'] ? +stopData['late_canc_reason'] : undefined;
-    }
-
-    private dateFromTime(time: TimeOnly, originTime: TimeOnly): moment.Moment {
-      if (time) {
-        // Handle times that occur other side of midnight
-        if (time.diff(originTime) < 0) {
-            time.add(1, 'days');
-        }
-      }
-      return time;
-    }
-}
-
 

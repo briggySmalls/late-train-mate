@@ -46,7 +46,7 @@
                 <tr class="result-row" *ngFor="let journey of visibleJourneys()"
                                        [ngClass]="journey.stateClass" >
                     <td>Departed {{ journey.originStation.text }} on {{ journey.originDate.format("D MMM YYYY") }}</td>
-                    <td><leg *ngFor="let leg of journey.legs" [leg]="leg" ></leg></td>
+                    <td><late-mate-leg *ngFor="let leg of journey.legs" [leg]="leg" ></late-mate-leg></td>
                     <td>{{ journey.scheduledDeparture.format("HH:mm") }}</td>
                     <td>{{ journey.scheduledArrival.format("HH:mm") }}</td>
                     <td [ngSwitch]="journey.state">

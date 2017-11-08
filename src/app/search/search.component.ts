@@ -38,7 +38,7 @@ function toMoment(date: NgbDateStruct): moment.Moment {
 
 @Component({
     moduleId: module.id,
-    selector: 'search-view',
+    selector: 'late-mate-search-view',
     templateUrl: 'search.component.html',
     styleUrls: ['search.component.css'],
   })

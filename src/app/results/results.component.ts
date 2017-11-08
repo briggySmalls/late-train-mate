@@ -34,7 +34,7 @@ type IRequestFunc = () => void;
 
 @Component({
   moduleId: module.id,
-  selector: 'results-view',
+  selector: 'late-mate-results-view',
   templateUrl: 'results.component.html',
   styleUrls: ['results.component.css'],
   providers: [HspApiService],

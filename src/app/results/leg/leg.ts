@@ -14,6 +14,28 @@ export enum LegState {
   Error,
 }
 
+class Stop {
+  public constructor(private details: StopDetails) { }
+
+  public get scheduledDeparture(): moment.Moment { return this.details.scheduledDeparture; }
+  public get scheduledArrival(): moment.Moment { return this.details.scheduledArrival; }
+  public get actualDeparture(): moment.Moment { return this.details.actualDeparture; }
+  public get actualArrival(): moment.Moment { return this.details.actualArrival; }
+  public get disruptionCode(): number { return this.details.disruptionCode; }
+
+  public get departedOnTime(): boolean {
+    return (this.details.scheduledDeparture) ?
+      (this.details.actualDeparture && this.details.actualDeparture.isSame(this.details.scheduledDeparture)) :
+      undefined;
+  }
+
+  public get arrivedOnTime(): boolean {
+    return (this.details.scheduledArrival) ?
+      (this.details.actualArrival && this.details.actualArrival.isSame(this.details.scheduledArrival)) :
+      undefined;
+  }
+}
+
 export class Leg {
   public legStateEnum = LegState;
 
@@ -181,27 +203,5 @@ export class Leg {
 
   private getStop(station: Station): StopDetails {
     return this.details.stops.First(x => x.station === station);
-  }
-}
-
-class Stop {
-  public constructor(private details: StopDetails) { }
-
-  public get scheduledDeparture(): moment.Moment { return this.details.scheduledDeparture; }
-  public get scheduledArrival(): moment.Moment { return this.details.scheduledArrival; }
-  public get actualDeparture(): moment.Moment { return this.details.actualDeparture; }
-  public get actualArrival(): moment.Moment { return this.details.actualArrival; }
-  public get disruptionCode(): number { return this.details.disruptionCode; }
-
-  public get departedOnTime(): boolean {
-    return (this.details.scheduledDeparture) ?
-      (this.details.actualDeparture && this.details.actualDeparture.isSame(this.details.scheduledDeparture)) :
-      undefined;
-  }
-
-  public get arrivedOnTime(): boolean {
-    return (this.details.scheduledArrival) ?
-      (this.details.actualArrival && this.details.actualArrival.isSame(this.details.scheduledArrival)) :
-      undefined;
   }
 }

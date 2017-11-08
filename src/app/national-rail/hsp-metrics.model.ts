@@ -4,6 +4,60 @@ import * as moment from 'moment';
 import { HspApiData, Station, TimeOnly, DateOnly } from './shared/hsp-core.model';
 import { ResourceService } from './resource.service';
 
+
+export class Metric extends HspApiData {
+  public tolerance: moment.Duration;
+  public numNotTolerance: number;
+  public numTolerance: number;
+  public percentTolerance: number;
+  public isGlobalTolerance: boolean;
+
+  constructor(
+    metricData: any,
+    resourceService: ResourceService) {
+    super();
+
+    // Populate class from json data
+    this.tolerance = moment.duration(+metricData['tolerance_value'], 'minutes');
+    this.numNotTolerance = +metricData['num_not_tolerance'];
+    this.numTolerance = +metricData['num_tolerance'];
+    this.percentTolerance = +metricData['percent_tolerance'];
+    this.isGlobalTolerance = metricData['global_tolerance'] === true;
+  }
+}
+
+export class ServiceMetrics extends HspApiData {
+
+  public originStation: Station;
+  public destinationStation: Station;
+  public departureTime: TimeOnly;
+  public arrivalTime: TimeOnly;
+  public tocCode: string;
+  public serviceCount: number;
+  public serviceIds: List<number>;
+  public metrics: List<Metric>;
+
+  constructor(serviceData: any,
+    resourceService: ResourceService) {
+    super();
+
+    // Populate class from json data
+    resourceService
+      .lookup(serviceData['serviceAttributesMetrics']['origin_location'])
+      .subscribe(station => { this.originStation = station; });
+    resourceService
+      .lookup(serviceData['serviceAttributesMetrics']['destination_location'])
+      .subscribe(station => { this.destinationStation = station; });
+    this.departureTime = this.toTime(serviceData['serviceAttributesMetrics']['gbtt_ptd']);
+    this.arrivalTime = this.toTime(serviceData['serviceAttributesMetrics']['gbtt_pta']);
+    this.tocCode = serviceData['serviceAttributesMetrics']['toc_code'];
+    this.serviceCount = +serviceData['serviceAttributesMetrics']['matched_services'];
+    this.serviceIds = new List<number>(serviceData['serviceAttributesMetrics']['rids'].map((rid: string) => +rid));
+    this.metrics = new List<Metric>(serviceData['Metrics'].map(
+      (metricData: any) => new Metric(metricData, resourceService)));
+  }
+}
+
 export class MetricsCollection extends HspApiData {
 
     /**
@@ -29,57 +83,4 @@ export class MetricsCollection extends HspApiData {
         resourceService.lookup(metricsData['header']['from_location']).subscribe(station => { this.fromStation = station; });
         resourceService.lookup(metricsData['header']['to_location']).subscribe(station => { this.toStation = station; });
     }
-}
-
-export class ServiceMetrics extends HspApiData {
-
-  public originStation: Station;
-  public destinationStation: Station;
-  public departureTime: TimeOnly;
-  public arrivalTime: TimeOnly;
-  public tocCode: string;
-  public serviceCount: number;
-  public serviceIds: List<number>;
-  public metrics: List<Metric>;
-
-  constructor(serviceData: any,
-              resourceService: ResourceService) {
-    super();
-
-    // Populate class from json data
-    resourceService
-      .lookup(serviceData['serviceAttributesMetrics']['origin_location'])
-      .subscribe(station => {this.originStation = station; });
-    resourceService
-      .lookup(serviceData['serviceAttributesMetrics']['destination_location'])
-      .subscribe(station => {this.destinationStation = station; });
-    this.departureTime = this.toTime(serviceData['serviceAttributesMetrics']['gbtt_ptd']);
-    this.arrivalTime = this.toTime(serviceData['serviceAttributesMetrics']['gbtt_pta']);
-    this.tocCode = serviceData['serviceAttributesMetrics']['toc_code'];
-    this.serviceCount = +serviceData['serviceAttributesMetrics']['matched_services'];
-    this.serviceIds = new List<number>(serviceData['serviceAttributesMetrics']['rids'].map((rid: string) => +rid));
-    this.metrics = new List<Metric>(serviceData['Metrics'].map(
-        (metricData: any) => new Metric(metricData, resourceService)));
-  }
-}
-
-export class Metric extends HspApiData {
-  public tolerance: moment.Duration;
-  public numNotTolerance: number;
-  public numTolerance: number;
-  public percentTolerance: number;
-  public isGlobalTolerance: boolean;
-
-  constructor(
-    metricData: any,
-    resourceService: ResourceService) {
-      super();
-
-      // Populate class from json data
-      this.tolerance = moment.duration(+metricData['tolerance_value'], 'minutes');
-      this.numNotTolerance = +metricData['num_not_tolerance'];
-      this.numTolerance = +metricData['num_tolerance'];
-      this.percentTolerance = +metricData['percent_tolerance'];
-      this.isGlobalTolerance = metricData['global_tolerance'] === true;
-  }
 }

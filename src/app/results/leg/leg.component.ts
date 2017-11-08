@@ -5,7 +5,7 @@ import { Leg } from './leg';
 
 @Component({
     moduleId: module.id,
-    selector: 'leg',
+    selector: 'late-mate-leg',
     templateUrl: 'leg.component.html',
     styleUrls: ['leg.component.scss']
 })

@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "concurrently --kill-others \"npm run _server:run\" \"ng serve --aot --progress=false --proxy-config proxy.conf.json\"",
-    "lint:client": "ng lint",
+    "lint:client": "ng lint --type-check",
     "lint:server": "tslint './server/**/*.ts' -c ./server/tslint.json --fix",
     "test:client": "ng test",
     "e2e:client": "ng e2e",
@@ -65,14 +65,14 @@
     "rxjs": "^5.4.2",
     "ts-helpers": "^1.1.2",
     "ts-node": "~3.3.0",
-    "tslint": "^4.5.1",
+    "tslint": "^5.8.0",
     "typescript": ">=2.1.0 <2.4.0",
     "uuid": "^3.0.1",
     "xml2js": "^0.4.19",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
-    "codelyzer": "~3.1.2",
+    "codelyzer": "^4.0.1",
     "concurrently": "^3.5.0",
     "jasmine-core": "~2.5.2",
     "jasmine-spec-reporter": "~3.2.0",

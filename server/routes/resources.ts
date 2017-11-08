@@ -42,7 +42,7 @@ function loadResources() {
     assert(files.length > 0, "No resource file found");
 
     // Create a new XML parser
-    let p = new Parser();
+    const p = new Parser();
 
     // Read the most-recent resources file
     fs.readFile(`${RESOURCES_PATH}/${files.sort()[0]}`, "utf8", (readErr, data) => {
@@ -70,7 +70,7 @@ function loadResources() {
 function loadStations(data: any) {
   allStations = [];
   // Add a key for each station
-  for (let location of data.PportTimetableRef.LocationRef) {
+  for (const location of data.PportTimetableRef.LocationRef) {
     if (location.$.hasOwnProperty("toc")) {
       assert(location.$.hasOwnProperty("crs"), `Station with TOC: ${location.$.toc} is missing crs property`);
       assert(location.$.hasOwnProperty("locname"), `Station ${location.$.crs} is missing locname property`);
@@ -88,13 +88,13 @@ function loadStations(data: any) {
 function loadReasons(data: any) {
   allReasons = [];
   // Add a key for each late running reason
-  for (let reason of data.PportTimetableRef.LateRunningReasons[0].Reason) {
+  for (const reason of data.PportTimetableRef.LateRunningReasons[0].Reason) {
     assert(reason.$.hasOwnProperty("code"));
     assert(reason.$.hasOwnProperty("reasontext"));
     allReasons.push({code: +reason.$.code, text: reason.$.reasontext});
   }
   // Add a key for each cancellation reason
-  for (let reason of data.PportTimetableRef.CancellationReasons[0].Reason) {
+  for (const reason of data.PportTimetableRef.CancellationReasons[0].Reason) {
     assert(reason.$.hasOwnProperty("code"));
     assert(reason.$.hasOwnProperty("reasontext"));
     allReasons.push({code: +reason.$.code, text: reason.$.reasontext});
@@ -102,13 +102,13 @@ function loadReasons(data: any) {
 }
 
 // Get all stations
-resourcesRouter.get("/stations", (request: Request, response: Response) => {
-  response.json(allStations);
+resourcesRouter.get("/stations", (req: Request, resp: Response) => {
+  resp.json(allStations);
 });
 
 // Get all reasons
-resourcesRouter.get("/reasons", (request: Request, response: Response) => {
-  response.json(allReasons);
+resourcesRouter.get("/reasons", (req: Request, resp: Response) => {
+  resp.json(allReasons);
 });
 
 export { resourcesRouter };
