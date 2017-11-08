@@ -123,7 +123,7 @@ function toMoment(date: NgbDateStruct): moment.Moment {
      * @param control The control to review
      */
     public isShowInvalidStation(control: AbstractControl): Boolean {
-      return (control.invalid && control.dirty);
+      return (control.invalid && !control.untouched);
     }
 
     /**
