@@ -24,19 +24,24 @@ export class HspApiService {
         toStation: string,
         fromDate: moment.Moment,
         toDate: moment.Moment,
-        days: string,
-        delays: moment.Duration[]): Observable<MetricsCollection> {
+        days?: string,
+        delays?: moment.Duration[]): Observable<MetricsCollection> {
 
-      return this.http.post(SERVICE_METRICS_URL, {
+      const request_body = {
         'from_loc': fromStation, 'to_loc': toStation,
         'from_time': '0000', 'to_time': '2359',
         'from_date': this.toHspDate(fromDate), 'to_date': this.toHspDate(toDate),
         'days': days,
-        'tolerance': delays.map(value => value.minutes())})
-            // Map the http results stream to a stream of MetricsCollections
-            .map(
-                (response: any) => new MetricsCollection(response.json(), this.resourceService),
-                this.handleError);
+      };
+      if (delays) {
+        request_body['tolerance'] = delays.map(duration => duration.minutes());
+      }
+
+      return this.http.post(SERVICE_METRICS_URL, request_body)
+        // Map the http results stream to a stream of MetricsCollections
+        .map(
+          (response: any) => new MetricsCollection(response.json(), this.resourceService),
+          this.handleError);
     }
 
     public journeyDetails(serviceId: number): Observable<JourneyDetails> {

@@ -139,7 +139,7 @@ describe('HspApiService', () => {
         })));
       });
 
-      // Test the serviceDetails function
+      // Test the serviceMetrics function
       service.serviceMetrics(
         metrics_args.fromStation, metrics_args.toStation,
         moment(metrics_args.fromDate, 'YYYY-MM-DD'), moment(metrics_args.toDate, 'YYYY-MM-DD'),
@@ -147,6 +147,27 @@ describe('HspApiService', () => {
       .subscribe((metrics: MetricsCollection) => {
         expect(metrics).toEqual(new MetricsCollection(metricsJson, TestBed.get(MockResourceService)));
       });
+    });
+
+    it('should not require tolerance', () => {
+      // Make the call (without tolerance argument)
+      service.serviceMetrics(
+        metrics_args.fromStation, metrics_args.toStation,
+        moment(metrics_args.fromDate, 'YYYY-MM-DD'), moment(metrics_args.toDate, 'YYYY-MM-DD'),
+        metrics_args.days
+      );
+
+      // Assert the requested URL
+      expect(this.lastConnection).toBeDefined();
+      expect(this.lastConnection.request.url).toMatch(/api\/hsp\/metrics/);
+      expect(this.lastConnection.request.json()).toEqual(jasmine.objectContaining({ 'from_loc': metrics_args.fromStation }));
+      expect(this.lastConnection.request.json()).toEqual(jasmine.objectContaining({ 'to_loc': metrics_args.toStation }));
+      expect(this.lastConnection.request.json()).toEqual(jasmine.objectContaining({ 'from_date': metrics_args.fromDate }));
+      expect(this.lastConnection.request.json()).toEqual(jasmine.objectContaining({ 'to_date': metrics_args.toDate }));
+      expect(this.lastConnection.request.json()).toEqual(jasmine.objectContaining({ 'from_time': '0000' }));
+      expect(this.lastConnection.request.json()).toEqual(jasmine.objectContaining({ 'to_time': '2359' }));
+      expect(this.lastConnection.request.json()).toEqual(jasmine.objectContaining({ 'days': metrics_args.days }));
+      expect(this.lastConnection.request.json()).not.toEqual(jasmine.objectContaining({ 'tolerance': metrics_args.delays }));
     });
   });
 });
