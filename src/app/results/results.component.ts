@@ -18,6 +18,7 @@ const PAGE_SIZE = 10;
 enum State {
   RequestingMetrics,
   RequestingDetails,
+  Complete,
   Error,
 }
 
@@ -35,14 +36,10 @@ type IRequestFunc = () => void;
   moduleId: module.id,
   selector: 'late-mate-results-view',
   templateUrl: 'results.component.html',
-  styleUrls: ['results.component.css'],
+  styleUrls: ['results.component.scss'],
   providers: [HspApiService],
 })
 export class ResultsComponent implements OnInit {
-
-  /**********************************************************************
-  * Public Members
-  *********************************************************************/
 
   /**
   * Field to make state type available in template
@@ -59,9 +56,10 @@ export class ResultsComponent implements OnInit {
   */
   public isHideTimely = true;
 
-  /**********************************************************************
-  * Private Members
-  *********************************************************************/
+  /**
+   * Percentage for the progress bar
+   */
+  public progressValue = 0;
 
   /**
   * The journeys that have been returned by a service metrics request
@@ -82,10 +80,6 @@ export class ResultsComponent implements OnInit {
   * The parameters of the search
   */
   public params: ISearch;
-
-  /**********************************************************************
-  * Static methods
-  *********************************************************************/
 
   private static isDelayedState(state: JourneyState): boolean {
     return (state === JourneyState.Delayed) ||
@@ -108,7 +102,6 @@ export class ResultsComponent implements OnInit {
   }
 
   private static pageCount(len: number) {
-    // TODO: Floor
     return Math.floor(len / PAGE_SIZE);
   }
 
@@ -131,29 +124,23 @@ export class ResultsComponent implements OnInit {
     return result;
   }
 
-  /**********************************************************************
-  * Constructor
-  *********************************************************************/
-
   constructor(
     private http: Http,
     private route: ActivatedRoute,
     private hspApiService: HspApiService) { }
 
-  /**********************************************************************
-  * View Methods
-  *********************************************************************/
-
+  /**
+   * Function to get the current paginated journey list
+   */
   public visibleJourneys(): Journey[] {
     return this.journeysOfInterest()
-    .slice(this.page * PAGE_SIZE, (this.page + 1) * PAGE_SIZE);
+      .slice(this.page * PAGE_SIZE, (this.page + 1) * PAGE_SIZE);
   }
 
   public onToggleInterest(): void {
     this.isHideTimely = !this.isHideTimely;
 
     // Ensure that we never get stuck in an invalid page
-    // TODO: Consider moving this to where we set isHideTimely?
     const pageCount = ResultsComponent.pageCount(this.journeysOfInterest().length);
     if (this.page > pageCount) {
       this.page = pageCount;
@@ -170,6 +157,10 @@ export class ResultsComponent implements OnInit {
     if (this.page > 0) {
       this.page--;
     }
+  }
+
+  public getProgressStyle = (): string => {
+    return `${this.progressValue}%`;
   }
 
   /**********************************************************************
@@ -195,10 +186,15 @@ export class ResultsComponent implements OnInit {
         this.params.toDate,
         this.params.days);
     }).subscribe(metrics => {
-      // Indicate the initial request is complete
-      this.state = State.RequestingDetails;
-      // Process the metrics
-      this.processMetrics(metrics, moment.duration(0));
+      if (metrics.services.Count() > 0) {
+        // Indicate the initial request is complete
+        this.state = State.RequestingDetails;
+        // Process the metrics
+        this.processMetrics(metrics, moment.duration(0));
+      } else {
+        // Indicate that we are done
+        this.state = State.Complete;
+      }
     }, this.onError);
   }
 
@@ -246,13 +242,16 @@ export class ResultsComponent implements OnInit {
           furtherRequests.push(journey.tryResolve(this.hspApiService));
         }
       });
-
-      // Refresh the array reference to redraw view
-      this.journeys = this.journeys.sort(ResultsComponent.compare);
     });
 
-    // Now we have drawn the table, make the requests
-    Observable.merge(...furtherRequests, CONCURRENT_COUNT).subscribe();
+    // Now we have all the journeys, sort them
+    this.journeys = this.journeys.sort(ResultsComponent.compare);
+    // Finally, make the requests for further details
+    Observable.merge(...furtherRequests, CONCURRENT_COUNT).subscribe(
+      () => this.progressValue = this.progressValue + 100 / furtherRequests.length,
+      undefined,
+      () => this.state = State.Complete, // Indicate all requests are complete
+    );
   }
 
   private journeysOfInterest(): Journey[] {
@@ -265,7 +264,7 @@ export class ResultsComponent implements OnInit {
     this.state = State.Error;
     console.log(error);
 
-    // TODO: Cancel all requests
+    console.log('TODO: Cancel all requests');
   }
 
   private onSelect(journey: Journey) {

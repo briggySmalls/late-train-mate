@@ -1,59 +1,68 @@
-<header>
-    <h1>Search Results</h1>
-    <table id="search-params">
-        <tbody>
-            <tr>
-                <td>Route:</td>
-                <td>{{ params.fromStation }} - {{ params.toStation }}</td>
-            </tr>
-                <td>Time Period:</td>
-                <td>{{ params.days }} between {{ params.fromDate.format("DD MMM YYYY") }} - {{ params.toDate.format("DD MMM YYYY") }}</td>
-        </tbody>
-    </table>
-</header>
-
-<main [ngSwitch]="state">
+<main class="container">
+  <header>
+      <h1>Search Results</h1>
+      <table id="search-params">
+          <tbody>
+              <tr>
+                  <td>Route:</td>
+                  <td>{{ params.fromStation }} - {{ params.toStation }}</td>
+              </tr>
+                  <td>Time Period:</td>
+                  <td>{{ params.days }} between {{ params.fromDate.format("DD MMM YYYY") }} - {{ params.toDate.format("DD MMM YYYY") }}</td>
+          </tbody>
+      </table>
+  </header>
+  <div [ngSwitch]="state">
     <!-- Loading icon -->
     <div *ngSwitchCase="stateEnum.RequestingMetrics" class="splash" >
         Loading...
+        <div class="loader"></div>
     </div>
     <!-- Error icon -->
     <div *ngSwitchCase="stateEnum.Error" class="splash" >
-        Error!
+        Error :(
     </div>
-    <div *ngSwitchCase="stateEnum.RequestingDetails" >
+    <div *ngSwitchDefault>
+      <div *ngIf="(state == stateEnum.Complete) && (journeys.length == 0); then noResults else results"></div>
+
+      <ng-template #noResults>
+        No services found!
+      </ng-template>
+
+      <ng-template #results>
+        <div class="progress">
+          <div class="progress-bar" [style.width]="getProgressStyle()" role="progressbar" attr.aria-valuenow="{{progressValue}}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
 
         <!-- Results controls -->
-        <label>Hide On-Time Journeys:</label>
-        <input type="checkbox" (change)="onToggleInterest()" [checked]="isHideTimely">
+        <label for="timely-toggle">Hide On-Time Journeys:
+          <input id="timely-toggle" type="checkbox" (change)="onToggleInterest()" [checked]="isHideTimely">
+        </label>
 
         <!-- Results Table -->
-        <table id="results" [hidden]="(state == stateEnum.RequestingMetrics)" [class.hide-on-time]="isHideTimely" >
-            <thead id="header-row">
+        <table id="results" class="table table-hover" [class.hide-on-time]="isHideTimely" >
+            <thead id="header-row" class="thead-dark">
                 <tr>
                     <th>Date</th>
-                    <th>Route</th>
                     <th>Scheduled Departure</th>
-                    <th>Scheduled Arrival</th>
-                    <th>Actual Arrival</th>
+                    <th>Delay (minutes)</th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="result-row" *ngFor="let journey of visibleJourneys()"
-                                       [ngClass]="journey.stateClass" >
+                <tr class="result-row"
+                *ngFor="let journey of visibleJourneys()"
+                [ngClass]="journey.stateClass" >
                     <td>Departed {{ journey.originStation.text }} on {{ journey.originDate.format("D MMM YYYY") }}</td>
-                    <td><late-mate-leg *ngFor="let leg of journey.legs" [leg]="leg" ></late-mate-leg></td>
                     <td>{{ journey.scheduledDeparture.format("HH:mm") }}</td>
-                    <td>{{ journey.scheduledArrival.format("HH:mm") }}</td>
                     <td [ngSwitch]="journey.state">
                         <div *ngSwitchCase="journey.journeyStateEnum.Cancelled">
-                            Journey cancelled before departure
+                            Cancelled before departure
                         </div>
                         <div *ngSwitchCase="journey.journeyStateEnum.CancelledEnRoute">
-                            Journey cancelled en route
+                            Cancelled en route
                         </div>
                         <div *ngSwitchDefault>
-                            {{ journey.actualArrival?.format("HH:mm") }}
+                            {{ journey.minutes_delayed }}
                         </div>
                     </td>
                 </tr>
@@ -63,5 +72,7 @@
         <!-- Paging -->
         <button (click)="onPrev()">Previous</button>
         <button (click)="onNext()">Next</button>
+      </ng-template>
     </div>
+  </div>
 </main>

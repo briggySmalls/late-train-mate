@@ -43,7 +43,7 @@ export class Journey {
     private m_toStation: Station,
     private m_originStation: Station,
     private m_terminatingStation: Station,
-    private delay: moment.Duration) {
+    private delay_threshold: moment.Duration) {
 
     // Squeeze the date out of the RID for sorting purposes
     this.m_originDate = Journey.toDate(serviceId);
@@ -55,7 +55,7 @@ export class Journey {
       m_toStation,
       m_scheduledDeparture,
       m_scheduledArrival,
-      delay));
+      delay_threshold));
   }
 
   /**
@@ -90,6 +90,10 @@ export class Journey {
 
   public get actualArrival(): moment.Moment {
     return this.m_legs.Last().actualArrival;
+  }
+
+  public get minutes_delayed(): number {
+    return this.actualArrival.diff(this.scheduledArrival, 'minutes');
   }
 
   public get stateClass(): string {
@@ -149,7 +153,7 @@ export class Journey {
           case LegState.OnTime:
           case LegState.Delayed:
             // Do nothing, we are resolved!
-            if (leg.actualArrival.diff(this.scheduledArrival, 'minutes') > this.delay.asMinutes()) {
+            if (leg.actualArrival.diff(this.scheduledArrival, 'minutes') > this.delay_threshold.asMinutes()) {
               // Definition of delayed is actual arrival later than scheduled by specified delay
               this.transition(JourneyState.Delayed);
             } else {
