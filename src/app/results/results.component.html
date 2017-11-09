@@ -12,7 +12,7 @@
           </tbody>
       </table>
   </header>
-  <div [ngSwitch]="state">
+  <div [ngSwitch]="state" id="results-container">
     <!-- Loading icon -->
     <div *ngSwitchCase="stateEnum.RequestingMetrics" class="splash" >
         Loading...
@@ -30,18 +30,22 @@
       </ng-template>
 
       <ng-template #results>
-        <div class="progress">
-          <div class="progress-bar" [style.width]="getProgressStyle()" role="progressbar" attr.aria-valuenow="{{progressValue}}" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-
         <!-- Results controls -->
-        <label for="timely-toggle">Hide On-Time Journeys:
+        <label for="timely-toggle" class="btn btn-primary active my-2">
+          Hide On-Time Journeys:
           <input id="timely-toggle" type="checkbox" (change)="onToggleInterest()" [checked]="isHideTimely">
         </label>
 
+        <!-- Paging -->
+        <ngb-pagination [collectionSize]="journeysOfInterest().length" [(page)]="current_page" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"
+          [pageSize]="pageSize"></ngb-pagination>
+        </ng-template>
+
+        <ngb-progressbar [value]="progressValue"></ngb-progressbar>
+
         <!-- Results Table -->
-        <table id="results" class="table table-hover" [class.hide-on-time]="isHideTimely" >
-            <thead id="header-row" class="thead-dark">
+        <table id="results" class="table table-hover my-2" [class.hide-on-time]="isHideTimely" >
+            <thead id="header-row" class="thead-inverse">
                 <tr>
                     <th>Date</th>
                     <th>Scheduled Departure</th>
@@ -68,11 +72,6 @@
                 </tr>
             </tbody>
         </table>
-
-        <!-- Paging -->
-        <button (click)="onPrev()">Previous</button>
-        <button (click)="onNext()">Next</button>
-      </ng-template>
     </div>
   </div>
 </main>

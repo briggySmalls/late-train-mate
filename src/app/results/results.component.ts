@@ -13,7 +13,6 @@ import { Journey, JourneyState } from './journey';
 
 
 const CONCURRENT_COUNT = 3;
-const PAGE_SIZE = 10;
 
 enum State {
   RequestingMetrics,
@@ -62,6 +61,11 @@ export class ResultsComponent implements OnInit {
   public progressValue = 0;
 
   /**
+   * The size of a page (for pagination)
+   */
+  public readonly pageSize = 10;
+
+  /**
   * The journeys that have been returned by a service metrics request
   */
   private journeys = new Array<Journey>();
@@ -69,7 +73,7 @@ export class ResultsComponent implements OnInit {
   /**
   * The page of journeys being shown
   */
-  private page = 0;
+  public current_page = 0;
 
   /**
   * The journey that has been selected by the user
@@ -101,10 +105,6 @@ export class ResultsComponent implements OnInit {
       toleranceMetrics => toleranceMetrics.tolerance.asMinutes() === delay.asMinutes()).numNotTolerance > 0);
   }
 
-  private static pageCount(len: number) {
-    return Math.floor(len / PAGE_SIZE);
-  }
-
   /**
   * @brief      Compare function for sorting JourneyWrappers
   *
@@ -134,33 +134,17 @@ export class ResultsComponent implements OnInit {
    */
   public visibleJourneys(): Journey[] {
     return this.journeysOfInterest()
-      .slice(this.page * PAGE_SIZE, (this.page + 1) * PAGE_SIZE);
+      .slice(this.current_page * this.pageSize, (this.current_page + 1) * this.pageSize);
   }
 
   public onToggleInterest(): void {
     this.isHideTimely = !this.isHideTimely;
 
     // Ensure that we never get stuck in an invalid page
-    const pageCount = ResultsComponent.pageCount(this.journeysOfInterest().length);
-    if (this.page > pageCount) {
-      this.page = pageCount;
+    const pageCount = Math.floor(this.journeysOfInterest().length / this.pageSize);
+    if (this.current_page > pageCount) {
+      this.current_page = pageCount;
     }
-  }
-
-  public onNext(): void {
-    if (this.page < ResultsComponent.pageCount(this.journeysOfInterest().length)) {
-      this.page++;
-    }
-  }
-
-  public onPrev(): void {
-    if (this.page > 0) {
-      this.page--;
-    }
-  }
-
-  public getProgressStyle = (): string => {
-    return `${this.progressValue}%`;
   }
 
   /**********************************************************************

@@ -1,1 +1,16 @@
-@import "./partials/shame";
+/* SEARCH PARAMETERS TABLE */
+#search-params {
+  font-weight: bold;
+  margin: auto;
+
+  td {
+    border-bottom: none;
+  }
+  td:first-child {
+    text-align: right;
+  }
+}
+
+#results-container {
+  text-align: center;
+}
