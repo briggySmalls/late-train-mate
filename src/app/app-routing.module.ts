@@ -9,7 +9,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 const routes: Routes = [
     { path: '', redirectTo: '/search', pathMatch: 'full' },
     { path: 'search', component: SearchComponent },
-    { path: 'results/:fromStation/:toStation/:fromDate/:toDate/:days/:delay', component: ResultsComponent },
+    { path: 'results/:fromStation/:toStation/:fromDate/:toDate/:days', component: ResultsComponent },
     { path: '**', component: PageNotFoundComponent }
 ];
 

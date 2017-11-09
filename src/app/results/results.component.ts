@@ -27,7 +27,6 @@ interface ISearch {
   fromDate: moment.Moment;
   toDate: moment.Moment;
   days: string;
-  delay: moment.Duration;
 }
 
 type IRequestFunc = () => void;
@@ -186,8 +185,7 @@ export class ResultsComponent implements OnInit {
         'toStation': params['toStation'],
         'fromDate': moment(params['fromDate'], 'YYYY-MM-DD'),
         'toDate': moment(params['toDate'], 'YYYY-MM-DD'),
-        'days': params['days'],
-        'delay': moment.duration(+params['delay'], 'minutes')
+        'days': params['days']
       };
       // Return the promise
       return this.hspApiService.serviceMetrics(
@@ -195,13 +193,12 @@ export class ResultsComponent implements OnInit {
         this.params.toStation,
         this.params.fromDate,
         this.params.toDate,
-        this.params.days,
-        [this.params.delay]);
+        this.params.days);
     }).subscribe(metrics => {
       // Indicate the initial request is complete
       this.state = State.RequestingDetails;
       // Process the metrics
-      this.processMetrics(metrics, this.params.delay);
+      this.processMetrics(metrics, moment.duration(0));
     }, this.onError);
   }
 

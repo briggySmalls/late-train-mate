@@ -61,8 +61,6 @@ function toMoment(date: NgbDateStruct): moment.Moment {
           'toDate': [undefined, Validators.required],
           // Day
           'days': ['WEEKDAY', Validators.required],
-          // Delay
-          'delay': [0, Validators.required]
       });
 
       // Save today's date for datepicker
@@ -112,8 +110,7 @@ function toMoment(date: NgbDateStruct): moment.Moment {
             this.search.value.toStation.code,
             SearchComponent.toHspDate(this.search.value.fromDate),
             SearchComponent.toHspDate(this.search.value.toDate),
-            this.search.value.days,
-            this.search.value.delay
+            this.search.value.days
         ];
         this.router.navigate(link);
     }
