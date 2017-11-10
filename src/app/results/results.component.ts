@@ -66,63 +66,19 @@ export class ResultsComponent implements OnInit {
   public readonly pageSize = 10;
 
   /**
-  * The journeys that have been returned by a service metrics request
-  */
-  private journeys = new Array<Journey>();
-
-  /**
-  * The page of journeys being shown
-  */
-  public current_page = 0;
-
-  /**
-  * The journey that has been selected by the user
-  */
-  private selectedJourney: Journey;
+   * The page of journeys being shown
+   */
+  public currentPage = 1;
 
   /**
   * The parameters of the search
   */
   public params: ISearch;
 
-  private static isDelayedState(state: JourneyState): boolean {
-    return (state === JourneyState.Delayed) ||
-    (state === JourneyState.Cancelled) ||
-    (state === JourneyState.CancelledEnRoute);
-  }
-
   /**
-  * @brief      Determines if there were delays on the service.
-  *
-  * @param      service           The service
-  * @param      delay             The delay
-  * @param      toleranceMetrics  The tolerance metrics
-  *
-  * @return     True if delays on service, False otherwise.
+  * The journeys that have been returned by a service metrics request
   */
-  private static isDelaysOnService(service: ServiceMetrics, delay: moment.Duration): boolean {
-    return (service.metrics.First(
-      toleranceMetrics => toleranceMetrics.tolerance.asMinutes() === delay.asMinutes()).numNotTolerance > 0);
-  }
-
-  /**
-  * @brief      Compare function for sorting JourneyWrappers
-  *
-  * @param      a     First JourneyWrapper object
-  * @param      b     Second JourneyWrapper object
-  *
-  * @return     Sort value
-  */
-  private static compare(a: Journey, b: Journey) {
-    // First compare the date of departure from origin station
-    let result = a.originDate.diff(b.originDate);
-
-    // If both journeys departed on same date, use the departure time
-    if (result === 0) {
-      result = a.scheduledDeparture.diff(b.scheduledDeparture);
-    }
-    return result;
-  }
+  private journeys = new Array<Journey>();
 
   constructor(
     private http: Http,
@@ -134,7 +90,7 @@ export class ResultsComponent implements OnInit {
    */
   public visibleJourneys(): Journey[] {
     return this.journeysOfInterest()
-      .slice(this.current_page * this.pageSize, (this.current_page + 1) * this.pageSize);
+      .slice((this.currentPage - 1) * this.pageSize, this.currentPage  * this.pageSize);
   }
 
   public onToggleInterest(): void {
@@ -142,8 +98,8 @@ export class ResultsComponent implements OnInit {
 
     // Ensure that we never get stuck in an invalid page
     const pageCount = Math.floor(this.journeysOfInterest().length / this.pageSize);
-    if (this.current_page > pageCount) {
-      this.current_page = pageCount;
+    if (this.currentPage > pageCount) {
+      this.currentPage = pageCount;
     }
   }
 
@@ -162,6 +118,7 @@ export class ResultsComponent implements OnInit {
         'toDate': moment(params['toDate'], 'YYYY-MM-DD'),
         'days': params['days']
       };
+
       // Return the promise
       return this.hspApiService.serviceMetrics(
         this.params.fromStation,
@@ -251,8 +208,42 @@ export class ResultsComponent implements OnInit {
     console.log('TODO: Cancel all requests');
   }
 
-  private onSelect(journey: Journey) {
-    console.log('Selected ' + journey.details.serviceId);
-    this.selectedJourney = journey;
+  /**
+  * @brief      Compare function for sorting JourneyWrappers
+  *
+  * @param      a     First JourneyWrapper object
+  * @param      b     Second JourneyWrapper object
+  *
+  * @return     Sort value
+  */
+  private static compare(a: Journey, b: Journey) {
+    // First compare the date of departure from origin station
+    let result = a.originDate.diff(b.originDate);
+
+    // If both journeys departed on same date, use the departure time
+    if (result === 0) {
+      result = a.scheduledDeparture.diff(b.scheduledDeparture);
+    }
+    return result;
+  }
+
+  private static isDelayedState(state: JourneyState): boolean {
+    return (state === JourneyState.Delayed) ||
+      (state === JourneyState.Cancelled) ||
+      (state === JourneyState.CancelledEnRoute);
+  }
+
+  /**
+  * @brief      Determines if there were delays on the service.
+  *
+  * @param      service           The service
+  * @param      delay             The delay
+  * @param      toleranceMetrics  The tolerance metrics
+  *
+  * @return     True if delays on service, False otherwise.
+  */
+  private static isDelaysOnService(service: ServiceMetrics, delay: moment.Duration): boolean {
+    return (service.metrics.First(
+      toleranceMetrics => toleranceMetrics.tolerance.asMinutes() === delay.asMinutes()).numNotTolerance > 0);
   }
 }

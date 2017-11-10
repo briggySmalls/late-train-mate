@@ -37,8 +37,12 @@
         </label>
 
         <!-- Paging -->
-        <ngb-pagination [collectionSize]="journeysOfInterest().length" [(page)]="current_page" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"
-          [pageSize]="pageSize"></ngb-pagination>
+        <ngb-pagination class="mx-center"
+        [collectionSize]="journeysOfInterest().length"
+        [(page)]="currentPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"></ngb-pagination>
         </ng-template>
 
         <ngb-progressbar [value]="progressValue"></ngb-progressbar>
