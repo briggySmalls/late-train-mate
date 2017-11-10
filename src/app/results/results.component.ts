@@ -86,6 +86,45 @@ export class ResultsComponent implements OnInit {
     private hspApiService: HspApiService) { }
 
   /**
+  * @brief      Compare function for sorting JourneyWrappers
+  *
+  * @param      a     First JourneyWrapper object
+  * @param      b     Second JourneyWrapper object
+  *
+  * @return     Sort value
+  */
+  private static compare(a: Journey, b: Journey) {
+    // First compare the date of departure from origin station
+    let result = a.originDate.diff(b.originDate);
+
+    // If both journeys departed on same date, use the departure time
+    if (result === 0) {
+      result = a.scheduledDeparture.diff(b.scheduledDeparture);
+    }
+    return result;
+  }
+
+  private static isDelayedState(state: JourneyState): boolean {
+    return (state === JourneyState.Delayed) ||
+      (state === JourneyState.Cancelled) ||
+      (state === JourneyState.CancelledEnRoute);
+  }
+
+  /**
+  * @brief      Determines if there were delays on the service.
+  *
+  * @param      service           The service
+  * @param      delay             The delay
+  * @param      toleranceMetrics  The tolerance metrics
+  *
+  * @return     True if delays on service, False otherwise.
+  */
+  private static isDelaysOnService(service: ServiceMetrics, delay: moment.Duration): boolean {
+    return (service.metrics.First(
+      toleranceMetrics => toleranceMetrics.tolerance.asMinutes() === delay.asMinutes()).numNotTolerance > 0);
+  }
+
+  /**
    * Function to get the current paginated journey list
    */
   public visibleJourneys(): Journey[] {
@@ -206,44 +245,5 @@ export class ResultsComponent implements OnInit {
     console.log(error);
 
     console.log('TODO: Cancel all requests');
-  }
-
-  /**
-  * @brief      Compare function for sorting JourneyWrappers
-  *
-  * @param      a     First JourneyWrapper object
-  * @param      b     Second JourneyWrapper object
-  *
-  * @return     Sort value
-  */
-  private static compare(a: Journey, b: Journey) {
-    // First compare the date of departure from origin station
-    let result = a.originDate.diff(b.originDate);
-
-    // If both journeys departed on same date, use the departure time
-    if (result === 0) {
-      result = a.scheduledDeparture.diff(b.scheduledDeparture);
-    }
-    return result;
-  }
-
-  private static isDelayedState(state: JourneyState): boolean {
-    return (state === JourneyState.Delayed) ||
-      (state === JourneyState.Cancelled) ||
-      (state === JourneyState.CancelledEnRoute);
-  }
-
-  /**
-  * @brief      Determines if there were delays on the service.
-  *
-  * @param      service           The service
-  * @param      delay             The delay
-  * @param      toleranceMetrics  The tolerance metrics
-  *
-  * @return     True if delays on service, False otherwise.
-  */
-  private static isDelaysOnService(service: ServiceMetrics, delay: moment.Duration): boolean {
-    return (service.metrics.First(
-      toleranceMetrics => toleranceMetrics.tolerance.asMinutes() === delay.asMinutes()).numNotTolerance > 0);
   }
 }
