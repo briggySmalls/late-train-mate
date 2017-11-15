@@ -23,13 +23,13 @@
         Error :(
     </div>
     <div *ngSwitchDefault>
-      <div *ngIf="(state == stateEnum.Complete) && (journeys.length == 0); then noResults else results"></div>
+      <div *ngIf="(state == stateEnum.Complete) && (journeys.length == 0); then noResults else showResults"></div>
 
       <ng-template #noResults>
         No services found!
       </ng-template>
 
-      <ng-template #results>
+      <ng-template #showResults>
         <!-- Results controls -->
         <label for="timely-toggle" class="btn btn-primary active my-2">
           Hide On-Time Journeys:
@@ -43,7 +43,6 @@
         [maxSize]="5"
         [rotate]="true"
         [boundaryLinks]="true"></ngb-pagination>
-        </ng-template>
 
         <ngb-progressbar [value]="progressValue"></ngb-progressbar>
 
@@ -76,6 +75,7 @@
                 </tr>
             </tbody>
         </table>
+      </ng-template>
     </div>
   </div>
 </main>
