@@ -89,11 +89,11 @@ export class Journey {
   }
 
   public get actualArrival(): moment.Moment {
-    return this.m_legs.Last().actualArrival;
+    return (this.state === JourneyState.Unresolved) ? undefined : this.m_legs.Last().actualArrival;
   }
 
-  public get minutes_delayed(): number {
-    return this.actualArrival.diff(this.scheduledArrival, 'minutes');
+  public get minutesDelayed(): number {
+    return (this.state === JourneyState.Unresolved) ? undefined : this.actualArrival.diff(this.scheduledArrival, 'minutes');
   }
 
   public get stateClass(): string {

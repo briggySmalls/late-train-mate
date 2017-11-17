@@ -68,8 +68,11 @@
                         <div *ngSwitchCase="journey.journeyStateEnum.CancelledEnRoute">
                             Cancelled en route
                         </div>
+                        <div *ngSwitchCase="journey.journeyStateEnum.Unresolved">
+                          On time
+                        </div>
                         <div *ngSwitchDefault>
-                            {{ journey.minutes_delayed }}
+                            {{ journey.minutesDelayed }}
                         </div>
                     </td>
                 </tr>
