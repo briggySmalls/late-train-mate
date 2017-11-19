@@ -76,7 +76,6 @@ export class Journey {
   public get scheduledArrival(): moment.Moment { return this.m_scheduledArrival; }
   public get scheduledDeparture(): moment.Moment { return this.m_scheduledDeparture; }
 
-
   public get fromStation(): Station { return this.m_fromStation; }
   public get toStation(): Station { return this.m_toStation; }
   public get originStation(): Station { return this.m_originStation; }
@@ -183,7 +182,6 @@ export class Journey {
   /**********************************************************************
    * Private Methods
    *********************************************************************/
-
 
   private transition(newState: JourneyState): void {
     this.state = newState;

@@ -1,3 +1,9 @@
+<div class="modal-header">
+  <h4 class="modal-title">Journey Details</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 <div [ngSwitch]="journey.state">
   <div *ngSwitchCase="journey.journeyStateEnum.Unresolved">
     <p>Our metrics indicate this journey ran on time</p>
@@ -10,7 +16,12 @@
         <late-mate-leg [leg]="leg"></late-mate-leg>
       </div>
       <div class="col-sm">
-        {{ leg.disruptionCode }}
+        <dl>
+          <dt>Date</dt>
+          <dd>{{ leg.scheduledDeparture.format('DD/MM/YYYY') }}</dd>
+          <dt *ngIf="leg.disruptionCode !== undefined">Disruption reason</dt>
+          <dd *ngIf="leg.disruptionCode !== undefined">{{ leg.disruptionCode }}</dd>
+        </dl>
       </div>
     </div>
   </div>

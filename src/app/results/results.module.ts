@@ -13,8 +13,11 @@ import { JourneyInfoComponent } from './journey-info/journey-info.component';
   ],
   declarations: [
     ResultsComponent,
-    JourneyInfoComponent,
     LegComponent,
+    JourneyInfoComponent
+  ],
+  entryComponents: [
+    JourneyInfoComponent
   ]
 })
 export class ResultsModule { }

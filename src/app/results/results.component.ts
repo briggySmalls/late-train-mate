@@ -7,9 +7,11 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/merge';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { HspApiService, MetricsCollection, ServiceMetrics, JourneyDetails } from '../national-rail';
 import { Journey, JourneyState } from './journey';
+import { JourneyInfoComponent } from './journey-info/journey-info.component';
 
 
 const CONCURRENT_COUNT = 3;
@@ -89,7 +91,8 @@ export class ResultsComponent implements OnInit {
   constructor(
     private http: Http,
     private route: ActivatedRoute,
-    private hspApiService: HspApiService) { }
+    private hspApiService: HspApiService,
+    private modalService: NgbModal) { }
 
   /**
   * @brief      Compare function for sorting JourneyWrappers
@@ -148,9 +151,9 @@ export class ResultsComponent implements OnInit {
     }
   }
 
-  public setCurrentJourney(journey: Journey) {
-    console.log(journey);
-    this.currentJourney = journey;
+  public viewJourneyInfo(journey: Journey) {
+    const modalRef = this.modalService.open(JourneyInfoComponent);
+    (modalRef.componentInstance as JourneyInfoComponent).journey = journey;
   }
 
   /**********************************************************************

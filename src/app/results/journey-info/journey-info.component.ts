@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { Journey } from '../journey';
 
 @Component({
@@ -7,6 +9,8 @@ import { Journey } from '../journey';
   styleUrls: ['./journey-info.component.scss']
 })
 export class JourneyInfoComponent {
+  constructor(public activeModal: NgbActiveModal) { }
+
   @Input()
   journey: Journey;
 }
