@@ -4,24 +4,26 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<div [ngSwitch]="journey.state">
-  <div *ngSwitchCase="journey.journeyStateEnum.Unresolved">
-    <p>Our metrics indicate this journey ran on time</p>
-    <p>Would you like to request the details for this journey?</p>
-    <p>TODO</p>
-  </div>
-  <div *ngSwitchDefault>
-    <div class="row" *ngFor="let leg of journey.legs">
-      <div class="col-sm">
-        <late-mate-leg [leg]="leg"></late-mate-leg>
-      </div>
-      <div class="col-sm">
-        <dl>
-          <dt>Date</dt>
-          <dd>{{ leg.scheduledDeparture.format('DD/MM/YYYY') }}</dd>
-          <dt *ngIf="leg.disruptionCode !== undefined">Disruption reason</dt>
-          <dd *ngIf="leg.disruptionCode !== undefined">{{ leg.disruptionCode }}</dd>
-        </dl>
+<div class="container">
+  <div [ngSwitch]="journey.state">
+    <div *ngSwitchCase="journey.journeyStateEnum.Unresolved">
+      <p>Our metrics indicate this journey ran on time</p>
+      <p>Would you like to request the details for this journey?</p>
+      <p>TODO</p>
+    </div>
+    <div *ngSwitchDefault>
+      <div class="row" *ngFor="let leg of journey.legs">
+        <div class="col-sm">
+          <late-mate-leg [leg]="leg"></late-mate-leg>
+        </div>
+        <div class="col-sm">
+          <dl>
+            <dt>Date</dt>
+            <dd>{{ leg.scheduledDeparture.format('DD/MM/YYYY') }}</dd>
+            <dt *ngIf="leg.disruptionCode !== undefined">Disruption reason</dt>
+            <dd *ngIf="leg.disruptionCode !== undefined">{{ leg.disruptionCode }}</dd>
+          </dl>
+        </div>
       </div>
     </div>
   </div>
