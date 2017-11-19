@@ -46,11 +46,15 @@
 
         <ngb-progressbar [value]="progressValue"></ngb-progressbar>
 
+        <late-mate-journey-info *ngIf="currentJourney !== undefined" [journey]="currentJourney">
+        </late-mate-journey-info>
+
         <!-- Results Table -->
         <table id="results" class="table table-hover my-2" [class.hide-on-time]="isHideTimely" >
             <thead id="header-row" class="thead-inverse">
                 <tr>
                     <th>Date</th>
+                    <th>Origin Station</th>
                     <th>Scheduled Departure</th>
                     <th>Delay (minutes)</th>
                 </tr>
@@ -58,8 +62,10 @@
             <tbody>
                 <tr class="result-row"
                 *ngFor="let journey of visibleJourneys()"
-                [ngClass]="journey.stateClass" >
-                    <td>Departed {{ journey.originStation.text }} on {{ journey.originDate.format("D MMM YYYY") }}</td>
+                [ngClass]="journey.stateClass"
+                (click)="setCurrentJourney(journey)" >
+                    <td>{{ journey.originDate.format("D MMM YYYY") }}</td>
+                    <td>{{ journey.originStation.text }}</td>
                     <td>{{ journey.scheduledDeparture.format("HH:mm") }}</td>
                     <td [ngSwitch]="journey.state">
                         <div *ngSwitchCase="journey.journeyStateEnum.Cancelled">

@@ -4,6 +4,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { ResultsComponent } from './results.component';
 import { LegComponent } from './leg/leg.component';
+import { JourneyInfoComponent } from './journey-info/journey-info.component';
 
 @NgModule({
   imports: [
@@ -12,6 +13,7 @@ import { LegComponent } from './leg/leg.component';
   ],
   declarations: [
     ResultsComponent,
+    JourneyInfoComponent,
     LegComponent,
   ]
 })

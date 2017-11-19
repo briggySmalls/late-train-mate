@@ -1,0 +1,17 @@
+<div [ngSwitch]="journey.state">
+  <div *ngSwitchCase="journey.journeyStateEnum.Unresolved">
+    <p>Our metrics indicate this journey ran on time</p>
+    <p>Would you like to request the details for this journey?</p>
+    <p>TODO</p>
+  </div>
+  <div *ngSwitchDefault>
+    <div class="row" *ngFor="let leg of journey.legs">
+      <div class="col-sm">
+        <late-mate-leg [leg]="leg"></late-mate-leg>
+      </div>
+      <div class="col-sm">
+        {{ leg.disruptionCode }}
+      </div>
+    </div>
+  </div>
+</div>

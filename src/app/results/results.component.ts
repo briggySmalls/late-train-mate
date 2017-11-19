@@ -67,6 +67,7 @@ export class ResultsComponent implements OnInit {
 
   /**
    * The page of journeys being shown
+   * Note: There is no such thing as 0th page!
    */
   public currentPage = 1;
 
@@ -74,6 +75,11 @@ export class ResultsComponent implements OnInit {
   * The parameters of the search
   */
   public params: ISearch;
+
+  /**
+   * The current journey of interest
+   */
+  public currentJourney: Journey;
 
   /**
   * The journeys that have been returned by a service metrics request
@@ -140,6 +146,11 @@ export class ResultsComponent implements OnInit {
     if (this.currentPage > pageCount) {
       this.currentPage = pageCount;
     }
+  }
+
+  public setCurrentJourney(journey: Journey) {
+    console.log(journey);
+    this.currentJourney = journey;
   }
 
   /**********************************************************************
