@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/briggySmalls/late-train-mate.svg?branch=feature%2Fnational-rail-tests)](https://travis-ci.org/briggySmalls/late-train-mate)
+
 # Late Mate
 
 A handy web application to review delayed and cancelled trains across the UK.
@@ -26,32 +28,24 @@ npm run start
 # Application ( express ) API: http://localhost:4300
 ```
 
-Install Redux DevTools chrome extenstion:
+## Running the tests
 
-https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd
-
-<!--## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+The automated tests are run using the following command:
 
 ```
-Give an example
+ng test
 ```
 
-### And coding style tests
+### Linting
 
-Explain what these tests test and why
+Linting is run using the following commands:
 
 ```
-Give an example
-```-->
+npm run lint:server  # Server linting
+npm run lint:client  # Client linting
+```
 
 ## Deployment
-
 
 ```bash
 npm run build
@@ -72,20 +66,6 @@ Structure of dist folder:
 - Angular 2 ( 2.x )
 - ExpressJS ( 4.x - with compression )
 - Webpack ( angular-cli )
-
-<!--## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.-->
 
 ## License
 
