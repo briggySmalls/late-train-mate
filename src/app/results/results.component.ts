@@ -38,7 +38,6 @@ type IRequestFunc = () => void;
   selector: 'late-mate-results-view',
   templateUrl: 'results.component.html',
   styleUrls: ['results.component.scss'],
-  providers: [HspApiService],
 })
 export class ResultsComponent implements OnInit {
 

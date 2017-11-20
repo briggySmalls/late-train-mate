@@ -74,6 +74,9 @@
                         <div *ngSwitchCase="journey.journeyStateEnum.Unresolved">
                           On time
                         </div>
+                        <div *ngSwitchCase="journey.journeyStateEnum.Requesting">
+                          Requesting...
+                        </div>
                         <div *ngSwitchDefault>
                             {{ journey.minutesDelayed }}
                         </div>
