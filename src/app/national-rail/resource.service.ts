@@ -15,7 +15,7 @@ export abstract class ResourceService {
 
   // Public methods
   public getStations(): Observable<List<Station>> {
-    return this.stations;
+    return this.stations.map(stations => stations.DistinctBy(station => station.code));
   }
 
   public lookup(code: string): Observable<Station> {
