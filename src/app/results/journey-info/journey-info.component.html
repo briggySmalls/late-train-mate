@@ -23,7 +23,7 @@
             <dt>Date</dt>
             <dd>{{ leg.scheduledDeparture.format('DD/MM/YYYY') }}</dd>
             <dt *ngIf="leg.disruptionCode !== undefined">Disruption reason</dt>
-            <dd *ngIf="leg.disruptionCode !== undefined">{{ leg.disruptionCode }}</dd>
+            <dd *ngIf="leg.disruptionCode !== undefined">{{ (resourceService.lookupDisruption(leg.disruptionCode) | async).text }}</dd>
           </dl>
         </div>
       </div>

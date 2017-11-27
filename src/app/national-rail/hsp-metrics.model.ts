@@ -43,10 +43,10 @@ export class ServiceMetrics extends HspApiData {
 
     // Populate class from json data
     resourceService
-      .lookup(serviceData['serviceAttributesMetrics']['origin_location'])
+      .lookupStation(serviceData['serviceAttributesMetrics']['origin_location'])
       .subscribe(station => { this.originStation = station; });
     resourceService
-      .lookup(serviceData['serviceAttributesMetrics']['destination_location'])
+      .lookupStation(serviceData['serviceAttributesMetrics']['destination_location'])
       .subscribe(station => { this.destinationStation = station; });
     this.departureTime = this.toTime(serviceData['serviceAttributesMetrics']['gbtt_ptd']);
     this.arrivalTime = this.toTime(serviceData['serviceAttributesMetrics']['gbtt_pta']);
@@ -80,7 +80,7 @@ export class MetricsCollection extends HspApiData {
         // Populate class from json data
         this.services = new List<ServiceMetrics>(metricsData['Services'].map(
             (serviceData: any) => new ServiceMetrics(serviceData, resourceService)));
-        resourceService.lookup(metricsData['header']['from_location']).subscribe(station => { this.fromStation = station; });
-        resourceService.lookup(metricsData['header']['to_location']).subscribe(station => { this.toStation = station; });
+        resourceService.lookupStation(metricsData['header']['from_location']).subscribe(station => { this.fromStation = station; });
+        resourceService.lookupStation(metricsData['header']['to_location']).subscribe(station => { this.toStation = station; });
     }
 }

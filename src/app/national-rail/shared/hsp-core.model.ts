@@ -43,3 +43,8 @@ export interface Station {
     readonly code: string;
     readonly text: string;
 }
+
+export interface Disruption {
+  readonly code: number;
+  readonly text: string;
+}

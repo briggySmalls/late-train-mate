@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Journey } from '../journey';
-import { HspApiService } from '../../national-rail/index';
+import { HspApiService, ResourceService } from '../../national-rail/index';
 
 @Component({
   selector: 'late-mate-journey-info',
@@ -11,7 +11,8 @@ import { HspApiService } from '../../national-rail/index';
 })
 export class JourneyInfoComponent {
   constructor(public activeModal: NgbActiveModal,
-    public hspApiService: HspApiService) { }
+    public hspApiService: HspApiService,
+    public resourceService: ResourceService) { }
 
   @Input()
   journey: Journey;

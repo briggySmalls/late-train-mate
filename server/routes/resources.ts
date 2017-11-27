@@ -107,7 +107,7 @@ resourcesRouter.get("/stations", (req: Request, resp: Response) => {
 });
 
 // Get all reasons
-resourcesRouter.get("/reasons", (req: Request, resp: Response) => {
+resourcesRouter.get("/disruptions", (req: Request, resp: Response) => {
   resp.json(allReasons);
 });
 

@@ -20,7 +20,7 @@ export class StopDetails extends HspApiData {
     super();
 
     // Populate class from json data
-    resourceService.lookup(stopData['location']).subscribe(station => { this.station = station; });
+    resourceService.lookupStation(stopData['location']).subscribe(station => { this.station = station; });
     this.scheduledDeparture = stopData['gbtt_ptd'] ? this.dateFromTime(this.toTime(stopData['gbtt_ptd'], date), originTime) : undefined;
     this.scheduledArrival = stopData['gbtt_pta'] ? this.dateFromTime(this.toTime(stopData['gbtt_pta'], date), originTime) : undefined;
     this.actualDeparture = stopData['actual_td'] ? this.dateFromTime(this.toTime(stopData['actual_td'], date), originTime) : undefined;
