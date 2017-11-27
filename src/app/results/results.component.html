@@ -5,7 +5,7 @@
           <tbody>
               <tr>
                   <td>Route:</td>
-                  <td>{{ params.fromStation }} - {{ params.toStation }}</td>
+                  <td>{{ (resourceService.lookupStation(params.fromStation) | async)?.text }} - {{ (resourceService.lookupStation(params.toStation) | async)?.text }}</td>
               </tr>
                   <td>Time Period:</td>
                   <td>{{ params.days }} between {{ params.fromDate.format("DD MMM YYYY") }} - {{ params.toDate.format("DD MMM YYYY") }}</td>

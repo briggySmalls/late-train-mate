@@ -20,11 +20,11 @@ export abstract class ResourceService {
   }
 
   public lookupStation(code: string): Observable<Station> {
-    return this.stations.map(stations => stations.First(station => (station.code === code)));
+    return this.stations.map(stations => stations.FirstOrDefault(station => (station.code === code)));
   }
 
   public lookupDisruption(code: number): Observable<Disruption> {
-    return this.disruptions.map(disruptions => disruptions.First(disruption => (disruption.code === code)));
+    return this.disruptions.map(disruptions => disruptions.FirstOrDefault(disruption => (disruption.code === code)));
   }
 }
 

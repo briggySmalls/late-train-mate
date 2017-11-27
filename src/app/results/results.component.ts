@@ -9,7 +9,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/merge';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { HspApiService, MetricsCollection, ServiceMetrics, JourneyDetails } from '../national-rail';
+import { HspApiService, MetricsCollection, ServiceMetrics, JourneyDetails, ResourceService } from '../national-rail';
 import { Journey, JourneyState } from './journey';
 import { JourneyInfoComponent } from './journey-info/journey-info.component';
 
@@ -91,7 +91,8 @@ export class ResultsComponent implements OnInit {
     private http: Http,
     private route: ActivatedRoute,
     private hspApiService: HspApiService,
-    private modalService: NgbModal) { }
+    private modalService: NgbModal,
+    public resourceService: ResourceService) { }
 
   /**
   * @brief      Compare function for sorting JourneyWrappers
