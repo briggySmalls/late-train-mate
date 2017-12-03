@@ -10,6 +10,7 @@ import { ResultsModule } from './results/results.module';
 import { SearchComponent } from './search/search.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ResourceService, HttpResourceService } from './national-rail';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import { ResourceService, HttpResourceService } from './national-rail';
     AppComponent,
     SearchComponent,
     PageNotFoundComponent,
+    HomeComponent,
   ],
   providers: [{ provide: ResourceService, useClass: HttpResourceService }],
   bootstrap: [ AppComponent ]
