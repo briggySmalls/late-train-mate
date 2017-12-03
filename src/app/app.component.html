@@ -1,5 +1,5 @@
-<header>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+<header class="sticky-top">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">{{title}}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
       aria-label="Toggle navigation">
@@ -14,9 +14,12 @@
         </li>
       </ul>
     </div>
+    <span class="navbar-text">
+      Created with ♥ by <a href="http://www.github.com/briggysmalls">Sam Briggs</a>
+    </span>
   </nav>
 </header>
 <router-outlet></router-outlet>
-<footer class="fixed-bottom bg-dark">
-  <div class="container text-white">Created with ♥ by <a href="http://www.github.com/briggysmalls">Sam Briggs</a></div>
+<footer class="sticky-bottom bg-dark">
+  <div class="container text-white"></div>
 </footer>
