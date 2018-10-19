@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import * as moment from 'moment';
@@ -16,7 +16,7 @@ const SERVICE_DETAILS_URL = '/api/hsp/details';
 @Injectable()
 export class HspApiService {
 
-    constructor(private http: Http,
+    constructor(private http: HttpClient,
                 private resourceService: ResourceService) { }
 
     public serviceMetrics(
@@ -40,14 +40,14 @@ export class HspApiService {
       return this.http.post(SERVICE_METRICS_URL, request_body)
         // Map the http results stream to a stream of MetricsCollections
         .map(
-          (response: any) => new MetricsCollection(response.json(), this.resourceService),
+          (response: any) => new MetricsCollection(response, this.resourceService),
           this.handleError);
     }
 
     public journeyDetails(serviceId: number): Observable<JourneyDetails> {
         return this.http.post(SERVICE_DETAILS_URL, {'rid': serviceId.toString()})
             .map(
-                (response: any) => new JourneyDetails(response.json(), this.resourceService),
+                (response: any) => new JourneyDetails(response, this.resourceService),
                 this.handleError);
     }
 

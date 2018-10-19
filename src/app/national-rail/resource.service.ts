@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { List } from 'linqts';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -30,17 +30,17 @@ export abstract class ResourceService {
 
 @Injectable()
 export class HttpResourceService extends ResourceService {
-    constructor(private http: Http) {
+    constructor(private http: HttpClient) {
       super();
 
       // Assign stations with a http result
-      this.http.get(STATIONS_URL).subscribe(response => {
-        this.stations.next(new List<Station>(response.json()).OrderBy(station => station.text));
+      this.http.get<any>(STATIONS_URL).subscribe((response: Array<any>) => {
+        this.stations.next(new List<Station>(response).OrderBy(station => station.text));
       });
 
       // Assign disruptions with a http result
-      this.http.get(DISRUPTIONS_URL).subscribe(response => {
-        this.disruptions.next(new List<Disruption>(response.json()));
+      this.http.get(DISRUPTIONS_URL).subscribe((response: Array<any>) => {
+        this.disruptions.next(new List<Disruption>(response));
       });
     }
 }

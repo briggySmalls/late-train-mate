@@ -63,7 +63,7 @@ Structure of dist folder:
 
 ## Built With
 
-- Angular 2 ( 2.x )
+- Angular 5+
 - ExpressJS ( 4.x - with compression )
 - Webpack ( angular-cli )
 

@@ -9,8 +9,7 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
-import { ResourceService } from '../national-rail/resource.service';
-import { Station } from '../national-rail/shared/hsp-core.model';
+import { ResourceService, Station } from '../national-rail';
 
 /**
  * Validator to ensure that date is after other Control

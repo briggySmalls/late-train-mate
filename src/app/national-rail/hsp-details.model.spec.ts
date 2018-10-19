@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { List } from 'linqts';
-import { TestBed, async } from '@angular/core/testing';
+import { async } from '@angular/core/testing';
 
 import { JourneyDetails } from './hsp-details.model';
 import { MockResourceService } from './resource.service.mock';

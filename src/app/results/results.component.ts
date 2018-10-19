@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
 import * as moment from 'moment';
 import * as assert from 'assert';
@@ -88,7 +88,7 @@ export class ResultsComponent implements OnInit {
   private journeys = new Array<Journey>();
 
   constructor(
-    private http: Http,
+    private http: HttpClient,
     private route: ActivatedRoute,
     private hspApiService: HspApiService,
     private modalService: NgbModal,
